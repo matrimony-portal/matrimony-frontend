@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bandan - Contact Us</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="../../assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="../../assets/favicon/site.webmanifest" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+          header {
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+        /*-------------------*/
+        .login-link {
+            padding: 0.5rem 1.25rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .login-link:hover {
+            padding: 0.5rem 1.25rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.25);
+            opacity: 1;
+        }
+
+        .register-link {
+            padding: 0.5rem 1.25rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .register-link:hover {
+            padding: 0.5rem 1.25rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.3);
+            opacity: 1;
+        }
+
+        .subscribe-btn {
+            background: #fbbf24 !important;
+            color: #1f2937 !important;
+            font-weight: 700 !important;
+            padding: 0.65rem 1.5rem !important;
+            border-radius: 25px !important;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .subscribe-btn:hover {
+            background: #f59e0b !important;
+            opacity: 1 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(251, 191, 36, 0.5);
+        }
+
+
+        /*---------*/
+        .nav-main{
+            display: flex;
+            gap: 1.5rem;
+            padding-right: 2rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .back-btn {
+            background: white;
+            color: #ae1700;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-form-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .contact-form-section h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ae1700;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .contact-info-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .contact-info-section h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f4ff;
+            border-radius: 10px;
+            color: #ae1700;
+        }
+
+        .contact-details h3 {
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-details p {
+            color: #666;
+        }
+
+        .contact-details a {
+            color: #ae1700;
+            text-decoration: none;
+        }
+
+        .office-hours {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .office-hours h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .office-hours p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .faq-section h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .faq-item {
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #ae1700;
+        }
+
+        .faq-item h4 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid,
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+         /*--------logo--------*/
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    height: 40px;
+    width: auto;
+}
+
+.logo-text {
+    height: 38px;
+    width: auto;
+}
+
+/* For responsive - hide text on small screens */
+@media (max-width: 768px) {
+    .logo-text {
+        display: none;
+    }
+
+    .logo-icon {
+        height: 35px;
+    }
+}
+        /*------------*/
+
+    </style>
+</head>
+<body>
+     <header>
+        <nav>
+            <div class="logo">
+    <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
+    <img src="../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
+</div>
+            <ul class="nav-links">
+                <div class="nav-main">
+<li><a href="./homepage.html">Home</a></li>
+                <li><a href="./homepage.html#search-div">Search</a></li>
+                <li><a href="./homepage.html#why-us">Why us?</a></li>
+                <li><a href="./homepage.html#success-stories-div">Success Stories</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                </div>
+
+                <li><a href="login.html" class="login-link">Login</a></li>
+                <li><a href="register.html" class="register-link">Register</a></li>
+                <li><a href="payment.html"  class="subscribe-btn">🜲 Subscribe</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Contact Us</h1>
+            <p>We're here to help! Reach out to us for any questions or support.</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="contact-form-section">
+                <h2>Send us a Message</h2>
+                <form id="contactForm" onsubmit="return submitContact()" novalidate>
+                    <div class="form-group">
+                        <label for="name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number<span class="required">*</span></label>
+                        <input type="tel" id="phone" placeholder="10-digit number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject <span class="required">*</span></label>
+                        <select id="subject" required>
+                            <option value="">Select a subject</option>
+                            <option value="profile">Profile Related Issue</option>
+                            <option value="technical">Technical Support</option>
+                            <option value="payment">Payment & Billing</option>
+                            <option value="verification">Profile Verification</option>
+                            <option value="report">Report a Profile</option>
+                            <option value="event">Event Related Query</option>
+                            <option value="feedback">General Feedback</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message <span class="required">*</span></label>
+                        <textarea id="message" required placeholder="Please describe your query in detail..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+
+            <div class="contact-info-section">
+                <h2>Get in Touch</h2>
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-details">
+                            <h3>Email</h3>
+                            <p><a href="mailto:support@perfectmatch.com">support@perfectmatch.com</a></p>
+                            <p><a href="mailto:info@perfectmatch.com">info@perfectmatch.com</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="contact-icon">📞</div>
+                        <div class="contact-details">
+                            <h3>Phone</h3>
+                            <p><a href="tel:+911234567890">+91 123-456-7890</a></p>
+                            <p><a href="tel:+911234567891">+91 123-456-7891</a> (Toll Free)</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="contact-icon">💬</div>
+                        <div class="contact-details">
+                            <h3>WhatsApp</h3>
+                            <p><a href="https://wa.me/911234567890">+91 123-456-7890</a></p>
+                            <p>Quick responses available</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h3>Head Office</h3>
+                            <p>123, Business Tower</p>
+                            <p>Andheri West, Mumbai - 400053</p>
+                            <p>Maharashtra, India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="office-hours">
+                    <h3>Office Hours</h3>
+                    <p><strong>Monday - Friday:</strong> 9:00 AM - 6:00 PM</p>
+                    <p><strong>Saturday:</strong> 10:00 AM - 4:00 PM</p>
+                    <p><strong>Sunday:</strong> Closed</p>
+                    <p style="margin-top: 1rem;"><strong>Emergency Support:</strong> 24/7 available via email</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>Quick Help</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h4>How do I verify my profile?</h4>
+                    <p>Go to your profile settings and click on "Verify Profile". Upload the required documents for verification.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How can I upgrade to premium?</h4>
+                    <p>Click on "Upgrade" in your dashboard and choose a subscription plan that suits your needs.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Can I hide my profile temporarily?</h4>
+                    <p>Yes, go to Settings > Privacy and enable "Hide Profile" option. You can unhide anytime.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How do I report a fake profile?</h4>
+                    <p>Visit the profile and click on the "Report" button. Provide details and our team will investigate.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function submitContact() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            if (!name || !email || !subject || !phone || !message) {
+                alert('Please fill in all required fields!');
+                return false;
+            }
+
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                alert('Please enter a valid email address!');
+                return false;
+            }
+
+            if (!phone.match(/^\d{10}$/)) {
+                alert('Please provide a valid phone number (exactly 10 digits).');
+                return false;
+            }
+
+            if (message.length < 20) {
+                alert('Please provide a detailed message (minimum 20 characters).');
+                return false;
+            }
+
+            alert('Thank you for contacting us!\n\nYour message has been sent successfully. We will respond within 24-48 hours.');
+            document.getElementById('contactForm').reset();
+            return false;
+        }
+    </script>
+</body>
+</html>
