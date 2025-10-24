@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & FAQ - Perfect Match</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { color: white; text-decoration: none; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 3rem 2rem; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; opacity: 0.95; }
+        .search-box { max-width: 600px; margin: 2rem auto 0; }
+        .search-input { width: 100%; padding: 1rem; border: none; border-radius: 30px; font-size: 1rem; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 2rem; }
+        .categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .category-card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; cursor: pointer; transition: transform 0.3s; }
+        .category-card:hover { transform: translateY(-5px); }
+        .category-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .category-title { color: #333; font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .category-desc { color: #666; font-size: 0.9rem; }
+        .faq-section { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .faq-section h2 { color: #333; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid #667eea; }
+        .faq-item { border-bottom: 1px solid #e2e8f0; padding: 1.5rem 0; cursor: pointer; }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; color: #333; font-weight: 600; font-size: 1.05rem; }
+        .faq-toggle { font-size: 1.5rem; color: #667eea; transition: transform 0.3s; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s; color: #666; line-height: 1.8; }
+        .faq-answer.show { max-height: 500px; margin-top: 1rem; }
+        .faq-item.active .faq-toggle { transform: rotate(45deg); }
+        .contact-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 3rem; border-radius: 10px; text-align: center; }
+        .contact-section h2 { margin-bottom: 1rem; }
+        .contact-section p { margin-bottom: 2rem; opacity: 0.95; }
+        .contact-btn { background: white; color: #667eea; padding: 1rem 2rem; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">💝 Perfect Match</div>
+        <nav class="nav-links">
+            <a href="homepage.html">Home</a>
+            <a href="contact.html">Contact</a>
+            <a href="faq.html">FAQ</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>❓ Help Center</h1>
+        <p>Find answers to your questions</p>
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search for help...">
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="categories">
+            <div class="category-card" onclick="scrollToSection('getting-started')">
+                <div class="category-icon">🚀</div>
+                <h3 class="category-title">Getting Started</h3>
+                <p class="category-desc">Learn how to create and set up your profile</p>
+            </div>
+            <div class="category-card" onclick="scrollToSection('profile')">
+                <div class="category-icon">👤</div>
+                <h3 class="category-title">Profile & Privacy</h3>
+                <p class="category-desc">Manage your profile and privacy settings</p>
+            </div>
+            <div class="category-card" onclick="scrollToSection('matching')">
+                <div class="category-icon">💑</div>
+                <h3 class="category-title">Matching & Search</h3>
+                <p class="category-desc">Find and connect with matches</p>
+            </div>
+            <div class="category-card" onclick="scrollToSection('payment')">
+                <div class="category-icon">💳</div>
+                <h3 class="category-title">Payment & Billing</h3>
+                <p class="category-desc">Subscription and payment related queries</p>
+            </div>
+        </div>
+
+        <div class="faq-section" id="getting-started">
+            <h2>Getting Started</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>How do I create an account?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Click on "Register" button on the homepage. Fill in your basic details including name, email, phone number, and create a password. Complete your profile by adding personal, educational, and family details. Upload clear photos to make your profile attractive. Your profile will be verified within 24 hours.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>Is registration free?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes! Registration on Perfect Match is completely free. You can create your profile, browse limited profiles, and send limited interests without any charge. Premium memberships are available with additional features.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>How long does profile verification take?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Profile verification typically takes 24-48 hours. Our team manually reviews each profile to ensure authenticity. You'll receive an email notification once your profile is verified. Verified profiles get better visibility and more responses.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" id="profile">
+            <h2>Profile & Privacy</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>How can I edit my profile?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Login to your account, go to "My Profile" or "Edit Profile" from the dashboard. You can update your personal details, educational qualifications, career information, family details, and preferences. Don't forget to save your changes.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>Can I hide my profile temporarily?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes! Go to Settings > Privacy > Profile Visibility and select "Hidden". Your profile won't be visible to others, but your account remains active. You can unhide it anytime by changing the visibility setting back to "Everyone" or "Premium Members Only".
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>Who can see my contact details?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    By default, your contact details are visible only to premium members and those whose interest you have accepted. You can change this in Settings > Privacy > Show Contact Details. For better security, we recommend keeping it restricted.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>How do I delete my account?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Go to Settings > Danger Zone > Delete Account. Please note that this action is permanent and cannot be undone. All your data including profile, photos, and messages will be permanently deleted. You can also choose to deactivate temporarily instead.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" id="matching">
+            <h2>Matching & Search</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>How does the matching algorithm work?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Our smart matching algorithm considers multiple factors including age, education, location, religion, profession, family background, and your stated preferences. It uses machine learning to suggest the most compatible profiles based on your activity and preferences.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>How do I send interest to someone?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Browse profiles using search or view recommended matches. Click on "Send Interest" or "Send Proposal" button on the profile you like. You can add a personalized message (premium feature). The person will be notified and can accept or decline your interest.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>What should I do if I receive inappropriate messages?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    You can block the user immediately from their profile or chat. Report the profile with details and screenshots if possible. Our team takes such reports seriously and will take appropriate action within 24 hours. You can also contact our support team.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" id="payment">
+            <h2>Payment & Billing</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>What are the premium plans?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    We offer Gold (₹2,999 for 3 months) and Platinum (₹4,999 for 6 months) plans. Premium features include unlimited profile browsing, direct chat, viewing contact details, advanced filters, profile highlighting, and priority support. Check the subscription page for complete details.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>What payment methods do you accept?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    We accept all major credit/debit cards, UPI, net banking, and digital wallets (Paytm, PhonePe, Google Pay). All transactions are secure and encrypted. You'll receive a payment confirmation via email immediately after successful payment.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>Can I get a refund?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Platinum members get a 30-day money-back guarantee. If you're not satisfied within 30 days, contact our support team for a full refund. For Gold members, refunds are processed on a case-by-case basis. Partial refunds may be available for unused period.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>How do I cancel my subscription?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Go to Settings > Subscription > Cancel Subscription. You can continue using premium features until the end of your billing period. Auto-renewal will be disabled. You can resubscribe anytime. Contact support if you need assistance with cancellation.
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h2>Still Need Help?</h2>
+            <p>Our support team is here to help you 24/7</p>
+            <a href="contact.html" class="contact-btn">Contact Support</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleFaq(element) {
+            const answer = element.querySelector('.faq-answer');
+            const isActive = element.classList.contains('active');
+            
+            // Close all FAQs
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('.faq-answer').classList.remove('show');
+            });
+            
+            // Open clicked FAQ if it wasn't active
+            if (!isActive) {
+                element.classList.add('active');
+                answer.classList.add('show');
+            }
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

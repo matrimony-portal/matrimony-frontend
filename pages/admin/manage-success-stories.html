@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Success Stories - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            padding: 0.75rem 1.5rem;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+            border-left-color: #fff;
+        }
+
+        .sidebar .nav-link.active {
+            color: #fff;
+            background: rgba(255,255,255,0.15);
+            border-left-color: #fff;
+            font-weight: 600;
+        }
+
+        .sidebar-heading {
+            font-size: .75rem;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            padding: 1.5rem 1.5rem 0.5rem;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo-text {
+            height: 40px;
+            width: auto;
+        }
+
+        .page-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input, .search-bar select {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background: ae1700;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #ae1700;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .story-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .story-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .story-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .story-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            color: #ae1700;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .story-content {
+            padding: 1.5rem;
+        }
+
+        .couple-names {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .story-meta {
+            display: flex;
+            gap: 1rem;
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .story-text {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .story-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            flex: 1;
+        }
+
+        .btn-edit {
+            background: #dbeafe;
+            color: #ae1700;
+        }
+
+        .btn-delete {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn-view {
+            background: #e9d5ff;
+            color: #6b21a8;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-published {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        @media (max-width: 768px) {
+            .logo-text {
+                display: none;
+            }
+            .logo-icon {
+                height: 35px;
+            }
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
+            <div class="logo">
+                <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
+                <img src="../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
+            </div>
+        </a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3 text-white" href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
+                        <span>Welcome, Admin</span>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin-dashboard.html">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="manage-users.html">
+                                <i class="bi bi-people"></i> Manage Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="manage-organizers.html">
+                                <i class="bi bi-person-badge"></i> Event Organizers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="manage-success-stories.html">
+                                <i class="bi bi-heart"></i> Success Stories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="reports-complaints.html">
+                                <i class="bi bi-exclamation-triangle"></i> Reports & Complaints
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="page-header">
+                    <div>
+                        <h1>Manage Success Stories</h1>
+                        <p class="mb-0">Add, edit, or remove success stories</p>
+                    </div>
+                    <button class="btn-primary" onclick="window.location.href='add-success-story.html'">
+                        <i class="bi bi-plus-circle"></i> Add Story
+                    </button>
+                </div>
+
+                <div class="content-card">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Search by couple names..." onkeyup="filterStories()">
+                        <select id="statusFilter" onchange="filterStories()">
+                            <option value="">All Status</option>
+                            <option value="published">Published</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                        <button class="btn-primary" onclick="filterStories()">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+
+                    <div class="stories-grid" id="storiesGrid">
+                        <!-- Story Card 1 -->
+                        <div class="story-card" data-status="published">
+                            <div class="story-image">
+                                <span class="story-badge">Recent</span>
+                                💑
+                            </div>
+                            <div class="story-content">
+                                <h3 class="couple-names">Rahul & Priya</h3>
+                                <div class="story-meta">
+                                    <span>📍 Mumbai</span>
+                                    <span>💑 Married Oct 2025</span>
+                                    <span class="status-badge status-published">Published</span>
+                                </div>
+                                <p class="story-text">
+                                    "We found each other on Perfect Match and it's been an incredible journey. The platform made it so easy to connect with like-minded people."
+                                </p>
+                                <div class="story-actions">
+                                    <!--<button class="action-btn btn-view" onclick="viewStory('SS001')">
+                                        <i class="bi bi-eye"></i> View
+                                    </button>-->
+                                    <button class="action-btn btn-edit" onclick="editStory('SS001')">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete" onclick="deleteStory('SS001', 'Rahul & Priya')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Story Card 2 -->
+                        <div class="story-card" data-status="published">
+                            <div class="story-image">💑</div>
+                            <div class="story-content">
+                                <h3 class="couple-names">Amit & Sneha</h3>
+                                <div class="story-meta">
+                                    <span>📍 Delhi</span>
+                                    <span>💑 Married Jan 2025</span>
+                                    <span class="status-badge status-published">Published</span>
+                                </div>
+                                <p class="story-text">
+                                    "Perfect Match helped us find our soulmates. The verification process ensured we only met genuine people. We're happily married now!"
+                                </p>
+                                <div class="story-actions">
+                                    <!--<button class="action-btn btn-view" onclick="viewStory('SS002')">
+                                        <i class="bi bi-eye"></i> View
+                                    </button>-->
+                                    <button class="action-btn btn-edit" onclick="editStory('SS002')">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete" onclick="deleteStory('SS002', 'Amit & Sneha')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Story Card 3 -->
+                        <div class="story-card" data-status="published">
+                            <div class="story-image">💑</div>
+                            <div class="story-content">
+                                <h3 class="couple-names">Vikram & Meera</h3>
+                                <div class="story-meta">
+                                    <span>📍 Bangalore</span>
+                                    <span>💑 Married May 2025</span>
+                                    <span class="status-badge status-published">Published</span>
+                                </div>
+                                <p class="story-text">
+                                    "The smart matching algorithm is amazing! We connected instantly and found we had so much in common. Couldn't be happier!"
+                                </p>
+                                <div class="story-actions">
+                                    <!--<button class="action-btn btn-view" onclick="viewStory('SS003')">
+                                        <i class="bi bi-eye"></i> View
+                                    </button>-->
+                                    <button class="action-btn btn-edit" onclick="editStory('SS003')">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete" onclick="deleteStory('SS003', 'Vikram & Meera')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Story Card 4 (Pending) -->
+                        <div class="story-card" data-status="pending">
+                            <div class="story-image">💑</div>
+                            <div class="story-content">
+                                <h3 class="couple-names">Arjun & Pooja</h3>
+                                <div class="story-meta">
+                                    <span>📍 Pune</span>
+                                    <span>💑 Married Aug 2025</span>
+                                    <span class="status-badge status-pending">Pending</span>
+                                </div>
+                                <p class="story-text">
+                                    "Meeting through a cultural event organized by Perfect Match was the best decision. We're planning our wedding now!"
+                                </p>
+                                <div class="story-actions">
+                                    <!--<button class="action-btn btn-view" onclick="viewStory('SS004')">
+                                        <i class="bi bi-eye"></i> View
+                                    </button>-->
+                                    <button class="action-btn btn-edit" onclick="editStory('SS004')">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete" onclick="deleteStory('SS004', 'Arjun & Pooja')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Logged out successfully!');
+                window.location.href = '../homepage/homepage.html';
+            }
+        }
+
+        function filterStories() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+            const cards = document.querySelectorAll('.story-card');
+
+            cards.forEach(card => {
+                const coupleName = card.querySelector('.couple-names').textContent.toLowerCase();
+                const status = card.getAttribute('data-status').toLowerCase();
+
+                const matchesSearch = coupleName.includes(searchInput);
+                const matchesStatus = statusFilter === '' || status === statusFilter;
+
+                if (matchesSearch && matchesStatus) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function viewStory(id) {
+            alert('Viewing full details for story: ' + id + '\n\nThis will show:\n- Full story content\n- Couple photos\n- Wedding details\n- Event information');
+        }
+
+        function editStory(id) {
+            window.location.href = 'edit-success-story.html?id=' + id;
+        }
+
+        function deleteStory(id, coupleName) {
+            if (confirm('Are you sure you want to delete the success story of "' + coupleName + '"?\n\nThis action cannot be undone.')) {
+                alert('Success story "' + coupleName + '" has been deleted successfully!');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

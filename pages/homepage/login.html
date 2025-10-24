@@ -399,21 +399,26 @@
                 isValid = false;
             }
 
-            if (isValid) {
+             if (isValid) {
                 const userType = document.querySelector('input[name="userType"]:checked').value;
 
                 // Dummy credentials for testing
                 if (userType === 'user' && email === 'user@test.com' && password === 'User@123') {
                     alert('Login successful! Redirecting to user dashboard...');
-                    window.location.href = '../user/user-dashboard.html';
-                } else if (userType === 'organizer' && email === 'organizer@test.com' && password === 'Org@123') {
+                    window.location.href = '../user/registered-user/user-dashboard.html';
+                }
+                else if (userType === 'user' && email === 'paid-user@test.com' && password === 'User@123') {
+                    alert('Login successful! Redirecting to organizer dashboard...');
+                    window.location.href = '../user/paid-user/organizer-dashboard.html';
+                }
+                else if (userType === 'organizer' && email === 'organizer@test.com' && password === 'Org@123') {
                     alert('Login successful! Redirecting to organizer dashboard...');
                     window.location.href = '../event-organizer/organizer-dashboard.html';
                 } else if (userType === 'admin' && email === 'admin@test.com' && password === 'Admin@123') {
                     alert('Login successful! Redirecting to admin dashboard...');
                     window.location.href = '../admin/admin-dashboard.html';
                 } else {
-                    alert('Invalid credentials!\n\nDummy Test Credentials:\nUser: user@test.com / User@123\nOrganizer: organizer@test.com / Org@123\nAdmin: admin@test.com / Admin@123');
+                    alert('Invalid credentials!\n\nDummy Test Credentials:\nUser: user@test.com / User@123\nUser: paid-user@test.com / User@123\nOrganizer: organizer@test.com / Org@123\nAdmin: admin@test.com / Admin@123');
                 }
             }
 

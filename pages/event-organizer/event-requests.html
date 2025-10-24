@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard - Perfect Match</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        }
+
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            padding: 0.75rem 1.5rem;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+            border-left-color: #fff;
+        }
+
+        .sidebar .nav-link.active {
+            color: #fff;
+            background: rgba(255,255,255,0.15);
+            border-left-color: #fff;
+            font-weight: 600;
+        }
+
+        .sidebar-heading {
+            font-size: .75rem;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            padding: 1.5rem 1.5rem 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Top navbar */
+        .navbar-brand {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);*/
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        }
+
+        /* Logo styles */
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: left;
+        }
+
+        .logo-icon {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo-text {
+            height: 40px;
+            width: auto;
+        }
+
+        /* Main content */
+        main {
+            padding-top: 20px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ae1700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .content-area {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            color: #333;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #ae1700;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #8b1300;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #666;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .event-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-details {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .event-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .status-upcoming {
+            background: #dbeafe;
+            color: #ae1700;
+        }
+
+        .status-ongoing {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-completed {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .participants-section {
+            margin-top: 2rem;
+        }
+
+        .participant-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .participant-table th,
+        .participant-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .participant-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .participant-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        /* For responsive - hide text on small screens */
+        @media (max-width: 768px) {
+            .logo-text {
+                display: none;
+            }
+            
+            .logo-icon {
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
+            <div class="logo">
+                <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
+                <img src="../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
+            </div>
+        </a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3 text-white" href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
+                        <span>Welcome, Meera</span>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="organizer-dashboard.html">
+                                <i class="bi bi-house-door"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="my-events.html">
+                                <i class="bi bi-calendar-event"></i> My Events
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="create-event.html">
+                                <i class="bi bi-plus-circle"></i> Create Event
+                            </a>
+                        </li>
+                        <!--<li class="nav-item">
+                            <a class="nav-link" href="participants.html">
+                                <i class="bi bi-people"></i> Participants
+                            </a>
+                        </li>-->
+                        <li class="nav-item">
+                            <a class="nav-link active" href="event-requests.html">
+                                <i class="bi bi-inbox"></i> Event Requests
+                            </a>
+                        </li>
+                        <!--<li class="nav-item">
+                            <a class="nav-link" href="analytics.html">
+                                <i class="bi bi-graph-up"></i> Analytics
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="messages.html">
+                                <i class="bi bi-chat-dots"></i> Messages
+                            </a>
+                        </li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="organizer-profile.html">
+                                <i class="bi bi-person-circle"></i> My Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="blocked-users.html">
+                            <i class="bi bi-x-circle"></i> Blocked Users
+                        </a>
+                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="organizer-settings.html">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!--<div class="page-header">
+                    <h1>Welcome, Meera!</h1>
+                    <p>Manage your events and participants</p>
+                </div>-->
+
+                
+
+                <div class="content-area">
+
+                    <div class="participants-section">
+                        <h3>Recent Event Requests</h3>
+                        <table class="participant-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Event</th>
+                                    <th>Request Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Rahul Sharma</td>
+                                    <td>Speed Dating Evening</td>
+                                    <td>20th Oct 2025</td>
+                                    <td><span class="event-status status-upcoming">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary action-btn" onclick="(2)" style="margin-right: 5px;">View Profile</button>
+                                        <button class="btn btn-primary action-btn" onclick="acceptRequest(1)">Accept</button>
+                                        <button class="btn btn-danger action-btn" onclick="rejectRequest(1)">Reject</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Priya Agarwal</td>
+                                    <td>Coffee Meetup</td>
+                                    <td>19th Oct 2025</td>viewProfile
+                                    <td><span class="event-status status-ongoing">Accepted</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary action-btn" onclick="viewProfile(2)">View Profile</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Amit Kumar</td>
+                                    <td>Cultural Evening</td>
+                                    <td>21st Oct 2025</td>
+                                    <td><span class="event-status status-upcoming">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary action-btn" onclick="viewProfile(2)" style="margin-right: 5px;">View Profile</button>
+                                        <button class="btn btn-primary action-btn" onclick="acceptRequest(3)">Accept</button>
+                                        <button class="btn btn-danger action-btn" onclick="rejectRequest(3)">Reject</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    
+    <script>
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Logged out successfully!');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function createEvent() {
+            alert('Opening create event form\n\nYou can create a new meetup event for users.');
+            window.location.href = 'create-event.html';
+        }
+
+        function editEvent(id) {
+            alert('Editing Event #' + id + '\n\nYou can modify event details, date, time, and location.');
+        }
+
+        function viewEvent(id) {
+            alert('Viewing Event #' + id + '\n\nShowing complete event details and participant list.');
+        }
+
+        function cancelEvent(id) {
+            if (confirm('Are you sure you want to cancel this event?\n\nAll participants will be notified.')) {
+                alert('Event #' + id + ' has been cancelled!');
+            }
+        }
+
+        function viewFeedback(id) {
+            alert('Viewing feedback for Event #' + id + '\n\nSee participant reviews and ratings.');
+        }
+
+        function acceptRequest(id) {
+            if (confirm('Accept this participation request?')) {
+                alert('Request accepted! Participant will be notified.');
+            }
+        }
+
+        function rejectRequest(id) {
+            if (confirm('Reject this participation request?')) {
+                alert('Request rejected! Participant will be notified.');
+            }
+        }
+
+        function viewProfile(id) {
+            alert('Viewing participant profile #' + id);
+            window.location.href = 'profile-view.html';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

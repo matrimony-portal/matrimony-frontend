@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Profile - Priya Agarwal - Perfect Match</title>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+ 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+ <style>
+  body {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   background: #f5f7fa;
+  }
+
+  /* Sidebar */
+  .sidebar {
+   position: fixed;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   z-index: 100;
+   padding: 48px 0 0;
+   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  }
+
+  .sidebar-main{
+   background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+  }
+
+  .sidebar .nav-link {
+   font-weight: 500;
+   color: rgba(255,255,255,0.8);
+   padding: 0.75rem 1.5rem;
+   border-left: 3px solid transparent;
+  }
+
+  .sidebar .nav-link:hover {
+   color: #fff;
+   background: rgba(255,255,255,0.1);
+   border-left-color: #fff;
+  }
+
+  .sidebar .nav-link.active {
+   color: #fff;
+   background: rgba(255,255,255,0.15);
+   border-left-color: #fff;
+   font-weight: 600;
+  }
+
+  .sidebar-heading {
+   font-size: .75rem;
+   text-transform: uppercase;
+   color: rgba(255,255,255,0.6);
+   padding: 1.5rem 1.5rem 0.5rem;
+   border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* Navbar */
+  .navbar {
+   background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+  }
+
+  .navbar-brand {
+   font-weight: bold;
+   /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);*/
+  }
+
+  .logo {
+   display: flex;
+   align-items: center;
+  }
+
+  .logo-icon {
+   height: 50px;
+   width: auto;
+  }
+
+  .logo-text {
+   height: 40px;
+   width: auto;
+  }
+
+  @media (max-width: 768px) {
+   .logo-text {
+    display: none;
+   }
+   .logo-icon {
+    height: 35px;
+   }
+  }
+
+  main {
+   padding-top: 20px;
+  }
+
+  .profile-header, .info-section, .contact-card, .premium-banner, .similar-profiles {
+   background: white;
+   border-radius: 10px;
+   padding: 2rem;
+   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+   margin-bottom: 2rem;
+  }
+
+  .profile-header {
+   display: grid;
+   grid-template-columns: 250px 1fr auto;
+   gap: 2rem;
+  }
+
+         /*---------------*/
+                    .profile-photo {
+                        width: 100%;
+                        height: 250px; /* adjust as needed */
+                        background-size: cover;       /* ensures the image covers the entire box */
+                        background-position: center;  /* centers the image */
+                        background-repeat: no-repeat; /* avoids tiling */
+                        border-radius: 10px;          /* optional — smooth corners */
+                        position: relative;
+                        color: white;                 /* text (like R&P) visible */
+                        display: flex;
+                        align-items: flex-end;        /* positions text at bottom */
+                        justify-content: center;
+                        font-weight: bold;
+                        font-size: 18px;
+                        }
+/*-------*/
+  .btn-primary {
+   background: #ae1700;
+   border-color: #ae1700;
+  }
+  .btn-primary:hover {
+   background: #8a1200;
+   border-color: #8a1200;
+  }
+  
+    /* Additional custom styles to match original layout's complexity within Bootstrap */
+    .quick-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #666;
+    }
+
+    .info-item {
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+    .info-label {
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+    }
+    .info-value {
+        color: #333;
+        font-weight: 600;
+    }
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+    }
+    .contact-icon {
+        font-size: 1.5rem;
+    }
+    .about-text {
+        color: #666;
+        line-height: 1.8;
+        text-align: justify;
+    }
+    /*-*/
+    /* Sidebar styles */
+
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+    padding: 0.75rem 1.5rem;
+    border-left: 3px solid transparent;
+}
+
+.sidebar .nav-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+    border-left-color: #fff;
+}
+
+.sidebar .nav-link.active {
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+    border-left-color: #fff;
+    font-weight: 600;
+}
+
+.sidebar-heading {
+    font-size: .75rem;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    padding: 1.5rem 1.5rem 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Top navbar */
+.navbar-brand {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);*/
+}
+
+.navbar {
+    background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+}
+
+/* Logo styles */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.logo-icon {
+    height: 50px;
+    width: auto;
+}
+
+.logo-text {
+    height: 40px;
+    width: auto;
+}
+
+/* For responsive - hide text on small screens */
+@media (max-width: 768px) {
+    .logo-text {
+        display: none;
+    }
+    
+    .logo-icon {
+        height: 35px;
+    }
+}
+ </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
+   <div class="logo">
+    <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
+    <img src="../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
+   </div>
+  </a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+   <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-nav">
+   <div class="nav-item text-nowrap">
+    <a class="nav-link px-3 text-white" href="#" onclick="logout()">Logout</a>
+   </div>
+  </div>
+ </nav>
+
+ <div class="container-fluid">
+  <div class="row">
+     <nav id="sidebarMenu" class="sidebar-main col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
+                        <div class="user" style="margin-right:20px;">
+                Welcome! Rahul
+
+            </div>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="organizer-dashboard.html">
+                                <i class="bi bi-house-door"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="my-events.html">
+                                <i class="bi bi-calendar-event"></i> My Events
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="create-event.html">
+                                <i class="bi bi-plus-circle"></i> Create Event
+                            </a>
+                        </li>
+                        <!--<li class="nav-item">
+                            <a class="nav-link" href="participants.html">
+                                <i class="bi bi-people"></i> Participants
+                            </a>
+                        </li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="event-requests.html">
+                                <i class="bi bi-inbox"></i> Event Requests
+                            </a>
+                        </li>
+                        <!--<li class="nav-item">
+                            <a class="nav-link" href="analytics.html">
+                                <i class="bi bi-graph-up"></i> Analytics
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="messages.html">
+                                <i class="bi bi-chat-dots"></i> Messages
+                            </a>
+                        </li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="organizer-profile.html">
+                                <i class="bi bi-person-circle"></i> My Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="blocked-users.html">
+                            <i class="bi bi-x-circle"></i> Blocked Users
+                        </a>
+                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="organizer-settings.html">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="container-fluid">
+            <div class="profile-header">
+                <div class="profile-photo-section text-center">
+                    <div class="profile-photo" style="background-image:url(../../assets/images/female/Gemini_Generated_Image_q3l092q3l092q3l0.png);"></div>
+                    <span class="badge bg-success mt-2">✅ Verified Profile</span>
+                </div>
+
+                <div class="profile-main-info">
+                    <h2>Priya Agarwal</h2>
+                    <p class="text-muted">ID: PM245678</p>
+                    
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6 col-sm-12 quick-info-item">
+                            <span>📅</span>
+                            <span><strong>28 years</strong></span>
+                        </div>
+                        <div class="col-md-6 col-sm-12 quick-info-item">
+                            <span>📏</span>
+                            <span><strong>5'4"</strong></span>
+                        </div>
+                        <div class="col-md-6 col-sm-12 quick-info-item">
+                            <span>🕉️</span>
+                            <span><strong>Hindu, Brahmin</strong></span>
+                        </div>
+                        <div class="col-md-6 col-sm-12 quick-info-item">
+                            <span>📍</span>
+                            <span><strong>Mumbai, Maharashtra</strong></span>
+                        </div>
+                        <div class="col-md-6 col-sm-12 quick-info-item">
+                            <span>🎓</span>
+                            <span><strong>MBA</strong></span>
+                        </div>
+                        <div class="col-md-6 col-sm-12 quick-info-item">
+                            <span>💼</span>
+                            <span><strong>Software Engineer</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-primary">🟢 Online Now</span>
+                        <span class="badge bg-info text-dark">💬 Responds within 2 hours</span>
+                        <span class="badge bg-warning text-dark">⭐ Premium Member</span>
+                    </div>
+                </div>
+
+                <div class="profile-actions d-flex flex-column gap-2 align-items-end">
+                    <button class="btn btn-primary w-100" onclick="sendProposal()">💌 Send Interest</button>
+                    <button class="btn btn-outline-secondary w-100" onclick="startChat()">💬 Start Chat</button>
+                    <div class="d-flex gap-2 w-100 justify-content-end">
+                        <button class="btn btn-light" onclick="shortlist()" title="Shortlist">⭐</button>
+                        <button class="btn btn-light" onclick="share()" title="Share">↗️</button>
+                        <button class="btn btn-light" onclick="report()" title="Report">⚠️</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="main-content">
+                        <div class="info-section">
+                            <h3>About Me</h3>
+                            <p class="about-text">
+                                I am a motivated and ambitious software engineer working with a leading tech company in Mumbai. I completed my MBA from IIM and have been working in the IT industry for the past 5 years. I come from a well-educated and cultured family that values both tradition and modernity. 
+                                <br><br>
+                                I enjoy traveling, reading books, and spending quality time with family and friends. I'm passionate about my career but also believe in maintaining a healthy work-life balance. I love cooking traditional Indian cuisine and experimenting with new recipes. Music and dancing are my stress-busters, and I practice yoga regularly to stay fit and healthy.
+                                <br><br>
+                                I'm looking for a life partner who is understanding, supportive, and shares similar values. Someone who respects family traditions while being modern in outlook. Education and career are important, but so is emotional compatibility and mutual respect. I believe in building a relationship based on trust, communication, and shared dreams for the future.
+                            </p>
+                        </div>
+
+                        <div class="info-section">
+                            <h3>Basic Details</h3>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Age</div>
+                                        <div class="info-value">28 years</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Height</div>
+                                        <div class="info-value">5'4" (163 cm)</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Marital Status</div>
+                                        <div class="info-value">Never Married</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Mother Tongue</div>
+                                        <div class="info-value">Hindi</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Body Type</div>
+                                        <div class="info-value">Average</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Complexion</div>
+                                        <div class="info-value">Fair</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-section">
+                            <h3>Religious Background</h3>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Religion</div>
+                                        <div class="info-value">Hindu</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Caste</div>
+                                        <div class="info-value">Brahmin</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Sub Caste</div>
+                                        <div class="info-value">Not Specified</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Manglik</div>
+                                        <div class="info-value">No</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Gotra</div>
+                                        <div class="info-value">Kashyap</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Star Sign</div>
+                                        <div class="info-value">Aries</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-section">
+                            <h3>Education & Career</h3>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Highest Education</div>
+                                        <div class="info-value">MBA</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">College/University</div>
+                                        <div class="info-value">IIM Ahmedabad</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Occupation</div>
+                                        <div class="info-value">Software Engineer</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Organization</div>
+                                        <div class="info-value">Tech Solutions Pvt Ltd</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Annual Income</div>
+                                        <div class="info-value">₹15-20 Lakhs</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Working City</div>
+                                        <div class="info-value">Mumbai</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-section">
+                            <h3>Family Details</h3>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Family Type</div>
+                                        <div class="info-value">Nuclear Family</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Family Status</div>
+                                        <div class="info-value">Upper Middle Class</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Father's Occupation</div>
+                                        <div class="info-value">Business Owner</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Mother's Occupation</div>
+                                        <div class="info-value">Teacher</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Brothers</div>
+                                        <div class="info-value">1 (Married)</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Sisters</div>
+                                        <div class="info-value">None</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-section">
+                            <h3>Lifestyle & Habits</h3>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Diet</div>
+                                        <div class="info-value">Vegetarian</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Smoking</div>
+                                        <div class="info-value">No</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Drinking</div>
+                                        <div class="info-value">No</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">Hobbies</div>
+                                        <div class="info-value">Reading, Traveling, Yoga</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-section">
+                            <h3>Partner Preferences</h3>
+                            <p class="about-text">
+                                I am looking for a well-educated partner, preferably with a post-graduate degree or equivalent. He should be working in a stable profession and have clear career goals. Age between 28-35 years would be ideal. Height should be above 5'8". I prefer someone from a similar cultural and religious background who respects family values and traditions.
+                                <br><br>
+                                The ideal match should be understanding, supportive, and have a positive outlook on life. He should believe in equality and mutual respect in a relationship. Someone who values both career and family, and is willing to build a life based on trust, love, and companionship. Location preference is Mumbai or other metro cities, but open to relocation for the right match.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="sidebar d-flex flex-column gap-4 position-sticky" style="top: 70px;">
+                        <div class="contact-card">
+                            <h4>Contact Information</h4>
+                            <div class="contact-item">
+                                <span class="contact-icon">📞</span>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: #666;">Phone</div>
+                                    <div style="font-weight: 600; color: #333;">+91 98765-43210</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-icon">📧</span>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: #666;">Email</div>
+                                    <div style="font-weight: 600; color: #333;">priya.a@email.com</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-icon">💬</span>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: #666;">WhatsApp</div>
+                                    <div style="font-weight: 600; color: #333;">Available</div>
+                                </div>
+                            </div>
+                            <p class="small text-muted mt-3 p-2 rounded" style="background: #fff3cd;">
+                                🔒 Contact details are visible to premium members only
+                            </p>
+                        </div>
+
+                        <!--<div class="premium-banner text-white text-center" style="background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);">
+                            <h4>Unlock Full Profile</h4>
+                            <p class="mb-3">Upgrade to premium to view contact details, chat directly, and get priority visibility</p>
+                            <button class="btn btn-light upgrade-btn" onclick="upgradePremium()">Upgrade Now</button>
+                        </div>-->
+
+                        <div class="similar-profiles">
+                            <h4>Similar Profiles</h4>
+                            
+                            <div class=" similar-profile-item p-3 mb-2 rounded shadow-sm" style="background: #f8fafc; cursor: pointer;" onclick="viewProfile('Sneha')">
+                                <div class="d-flex gap-3 align-items-center">
+                                    <div class="profile-photo rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px; font-size: 1.5rem; background-image: url(../../assets/images/female-profile/sneha.png);"></div>
+                                    <div>
+                                        <h5 class="mb-0 text-dark">Sneha Kapoor</h5>
+                                        <p class="mb-0 text-muted small">26 yrs, 5'3", Doctor</p>
+                                        <p class="mb-0 text-muted small">Delhi, India</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="similar-profile-item p-3 mb-2 rounded shadow-sm" style="background: #f8fafc; cursor: pointer;" onclick="viewProfile('Ananya')">
+                                <div class="d-flex gap-3 align-items-center">
+                                    <div class="profile-photo rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px; font-size: 1.5rem; background-image: url(../../assets/images/female-profile/ananya.png);"></div>
+                                    <div>
+                                        <h5 class="mb-0 text-dark">Ananya Mehta</h5>
+                                        <p class="mb-0 text-muted small">27 yrs, 5'5", Business Analyst</p>
+                                        <p class="mb-0 text-muted small">Bangalore, Karnataka</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="similar-profile-item p-3 mb-2 rounded shadow-sm" style="background: #f8fafc; cursor: pointer;" onclick="viewProfile('Neha')">
+                                <div class="d-flex gap-3 align-items-center">
+                                    <div class="profile-photo rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px; font-size: 1.5rem; background-image: url(../../assets/images/female-profile/neha.png)"></div>
+                                    <div>
+                                        <h5 class="mb-0 text-dark">Neha Reddy</h5>
+                                        <p class="mb-0 text-muted small">29 yrs, 5'6", Marketing Manager</p>
+                                        <p class="mb-0 text-muted small">Hyderabad, Telangana</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </main>
+  </div>
+ </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+ <script>
+  
+    function sendProposal() {
+        alert('Sending interest to Priya Agarwal!\n\nYou will be notified when she responds.');
+    }
+
+    function startChat() {
+        alert('Starting chat with Priya Agarwal...\n\nThis feature is available for premium members.');
+    }
+
+    function shortlist() {
+        alert('Priya Agarwal added to your shortlist!');
+    }
+
+    function share() {
+        alert('Share this profile via:\n\n• WhatsApp\n• Email\n• Copy Link');
+    }
+
+    function report() {
+        if (confirm('Report this profile?\n\nPlease provide a reason for reporting.')) {
+            alert('Thank you for reporting. Our team will review this profile.');
+        }
+    }
+
+    function upgradePremium() {
+        alert('Upgrade to Premium!\n\nGet unlimited access to all features.');
+        window.location.href = 'payment.html';
+    }
+
+    function viewProfile(name) {
+        alert('Viewing profile of ' + name);
+    }
+
+    function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            alert('Logged out successfully!');
+            window.location.href = '../../homepage/homepage.html';
+        }
+    }
+ </script>
+</body>
+</html>
