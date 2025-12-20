@@ -1,44 +1,32 @@
-name: CI
+name: Lint and Format
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, dev]
   pull_request:
-    branches: [main, develop]
+    branches: [main, dev]
 
 jobs:
-  test:
+  quality-checks:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x, 20.x]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: "yarn"
+          node-version: 20.x
+          cache: "npm"
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Run linting
-        run: yarn lint
+        run: npm run lint
 
       - name: Run CSS linting
-        run: yarn lint:css
+        run: npm run lint:css
 
       - name: Check formatting
-        run: yarn format --check
-
-      - name: Run tests
-        run: yarn test
-        continue-on-error: true # Remove this when tests are added
-
-      - name: Build project
-        run: yarn build
-        continue-on-error: true # Remove this when build script is added
+        run: npm run format -- --check

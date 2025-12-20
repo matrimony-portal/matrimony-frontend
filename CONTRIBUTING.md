@@ -27,8 +27,8 @@ This project adheres to a code of conduct to ensure a welcoming environment for 
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- Yarn package manager
+- Node.js (v18 or higher)
+- npm package manager
 - Git
 
 ### Setup
@@ -41,11 +41,11 @@ This project adheres to a code of conduct to ensure a welcoming environment for 
    ```
 3. Install dependencies:
    ```bash
-   yarn install
+   npm install
    ```
 4. Set up the development environment:
    ```bash
-   yarn prepare  # Sets up Husky hooks
+   npm run prepare  # Sets up Husky hooks
    ```
 
 ## Development Workflow
@@ -57,14 +57,14 @@ This project adheres to a code of conduct to ensure a welcoming environment for 
 2. Make your changes following our coding standards
 3. Run code quality checks:
    ```bash
-   yarn lint
-   yarn lint:css
-   yarn format
+   npm run lint
+   npm run lint:css
+   npm run format
    ```
 4. Test your changes thoroughly
 5. Commit using conventional commits:
    ```bash
-   yarn commit
+   npm run commit
    ```
 
 ## Submitting Changes

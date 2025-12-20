@@ -26,7 +26,7 @@ matrimony-frontend/
 ├── stylelint.config.mjs          # Stylelint configuration
 ├── commitlint.config.js          # Commitlint configuration
 ├── package.json                  # Project dependencies and scripts
-├── yarn.lock                     # Yarn lock file
+├── package-lock.json             # npm lock file
 ├── .husky/                       # Husky hooks
 │   └── pre-commit                # Pre-commit hook
 └── README.md                     # Project documentation
@@ -36,8 +36,8 @@ matrimony-frontend/
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- Yarn package manager
+- Node.js (v18 or higher)
+- npm package manager
 
 ### Installation
 
@@ -51,18 +51,18 @@ matrimony-frontend/
 2. Install dependencies:
 
    ```
-   yarn install
+   npm install
    ```
 
 3. Open `index.html` in your browser to view the site.
 
 ## Development Scripts
 
-- `yarn lint` - Run ESLint on JavaScript files
-- `yarn lint:fix` - Fix ESLint issues automatically
-- `yarn lint:css` - Run Stylelint on CSS files with auto-fix
-- `yarn format` - Format code with Prettier
-- `yarn commit` - Create conventional commits using Commitizen
+- `npm run lint` - Run ESLint on JavaScript files
+- `npm run lint:fix` - Fix ESLint issues automatically
+- `npm run lint:css` - Run Stylelint on CSS files with auto-fix
+- `npm run format` - Format code with Prettier
+- `npm run commit` - Create conventional commits using Commitizen
 
 ## Code Quality Tools
 
@@ -95,12 +95,12 @@ For a quick start:
 3. Make your changes
 4. Run code quality checks:
    ```
-   yarn lint
-   yarn lint:css
-   yarn format
+   npm run lint
+   npm run lint:css
+   npm run format
    ```
 5. Test thoroughly
-6. Use `yarn commit` for conventional commits
+6. Use `npm run commit` for conventional commits
 7. Submit a pull request
 
 ## Changelog
