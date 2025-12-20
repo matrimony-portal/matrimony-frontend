@@ -1,28 +1,52 @@
 # Contributing Guide
 
-## Code Quality Scripts
+## Quick Start
 
-**Quick Fix (Local Development):**
+1. Fork and clone the repository
+2. Install dependencies: `npm install`
+3. Create a feature branch: `git checkout -b feature/your-feature`
+4. Make your changes
+5. Fix code issues: `npm run fix`
+6. Commit changes: `npm run commit`
+7. Push and create a pull request
+
+## Code Quality
+
+**Auto-fix everything:**
 ```bash
 npm run fix
 ```
 
-**Validate Only (CI/Testing):**
+**Check without fixing:**
 ```bash
 npm run check
 ```
 
-**Individual Scripts:**
-- `npm run format` - Format code with Prettier
-- `npm run lint:css` - Fix CSS issues with Stylelint
-- `npm run lint:js` - Fix JavaScript issues with ESLint
+**Individual tools:**
+- `npm run format` - Prettier formatting
+- `npm run lint:css` - CSS linting
+- `npm run lint:js` - JavaScript linting
 
-## Development Workflow
+## Project Structure
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run `npm run fix` to auto-fix all issues
-5. Test thoroughly
-6. Use `npm run commit` for conventional commits
-7. Submit a pull request
+```
+src/
+├── components/          # React components
+├── hooks/              # Custom hooks
+├── services/           # API services
+├── providers/          # Context providers
+├── utils/              # Utility functions
+└── assets/             # Static assets
+```
+
+## Commit Messages
+
+Use conventional commits:
+```bash
+npm run commit
+```
+
+Examples:
+- `feat: add user registration`
+- `fix: resolve login validation`
+- `docs: update README`
