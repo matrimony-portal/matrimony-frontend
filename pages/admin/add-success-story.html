@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Success Story - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            padding: 0.75rem 1.5rem;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+            border-left-color: #fff;
+        }
+
+        .sidebar .nav-link.active {
+            color: #fff;
+            background: rgba(255,255,255,0.15);
+            border-left-color: #fff;
+            font-weight: 600;
+        }
+
+        .sidebar-heading {
+            font-size: .75rem;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            padding: 1.5rem 1.5rem 0.5rem;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo-text {
+            height: 40px;
+            width: auto;
+        }
+
+        .page-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 900px;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group label .required {
+            color: #ef4444;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: ae1700;
+        }
+
+        .form-group .help-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: ae1700;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .image-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            padding: 2rem;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .image-upload-area:hover {
+            border-color: ae1700;
+            background: #eff6ff;
+        }
+
+        .image-upload-area i {
+            font-size: 3rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        .char-counter {
+            font-size: 0.85rem;
+            color: #666;
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .logo-text {
+                display: none;
+            }
+            .logo-icon {
+                height: 35px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
+            <div class="logo">
+                <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
+                <img src="../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
+            </div>
+        </a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3 text-white" href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
+                        <span>Welcome, Admin</span>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin-dashboard.html">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="manage-users.html">
+                                <i class="bi bi-people"></i> Manage Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="manage-organizers.html">
+                                <i class="bi bi-person-badge"></i> Event Organizers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="manage-success-stories.html">
+                                <i class="bi bi-heart"></i> Success Stories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="reports-complaints.html">
+                                <i class="bi bi-exclamation-triangle"></i> Reports & Complaints
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="page-header">
+                    <h1>Add New Success Story</h1>
+                    <p class="mb-0">Share a beautiful love story</p>
+                </div>
+
+                <div class="form-card">
+                    <form id="storyForm" onsubmit="return validateForm(event)">
+                        <div class="form-section">
+                            <h3>Couple Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Groom's Name <span class="required">*</span></label>
+                                    <input type="text" id="groomName" name="groomName" required>
+                                    <div class="error-message" id="groomNameError">Please enter groom's name</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Bride's Name <span class="required">*</span></label>
+                                    <input type="text" id="brideName" name="brideName" required>
+                                    <div class="error-message" id="brideNameError">Please enter bride's name</div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Location <span class="required">*</span></label>
+                                    <input type="text" id="location" name="location" placeholder="e.g., Mumbai" required>
+                                    <div class="error-message" id="locationError">Please enter location</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Marriage Date <span class="required">*</span></label>
+                                    <input type="date" id="marriageDate" name="marriageDate" required>
+                                    <div class="error-message" id="marriageDateError">Please select marriage date</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>How They Met</h3>
+                            <div class="form-group">
+                                <label>Meeting Method <span class="required">*</span></label>
+                                <select id="meetingMethod" name="meetingMethod" required>
+                                    <option value="">Select How They Met</option>
+                                    <option value="Speed Dating Event">Speed Dating Event</option>
+                                    <option value="Online Platform">Online Platform</option>
+                                    <option value="Cultural Evening">Cultural Evening</option>
+                                    <option value="Social Mixer">Social Mixer</option>
+                                    <option value="Networking Event">Networking Event</option>
+                                    <option value="Workshop">Workshop</option>
+                                </select>
+                                <div class="error-message" id="meetingMethodError">Please select meeting method</div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Time to Match <span class="required">*</span></label>
+                                    <input type="text" id="timeToMatch" name="timeToMatch" placeholder="e.g., 2 months" required>
+                                    <div class="help-text">How long it took to become a couple</div>
+                                    <div class="error-message" id="timeToMatchError">Please enter time to match</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Current Status <span class="required">*</span></label>
+                                    <select id="currentStatus" name="currentStatus" required>
+                                        <option value="">Select Status</option>
+                                        <option value="Happily Married">Happily Married</option>
+                                        <option value="Engaged">Engaged</option>
+                                        <option value="In Relationship">In Relationship</option>
+                                    </select>
+                                    <div class="error-message" id="currentStatusError">Please select current status</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Their Story</h3>
+                            <div class="form-group">
+                                <label>Story Content <span class="required">*</span></label>
+                                <textarea id="storyContent" name="storyContent" placeholder="Write the couple's love story here..." required oninput="updateCharCount()"></textarea>
+                                <div class="char-counter">
+                                    <span id="charCount">0</span> / 1000 characters
+                                </div>
+                                <div class="error-message" id="storyContentError">Story must be between 50 and 1000 characters</div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Story Image</h3>
+                            <div class="form-group">
+                                <label>Upload Couple Photo</label>
+                                <div class="image-upload-area" onclick="document.getElementById('imageUpload').click()">
+                                    <i class="bi bi-cloud-upload"></i>
+                                    <p>Click to upload image</p>
+                                    <p style="font-size: 0.85rem; color: #666;">Recommended: 800x600px, JPG or PNG</p>
+                                </div>
+                                <input type="file" id="imageUpload" name="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                                <div id="imagePreview" style="margin-top: 1rem; display: none;">
+                                    <img id="previewImg" style="max-width: 100%; border-radius: 5px;">
+                                </div>
+                                <div class="help-text">Optional: Add a photo of the couple</div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Publication Settings</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Status <span class="required">*</span></label>
+                                    <select id="publicationStatus" name="publicationStatus" required>
+                                        <option value="published">Published</option>
+                                        <option value="pending">Pending Review</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Featured Story</label>
+                                    <select id="featured" name="featured">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                    </select>
+                                    <div class="help-text">Featured stories appear with a badge</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Add Success Story
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="window.location.href='manage-success-stories.html'">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Logged out successfully!');
+                window.location.href = '../homepage/homepage.html';
+            }
+        }
+
+        function updateCharCount() {
+            const textarea = document.getElementById('storyContent');
+            const charCount = document.getElementById('charCount');
+            charCount.textContent = textarea.value.length;
+            
+            if (textarea.value.length > 1000) {
+                charCount.style.color = '#ef4444';
+            } else {
+                charCount.style.color = '#666';
+            }
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').style.display = 'block';
+                    document.getElementById('previewImg').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function validateForm(event) {
+            event.preventDefault();
+            let isValid = true;
+
+            const groomName = document.getElementById('groomName');
+            const brideName = document.getElementById('brideName');
+            const location = document.getElementById('location');
+            const marriageDate = document.getElementById('marriageDate');
+            const meetingMethod = document.getElementById('meetingMethod');
+            const timeToMatch = document.getElementById('timeToMatch');
+            const currentStatus = document.getElementById('currentStatus');
+            const storyContent = document.getElementById('storyContent');
+
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+            if (groomName.value.trim().length < 2) {
+                document.getElementById('groomNameError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (brideName.value.trim().length < 2) {
+                document.getElementById('brideNameError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (location.value.trim().length < 2) {
+                document.getElementById('locationError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!marriageDate.value) {
+                document.getElementById('marriageDateError').style.display = 'block';
+                isValid = false;
+            }
+
+            const selectedDate = new Date(marriageDate.value);
+            const today = new Date();
+            if (selectedDate > today) {
+                document.getElementById('marriageDateError').textContent = 'Marriage date cannot be in the future';
+                document.getElementById('marriageDateError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (meetingMethod.value === '') {
+                document.getElementById('meetingMethodError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (timeToMatch.value.trim().length < 2) {
+                document.getElementById('timeToMatchError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (currentStatus.value === '') {
+                document.getElementById('currentStatusError').style.display = 'block';
+                isValid = false;
+            }
+
+            const storyLength = storyContent.value.trim().length;
+            if (storyLength < 50 || storyLength > 1000) {
+                document.getElementById('storyContentError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isValid) {
+                const coupleName = groomName.value + ' & ' + brideName.value;
+                alert('Success Story added successfully!\n\nCouple: ' + coupleName + '\nLocation: ' + location.value + '\nStatus: ' + currentStatus.value);
+                window.location.href = 'manage-success-stories.html';
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>

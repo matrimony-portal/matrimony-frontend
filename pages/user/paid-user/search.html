@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Matches - Perfect Match</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+         header {
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+        /*-------------------*/
+        .login-link {
+            padding: 0.5rem 1.25rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .login-link:hover {
+            padding: 0.5rem 1.25rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.25);
+            opacity: 1;
+        }
+
+        .register-link {
+            padding: 0.5rem 1.25rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .register-link:hover {
+            padding: 0.5rem 1.25rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.3);
+            opacity: 1;
+        }
+
+        .subscribe-btn {
+            background: #fbbf24 !important;
+            color: #1f2937 !important;
+            font-weight: 700 !important;
+            padding: 0.65rem 1.5rem !important;
+            border-radius: 25px !important;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .subscribe-btn:hover {
+            background: #f59e0b !important;
+            opacity: 1 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(251, 191, 36, 0.5);
+        }
+
+
+        /*---------*/
+        .nav-main{
+            display: flex;
+            gap: 1.5rem;
+            padding-right: 2rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        /*---------*/
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .search-filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .search-filters h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #ae1700;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .range-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #ae1700;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #e2e8f0;
+            color: #666;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .search-results {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-count {
+            color: #666;
+        }
+
+        .sort-dropdown {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .profile-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        /*---------------*/
+                    .profile-image {
+                        width: 100%;
+                        height: 250px; /* adjust as needed */
+                        background-size: cover;       /* ensures the image covers the entire box */
+                        background-position: center;  /* centers the image */
+                        background-repeat: no-repeat; /* avoids tiling */
+                        border-radius: 10px;          /* optional — smooth corners */
+                        position: relative;
+                        color: white;                 /* text (like R&P) visible */
+                        display: flex;
+                        align-items: flex-end;        /* positions text at bottom */
+                        justify-content: center;
+                        font-weight: bold;
+                        font-size: 18px;
+                        }
+/*-------*/
+
+        .online-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+
+        .profile-content {
+            padding: 1.5rem;
+        }
+
+        .profile-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-id {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 1rem;
+        }
+
+        .profile-details {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #ae1700;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #666;
+        }
+
+        .btn-icon {
+            padding: 0.75rem;
+            background: #e2e8f0;
+            color: #666;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            background: #ae1700;
+            color: white;
+            border-color: #ae1700;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filters {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+        }
+
+        /*--------logo--------*/
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    /*gap: 0.75rem;*/
+}
+
+.logo-icon {
+    height: 50px;
+    width: auto;
+}
+
+.logo-text {
+    height: 40px;
+    width: auto;
+}
+
+/* For responsive - hide text on small screens */
+@media (max-width: 768px) {
+    .logo-text {
+        display: none;
+    }
+
+    .logo-icon {
+        height: 35px;
+    }
+}
+        /*------------*/
+
+        /* Sidebar styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+    padding: 0.75rem 1.5rem;
+    border-left: 3px solid transparent;
+}
+
+.sidebar .nav-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+    border-left-color: #fff;
+}
+
+.sidebar .nav-link.active {
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+    border-left-color: #fff;
+    font-weight: 600;
+}
+
+.sidebar-heading {
+    font-size: .75rem;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    padding: 1.5rem 1.5rem 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Top navbar */
+.navbar-brand {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);*/
+}
+
+.navbar {
+    background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+    min-width: 100%;
+    margin: 0;
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><div class="logo">
+                <img src="../../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
+                <img src="../../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
+            </div></a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3 text-white" href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+     <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
+                        <div class="user" style="margin-right:20px;">
+                Welcome! Rahul
+
+            </div>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="user-dashboard.html">
+                                <i class="bi bi-house-door"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="my-profile.html">
+                                <i class="bi bi-person"></i> My Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="edit-profile.html">
+                                <i class="bi bi-pencil-square"></i> Edit Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="manage-photos.html">
+                                <i class="bi bi-images"></i> Manage Photos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="search.html">
+                                <i class="bi bi-search"></i> Search Matches
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="proposals.html">
+                                <i class="bi bi-envelope-heart"></i> Proposals
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="chat.html">
+                                <i class="bi bi-chat-dots"></i> Messages
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="shortlist.html">
+                                <i class="bi bi-star"></i> Shortlist
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="blocked-users.html">
+                                <i class="bi bi-x-circle"></i> Blocked Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="events.html">
+                                <i class="bi bi-calendar-event"></i> Events
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="feedback.html">
+                                <i class="bi bi-chat-left-text"></i> Feedback
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="container">
+        <aside class="search-filters">
+            <h3>Search Filters</h3>
+
+            <div class="filter-group">
+                <label>Looking for</label>
+                <select>
+                    <option value="bride">Bride</option>
+                    <option value="groom">Groom</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Age Range</label>
+                <div class="range-inputs">
+                    <input type="number" placeholder="From" value="25" min="18" max="60">
+                    <input type="number" placeholder="To" value="30" min="18" max="60">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Height Range</label>
+                <div class="range-inputs">
+                    <select>
+                        <option value="">From</option>
+                        <option value="5.0">5'0"</option>
+                        <option value="5.2">5'2"</option>
+                        <option value="5.4">5'4"</option>
+                        <option value="5.6">5'6"</option>
+                    </select>
+                    <select>
+                        <option value="">To</option>
+                        <option value="5.6">5'6"</option>
+                        <option value="5.8">5'8"</option>
+                        <option value="6.0">6'0"</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Marital Status</label>
+                <select>
+                    <option value="">Any</option>
+                    <option value="never-married">Never Married</option>
+                    <option value="divorced">Divorced</option>
+                    <option value="widowed">Widowed</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Religion</label>
+                <select>
+                    <option value="">Any</option>
+                    <option value="hindu">Hindu</option>
+                    <option value="muslim">Muslim</option>
+                    <option value="christian">Christian</option>
+                    <option value="sikh">Sikh</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Mother Tongue</label>
+                <select>
+                    <option value="">Any</option>
+                    <option value="hindi">Hindi</option>
+                    <option value="english">English</option>
+                    <option value="bengali">Bengali</option>
+                    <option value="tamil">Tamil</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Country</label>
+                <select>
+                    <option value="">Any</option>
+                    <option value="india" selected>India</option>
+                    <option value="usa">USA</option>
+                    <option value="uk">UK</option>
+                    <option value="canada">Canada</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>State</label>
+                <input type="text" placeholder="Enter state">
+            </div>
+
+            <div class="filter-group">
+                <label>City</label>
+                <input type="text" placeholder="Enter city">
+            </div>
+
+            <div class="filter-group">
+                <label>Education</label>
+                <select>
+                    <option value="">Any</option>
+                    <option value="bachelors">Bachelor's</option>
+                    <option value="masters">Master's</option>
+                    <option value="doctorate">Doctorate</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Occupation</label>
+                <select>
+                    <option value="">Any</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="business">Business</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Annual Income</label>
+                <select>
+                    <option value="">Any</option>
+                    <option value="0-3">Below 3 Lakhs</option>
+                    <option value="3-5">3-5 Lakhs</option>
+                    <option value="5-10">5-10 Lakhs</option>
+                    <option value="10-20">10-20 Lakhs</option>
+                    <option value="20+">Above 20 Lakhs</option>
+                </select>
+            </div>
+
+            <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+            <button class="reset-btn" onclick="resetFilters()">Reset All</button>
+        </aside>
+
+        <main class="search-results">
+            <div class="results-header">
+                <div>
+                    <h2>Search Results</h2>
+                    <p class="results-count">Showing 6 of 156 profiles</p>
+                </div>
+                <select class="sort-dropdown">
+                    <option>Recently Active</option>
+                    <option>Newest First</option>
+                    <option>Age: Low to High</option>
+                    <option>Age: High to Low</option>
+                </select>
+            </div>
+
+            <div class="results-grid">
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image:url(../../../assets/images/female-profile/priyanka.png);">
+                        <span class="online-badge">Online</span>
+
+                    </div>
+                    <div class="profile-content">
+                        <div class="profile-name">Priya Agarwal</div>
+                        <div class="profile-id">ID: PM245678</div>
+                        <div class="profile-details">
+                            <div>28 yrs, 5'4"</div>
+                            <div>MBA, Software Engineer</div>
+                            <div>Mumbai, Maharashtra</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Priya')">Send Interest</button>
+                            <button class="btn btn-secondary" onclick="viewProfile('Priya')">View</button>
+                            <button class="btn-icon" onclick="shortlist('Priya')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image:url(../../../assets/images/female-profile/sneha.png);"></div>
+                    <div class="profile-content">
+                        <div class="profile-name">Sneha Kapoor</div>
+                        <div class="profile-id">ID: PM245679</div>
+                        <div class="profile-details">
+                            <div>26 yrs, 5'3"</div>
+                            <div>MBBS, Doctor</div>
+                            <div>Delhi, India</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Sneha')">Send Interest</button>
+                            <button class="btn btn-secondary" onclick="viewProfile('Sneha')">View</button>
+                            <button class="btn-icon" onclick="shortlist('Sneha')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image:url(../../../assets/images/female-profile/ananya.png);">
+                        <span class="online-badge">Online</span>
+
+                    </div>
+                    <div class="profile-content">
+                        <div class="profile-name">Ananya Mehta</div>
+                        <div class="profile-id">ID: PM245680</div>
+                        <div class="profile-details">
+                            <div>27 yrs, 5'5"</div>
+                            <div>Masters, Business Analyst</div>
+                            <div>Bangalore, Karnataka</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Ananya')">Send Interest</button>
+                            <button class="btn btn-secondary" onclick="viewProfile('Ananya')">View</button>
+                            <button class="btn-icon" onclick="shortlist('Ananya')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image:url(../../../assets/images/female-profile/neha.png);"></div>
+                    <div class="profile-content">
+                        <div class="profile-name">Neha Reddy</div>
+                        <div class="profile-id">ID: PM245681</div>
+                        <div class="profile-details">
+                            <div>29 yrs, 5'6"</div>
+                            <div>MBA, Marketing Manager</div>
+                            <div>Hyderabad, Telangana</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Neha')">Send Interest</button>
+                            <button class="btn btn-secondary" onclick="viewProfile('Neha')">View</button>
+                            <button class="btn-icon" onclick="shortlist('Neha')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image:url(../../../assets/images/female-profile/divya.png);"></div>
+
+                    <div class="profile-content">
+                        <div class="profile-name">Divya Patel</div>
+                        <div class="profile-id">ID: PM245682</div>
+                        <div class="profile-details">
+                            <div>25 yrs, 5'2"</div>
+                            <div>B.Tech, Teacher</div>
+                            <div>Ahmedabad, Gujarat</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Divya')">Send Interest</button>
+                            <button class="btn btn-secondary" onclick="viewProfile('Divya')">View</button>
+                            <button class="btn-icon" onclick="shortlist('Divya')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image:url(../../../assets/images/female-profile/riya.png);">
+                        <span class="online-badge">Online</span>
+
+                    </div>
+                    <div class="profile-content">
+                        <div class="profile-name">Riya Gupta</div>
+                        <div class="profile-id">ID: PM245683</div>
+                        <div class="profile-details">
+                            <div>30 yrs, 5'4"</div>
+                            <div>Masters, Architect</div>
+                            <div>Pune, Maharashtra</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Riya')">Send Interest</button>
+                            <button class="btn btn-secondary" onclick="viewProfile('Riya')">View</button>
+                            <button class="btn-icon" onclick="shortlist('Riya')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="profile-card">
+                    <div class="profile-image">KS</div>
+                    <div class="profile-content">
+                        <div class="profile-name">Kavya Singh</div>
+                        <div class="profile-id">ID: PM245684</div>
+                        <div class="profile-details">
+                            <div>27 yrs, 5'5"</div>
+                            <div>B.Tech, Software Developer</div>
+                            <div>Noida, UP</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Kavya')">Send Interest</button>
+                            <button class="btn-icon" onclick="shortlist('Kavya')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image">SM</div>
+                    <div class="profile-content">
+                        <div class="profile-name">Simran Malhotra</div>
+                        <div class="profile-id">ID: PM245685</div>
+                        <div class="profile-details">
+                            <div>26 yrs, 5'3"</div>
+                            <div>MBA, HR Manager</div>
+                            <div>Chandigarh, Punjab</div>
+                            <div>Sikh, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Simran')">Send Interest</button>
+                            <button class="btn-icon" onclick="shortlist('Simran')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image">
+                        <span class="online-badge">Online</span>
+                        AK
+                    </div>
+                    <div class="profile-content">
+                        <div class="profile-name">Aisha Khan</div>
+                        <div class="profile-id">ID: PM245686</div>
+                        <div class="profile-details">
+                            <div>28 yrs, 5'4"</div>
+                            <div>Masters, Data Scientist</div>
+                            <div>Lucknow, UP</div>
+                            <div>Muslim, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Aisha')">Send Interest</button>
+                            <button class="btn-icon" onclick="shortlist('Aisha')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image">TJ</div>
+                    <div class="profile-content">
+                        <div class="profile-name">Tanvi Joshi</div>
+                        <div class="profile-id">ID: PM245687</div>
+                        <div class="profile-details">
+                            <div>25 yrs, 5'2"</div>
+                            <div>B.Com, Accountant</div>
+                            <div>Jaipur, Rajasthan</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Tanvi')">Send Interest</button>
+                            <button class="btn-icon" onclick="shortlist('Tanvi')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image">MS</div>
+                    <div class="profile-content">
+                        <div class="profile-name">Megha Shah</div>
+                        <div class="profile-id">ID: PM245688</div>
+                        <div class="profile-details">
+                            <div>29 yrs, 5'5"</div>
+                            <div>MBA, Product Manager</div>
+                            <div>Surat, Gujarat</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Megha')">Send Interest</button>
+                            <button class="btn-icon" onclick="shortlist('Megha')">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-image">
+                        <span class="online-badge">Online</span>
+                        VB
+                    </div>
+                    <div class="profile-content">
+                        <div class="profile-name">Vidya Balan</div>
+                        <div class="profile-id">ID: PM245689</div>
+                        <div class="profile-details">
+                            <div>27 yrs, 5'6"</div>
+                            <div>Masters, Research Analyst</div>
+                            <div>Kolkata, West Bengal</div>
+                            <div>Hindu, Never Married</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" onclick="sendProposal('Vidya')">Send Interest</button>
+                            <button class="btn-icon" onclick="shortlist('Vidya')">⭐</button>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+
+            <div class="pagination">
+                <button class="page-btn">Previous</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+                <button class="page-btn">Next</button>
+            </div>
+        </main>
+    </div>
+    </main>
+        </div>
+    </div>
+
+    <script>
+        function applyFilters() {
+            alert('Applying search filters...\n\nResults will be filtered based on your criteria.');
+        }
+
+        function resetFilters() {
+            if (confirm('Reset all filters to default?')) {
+                alert('All filters have been reset!');
+                location.reload();
+            }
+        }
+
+        function sendProposal(name) {
+            alert('Sending interest to ' + name + '!\n\nYou will be notified when they respond.');
+        }
+
+        function shortlist(name) {
+            alert(name + ' added to your shortlist!\n\nYou can view all shortlisted profiles from your dashboard.');
+        }
+
+        function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            alert('Logged out successfully!');
+            window.location.href = '../../homepage/homepage.html';
+        }
+
+
+    }
+
+    function viewProfile(name) {
+            alert('Viewing profile of ' + name + '\n\nThis will open detailed profile page.');
+            window.location.href = 'profile-view.html';
+        }
+    </script>
+</body>
+</html>

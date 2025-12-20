@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Perfect Match</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);; min-height: 100vh; padding: 2rem; }
+        .container { max-width: 700px; margin: 0 auto; background: white; border-radius: 15px; padding: 3rem; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        h1 { color: #333; text-align: center; margin-bottom: 0.5rem; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 2rem; }
+        .rating-section { text-align: center; margin-bottom: 2rem; padding: 2rem; background: #f8fafc; border-radius: 10px; }
+        .stars { font-size: 3rem; cursor: pointer; }
+        .star { color: #cbd5e0; transition: color 0.3s; }
+        .star.active { color: #fbbf24; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #333; font-weight: 500; }
+        .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 150px; }
+        .submit-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);; color: white; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💬 We Value Your Feedback</h1>
+        <p class="subtitle">Help us improve Perfect Match</p>
+
+        <form onsubmit="return submitFeedback()">
+            <div class="rating-section">
+                <h3 style="margin-bottom: 1rem; color: #333;">Rate Your Experience</h3>
+                <div class="stars" id="stars">
+                    <span class="star" onclick="rate(1)">★</span>
+                    <span class="star" onclick="rate(2)">★</span>
+                    <span class="star" onclick="rate(3)">★</span>
+                    <span class="star" onclick="rate(4)">★</span>
+                    <span class="star" onclick="rate(5)">★</span>
+                </div>
+                <p id="ratingText" style="margin-top: 1rem; color: #666;"></p>
+            </div>
+
+            <div class="form-group">
+                <label>Feedback Category</label>
+                <select required>
+                    <option value="">Select Category</option>
+                    <option>Profile Quality</option>
+                    <option>Matching Algorithm</option>
+                    <option>User Interface</option>
+                    <option>Customer Support</option>
+                    <option>Events</option>
+                    <option>Features Request</option>
+                    <option>General Feedback</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Your Feedback</label>
+                <textarea required placeholder="Please share your thoughts, suggestions, or report any issues..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Feedback</button>
+        </form>
+    </div>
+
+    <script>
+        let selectedRating = 0;
+        function rate(stars) {
+            selectedRating = stars;
+            const starElements = document.querySelectorAll('.star');
+            const texts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+            starElements.forEach((star, index) => {
+                star.classList.toggle('active', index < stars);
+            });
+            document.getElementById('ratingText').textContent = texts[stars - 1];
+        }
+        function submitFeedback() {
+            if (selectedRating === 0) {
+                alert('Please rate your experience!');
+                return false;
+            }
+            alert('Thank you for your feedback!\n\nWe appreciate your input and will use it to improve our services.');
+            return false;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bandan - Login</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="../../assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="../../assets/favicon/site.webmanifest" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .login-left {
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+            color: white;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-left h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-left p {
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            margin-right: 0.75rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .login-right {
+            padding: 3rem;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-section h2 {
+            color: #ae1700;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-section p {
+            color: #666;
+        }
+
+        .user-type-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-type {
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-type:hover {
+            border-color: #ae1700;
+        }
+
+        .user-type input[type="radio"] {
+            display: none;
+        }
+
+        .user-type input[type="radio"]:checked + label {
+            color: #ae1700;
+            font-weight: 600;
+        }
+
+        .user-type input[type="radio"]:checked ~ .user-type {
+            background: #f0f4ff;
+            border-color: #ae1700;
+        }
+
+        .user-type.active {
+            background: #f0f4ff;
+            border-color: #ae1700;
+        }
+
+        .user-type label {
+            cursor: pointer;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ae1700;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me input {
+            margin-right: 0.5rem;
+        }
+
+        .forgot-password {
+            color: #ae1700;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .divider:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            color: #666;
+        }
+
+        .register-link {
+            text-align: center;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #ae1700;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: #e53e3e;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+            }
+
+            .login-left {
+                display: none;
+            }
+
+            .user-type-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+
+                        /*--------logo--------*/
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    /*gap: 0.75rem;*/
+}
+
+.logo-icon {
+    height: 50px;
+    width: auto;
+}
+
+.logo-text {
+    height: 40px;
+    width: auto;
+}
+
+/* For responsive - hide text on small screens */
+@media (max-width: 768px) {
+    .logo-text {
+        display: none;
+    }
+
+    .logo-icon {
+        height: 35px;
+    }
+}
+        /*------------*/
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-left">
+            <div class="logo-section">
+            <div class="logo">
+                <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
+                <img src="../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
+            </div>
+            </div>
+            <h1> Welcome Back!</h1>
+            <p>Continue your journey to find your perfect life partner with Perfect Match.</p>
+            <ul class="feature-list">
+                <li>Access your profile and matches</li>
+                <li>Connect with compatible partners</li>
+                <li>Manage your proposals and chats</li>
+                <li>Participate in exclusive events</li>
+                <li>Get personalized recommendations</li>
+            </ul>
+        </div>
+
+        <div class="login-right">
+            <div class="logo-section">
+                <h2>Login to Your Account</h2>
+                <p>Choose your account type</p>
+            </div>
+
+            <div class="user-type-selector">
+                <div class="user-type active" onclick="selectUserType('user')">
+                    <input type="radio" name="userType" id="typeUser" value="user" checked>
+                    <label for="typeUser">User</label>
+                </div>
+                <div class="user-type" onclick="selectUserType('organizer')">
+                    <input type="radio" name="userType" id="typeOrganizer" value="organizer">
+                    <label for="typeOrganizer">Organizer</label>
+                </div>
+                <div class="user-type" onclick="selectUserType('admin')">
+                    <input type="radio" name="userType" id="typeAdmin" value="admin">
+                    <label for="typeAdmin">Admin</label>
+                </div>
+            </div>
+
+            <form id="loginForm" onsubmit="return validateLogin()" novalidate>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    <div class="error" id="emailError">Please enter a valid email address</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <div class="error" id="passwordError">Please enter your password</div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember">
+                        Remember me
+                    </label>
+                    <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="login-btn">Login</button>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <div class="register-link">
+                    Don't have an account? <a href="register.html">Register now</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function selectUserType(type) {
+            document.querySelectorAll('.user-type').forEach(el => {
+                el.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            document.getElementById('type' + type.charAt(0).toUpperCase() + type.slice(1)).checked = true;
+        }
+
+        function validateLogin() {
+            let isValid = true;
+
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+
+            // Validate email
+            const email = document.getElementById('email').value;
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate password
+            const password = document.getElementById('password').value;
+            if (password.length < 1) {
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+
+             if (isValid) {
+                const userType = document.querySelector('input[name="userType"]:checked').value;
+
+                // Dummy credentials for testing
+                if (userType === 'user' && email === 'user@test.com' && password === 'User@123') {
+                    alert('Login successful! Redirecting to user dashboard...');
+                    window.location.href = '../user/registered-user/user-dashboard.html';
+                }
+                else if (userType === 'user' && email === 'paid-user@test.com' && password === 'User@123') {
+                    alert('Login successful! Redirecting to organizer dashboard...');
+                    window.location.href = '../user/paid-user/organizer-dashboard.html';
+                }
+                else if (userType === 'organizer' && email === 'organizer@test.com' && password === 'Org@123') {
+                    alert('Login successful! Redirecting to organizer dashboard...');
+                    window.location.href = '../event-organizer/organizer-dashboard.html';
+                } else if (userType === 'admin' && email === 'admin@test.com' && password === 'Admin@123') {
+                    alert('Login successful! Redirecting to admin dashboard...');
+                    window.location.href = '../admin/admin-dashboard.html';
+                } else {
+                    alert('Invalid credentials!\n\nDummy Test Credentials:\nUser: user@test.com / User@123\nUser: paid-user@test.com / User@123\nOrganizer: organizer@test.com / Org@123\nAdmin: admin@test.com / Admin@123');
+                }
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>
