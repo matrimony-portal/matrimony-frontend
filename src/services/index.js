@@ -6,6 +6,9 @@ const mockUsers = [
     userType: "user",
     name: "Test User",
     id: 1,
+    subscriptionStatus: "inactive",
+    subscriptionTier: "free",
+    subscriptionExpiry: null,
   },
   {
     email: "paid-user@test.com",
@@ -13,6 +16,9 @@ const mockUsers = [
     userType: "user",
     name: "Paid User",
     id: 2,
+    subscriptionStatus: "active",
+    subscriptionTier: "premium",
+    subscriptionExpiry: "2025-12-31",
   },
   {
     email: "organizer@test.com",
@@ -48,6 +54,9 @@ export const authService = {
         email: user.email,
         name: user.name,
         userType: user.userType,
+        subscriptionStatus: user.subscriptionStatus,
+        subscriptionTier: user.subscriptionTier,
+        subscriptionExpiry: user.subscriptionExpiry,
       },
     };
   },
