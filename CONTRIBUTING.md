@@ -86,6 +86,7 @@ npm run commit
 7. Get at least 1 approval
 
 **Merge Style:**
+
 - Use **Rebase and Merge** for feature PRs
 - Maintains linear commit history
 - Preserves individual commits from feature branch
