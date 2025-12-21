@@ -1,112 +1,71 @@
 # Matrimony Frontend
 
-A modern, responsive HTML, CSS, and JavaScript-based frontend for a matrimony application with comprehensive tooling for development and code quality.
+A modern React-based matrimony application with comprehensive tooling for development and code quality.
+
+## Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Fix all code issues
+npm run fix
+```
 
 ## Project Structure
 
 ```
-matrimony-frontend/
-├── index.html                    # Main entry point (homepage)
-├── pages/                        # Additional HTML pages
-├── css/                          # Stylesheets
-│   ├── styles.css                # Main CSS file
-├── js/                           # JavaScript files
-│   ├── script.js                 # Main JS file
-├── assets/                       # Static assets (images, fonts, etc.)
-│   ├── images/                   # Image files
-│   ├── fonts/                    # Font files
-├── components/                   # Reusable HTML components
-├── utils/                        # Utility scripts or helpers
-├── .gitignore                    # Git ignore rules
-├── .editorconfig                 # Editor configuration
-├── .gitattributes                # Git attributes
-├── .prettierrc                   # Prettier configuration
-├── .prettierignore               # Prettier ignore rules
-├── eslint.config.mjs             # ESLint configuration
-├── stylelint.config.mjs          # Stylelint configuration
-├── commitlint.config.js          # Commitlint configuration
-├── package.json                  # Project dependencies and scripts
-├── package-lock.json             # npm lock file
-├── .husky/                       # Husky hooks
-│   └── pre-commit                # Pre-commit hook
-└── README.md                     # Project documentation
+src/
+├── components/          # React components (Login, Register, etc.)
+├── hooks/              # Custom hooks (useAuth, useLocalStorage)
+├── services/           # API services and mock data
+├── providers/          # Context providers (AuthProvider)
+├── utils/              # Utility functions
+└── assets/             # Images, fonts, icons
 ```
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v18 or higher)
-- npm package manager
-
-### Installation
-
-1. Clone the repository:
-
-   ```
-   git clone <repository-url>
-   cd matrimony-frontend
-   ```
-
-2. Install dependencies:
-
-   ```
-   npm install
-   ```
-
-3. Open `index.html` in your browser to view the site.
 
 ## Development Scripts
 
-- `npm run lint` - Run ESLint on JavaScript files
-- `npm run lint:fix` - Fix ESLint issues automatically
-- `npm run lint:css` - Run Stylelint on CSS files with auto-fix
-- `npm run format` - Format code with Prettier
-- `npm run commit` - Create conventional commits using Commitizen
+**Main Commands:**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run fix` - Auto-fix all code issues
+- `npm run check` - Validate code without fixing
+- `npm run commit` - Create conventional commits
 
-## Code Quality Tools
-
-This project uses the following tools to maintain code quality:
-
-- **ESLint**: JavaScript linting and code quality
-- **Stylelint**: CSS linting and formatting
-- **Prettier**: Code formatting
-- **Husky**: Git hooks for pre-commit checks
-- **lint-staged**: Run linters on staged files
-- **Commitlint**: Enforce conventional commit messages
-- **GitHub Actions**: Continuous integration for automated testing and building
+**Individual Tools:**
+- `npm run format` - Prettier formatting
+- `npm run lint:css` - CSS linting with Stylelint
+- `npm run lint:js` - JavaScript linting with ESLint
 
 ## Features
 
-- Responsive design
-- Basic interactivity with JavaScript
-- Modular structure for easy maintenance
+- React 19 with modern hooks
+- Step-based user registration
+- Authentication with context
+- Bootstrap styling with custom CSS variables
 - Automated code quality checks
 - Conventional commit enforcement
 
 ## Contributing
 
-Please see our [Contributing Guide](CONTRIBUTING.md) for detailed information on how to contribute to this project.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
-For a quick start:
+**Quick workflow:**
+1. Fork and clone
+2. Create feature branch
+3. Make changes
+4. Run `npm run fix`
+5. Commit with `npm run commit`
+6. Submit pull request
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run code quality checks:
-   ```
-   npm run lint
-   npm run lint:css
-   npm run format
-   ```
-5. Test thoroughly
-6. Use `npm run commit` for conventional commits
-7. Submit a pull request
+## Tech Stack
 
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a list of changes and version history.
-
-## License
-
-This project is licensed under the MIT License.
+- **Frontend**: React 19, React Router
+- **Styling**: Bootstrap 5, Custom CSS
+- **Build**: Vite
+- **Quality**: ESLint, Stylelint, Prettier
+- **Git**: Husky, Commitlint, Conventional Commits
