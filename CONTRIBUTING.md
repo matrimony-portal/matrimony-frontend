@@ -66,6 +66,12 @@ Use conventional commits:
 npm run commit
 ```
 
+Examples:
+
+- `feat: add user registration`
+- `fix: resolve login validation`
+- `docs: update README`
+
 ## Pull Requests
 
 **Branch Flow:**
@@ -86,6 +92,7 @@ npm run commit
 7. Get at least 1 approval
 
 **Merge Style:**
+
 - Use **Rebase and Merge** for feature PRs
 - Maintains linear commit history
 - Preserves individual commits from feature branch
