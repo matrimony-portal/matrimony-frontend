@@ -2,7 +2,7 @@
 <<<<<<< HEAD
 // src/components/dashboard/premium/PremiumUserDashboard.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import StatCard from "../../common/shared/StatCard.jsx";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";

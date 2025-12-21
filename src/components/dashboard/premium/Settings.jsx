@@ -1,6 +1,6 @@
 // src/components/dashboard/premium/Settings.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const SettingItem = ({ title, description, children }) => (
   <div className="d-flex justify-content-between align-items-center p-3 bg-light rounded mb-2">
