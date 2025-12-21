@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // src/components/dashboard/premium/PremiumUserDashboard.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +11,14 @@ import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useNavigate } from "react-router";
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+// src/components/dashboard/premium/PremiumUserDashboard.jsx
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth.jsx";
+import StatCard from "../../common/shared/StatCard.jsx";
+import ProfileCard from "../../common/shared/ProfileCard.jsx";
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
 
 const PremiumUserDashboard = () => {
   const { user } = useAuth();
@@ -18,12 +27,16 @@ const PremiumUserDashboard = () => {
 
   const stats = [
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
     { icon: "👥", number: 52, label: "Total Matches" },
     { icon: "💌", number: 25, label: "Sent Proposals" },
     { icon: "📩", number: 18, label: "Received Proposals" },
     { icon: "⭐", number: 32, label: "Shortlisted" },
     { icon: "💬", number: 15, label: "Active Chats" },
     { icon: "👁️", number: 485, label: "Profile Views" },
+<<<<<<< HEAD
 =======
     { icon: "👥", number: 28, label: "Total Matches" },
     { icon: "💌", number: 12, label: "Sent Proposals" },
@@ -32,6 +45,8 @@ const PremiumUserDashboard = () => {
     { icon: "💬", number: 6, label: "Active Chats" },
     { icon: "👁️", number: 145, label: "Profile Views" },
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
   ];
 
   const profiles = [
@@ -47,10 +62,14 @@ const PremiumUserDashboard = () => {
       maritalStatus: "Never Married",
       image: "/assets/images/female-profile/priyanka.png",
 <<<<<<< HEAD
+<<<<<<< HEAD
       isPremium: true,
 =======
       online: true,
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+      isPremium: true,
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
     },
     {
       id: 2,
@@ -58,20 +77,28 @@ const PremiumUserDashboard = () => {
       age: 26,
       height: "5'3\"",
 <<<<<<< HEAD
+<<<<<<< HEAD
       education: "MBBS",
 =======
       education: "B.Tech",
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+      education: "MBBS",
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
       occupation: "Doctor",
       location: "Delhi, India",
       religion: "Hindu",
       maritalStatus: "Never Married",
       image: "/assets/images/female-profile/sneha.png",
 <<<<<<< HEAD
+<<<<<<< HEAD
       isPremium: true,
 =======
       online: false,
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+      isPremium: true,
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
     },
     {
       id: 3,
@@ -85,10 +112,14 @@ const PremiumUserDashboard = () => {
       maritalStatus: "Never Married",
       image: "/assets/images/female-profile/ananya.png",
 <<<<<<< HEAD
+<<<<<<< HEAD
       isPremium: true,
 =======
       online: true,
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+      isPremium: true,
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
     },
     {
       id: 4,
@@ -102,10 +133,14 @@ const PremiumUserDashboard = () => {
       maritalStatus: "Never Married",
       image: "/assets/images/female-profile/neha.png",
 <<<<<<< HEAD
+<<<<<<< HEAD
       isPremium: true,
 =======
       online: false,
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+      isPremium: true,
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
     },
     {
       id: 5,
@@ -119,10 +154,14 @@ const PremiumUserDashboard = () => {
       maritalStatus: "Never Married",
       image: "/assets/images/female-profile/divya.png",
 <<<<<<< HEAD
+<<<<<<< HEAD
       isPremium: true,
 =======
       online: false,
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+      isPremium: true,
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
     },
     {
       id: 6,
@@ -136,10 +175,14 @@ const PremiumUserDashboard = () => {
       maritalStatus: "Never Married",
       image: "/assets/images/female-profile/riya.png",
 <<<<<<< HEAD
+<<<<<<< HEAD
       isPremium: true,
 =======
       online: true,
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+      isPremium: true,
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
     },
   ];
 
@@ -150,6 +193,7 @@ const PremiumUserDashboard = () => {
   };
 
   const handleViewProfile = (profileId) => {
+<<<<<<< HEAD
 <<<<<<< HEAD
     navigate(`/dashboard/profile/${profileId}`);
   };
@@ -190,42 +234,45 @@ const PremiumUserDashboard = () => {
             <StatCard {...stat} />
 =======
     navigate(`/profile/${profileId}`);
+=======
+    navigate(`/dashboard/profile/${profileId}`);
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
   };
 
   return (
-    <div
-      className="container-fluid py-3 py-md-4"
-      style={{ background: "#f5f7fa" }}
-    >
-      {/* Header with Premium Badge */}
+    <div className="dashboard-container py-3 py-md-4">
+      {/* Header */}
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 pb-2 border-bottom">
         <div>
-          <h1 className="h3 mb-2">Welcome back, {user?.name || "User"}!</h1>
-          <div className="d-flex align-items-center gap-2">
-            <span
-              className="badge px-3 py-2"
-              style={{
-                background: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)",
-                color: "#1f2937",
-                fontWeight: "700",
-              }}
-            >
-              ⭐ Premium Member
-            </span>
-            <span className="text-muted small">
-              Valid until {user?.subscriptionExpiry || "2025-12-31"}
-            </span>
-          </div>
+          <h1 className="h2 mb-2 mb-md-0">
+            Welcome back, {user?.firstName || "User"}!
+            <span className="badge bg-warning text-dark ms-2">⭐ Premium</span>
+          </h1>
         </div>
-        <div className="text-muted small mt-2 mt-md-0">
-          You have 5 new matches and 3 pending proposals
+        <div className="text-muted small">
+          You have 12 new matches and 8 pending proposals
         </div>
       </div>
 
-      {/* Stats Grid - Mobile First */}
+      {/* Premium Features Banner */}
+      <div className="alert alert-info mb-4">
+        <div className="d-flex align-items-center">
+          <i
+            className="bi bi-star-fill text-warning me-2"
+            style={{ fontSize: "1.5rem" }}
+          ></i>
+          <div>
+            <strong>Premium Benefits Active:</strong> Unlimited searches,
+            priority visibility, direct messaging, and advanced filters enabled!
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Grid */}
       <div className="row g-2 g-md-3 mb-4">
         {stats.map((stat, index) => (
           <div key={index} className="col-6 col-md-4 col-lg-2">
+<<<<<<< HEAD
             <div className="card h-100 border-0 shadow-sm stat-card">
               <div className="card-body text-center p-3">
                 <div className="stat-icon mb-2" style={{ fontSize: "2rem" }}>
@@ -241,6 +288,9 @@ const PremiumUserDashboard = () => {
               </div>
             </div>
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+            <StatCard {...stat} />
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
           </div>
         ))}
       </div>
@@ -248,16 +298,22 @@ const PremiumUserDashboard = () => {
       {/* Tabs */}
       <div className="mb-4">
 <<<<<<< HEAD
+<<<<<<< HEAD
         <h2 className="h4 mb-3">Premium Matches</h2>
         <ul className="nav nav-tabs">
 =======
         <h2 className="h4 mb-3">Recommended Matches</h2>
         <ul className="nav nav-tabs border-bottom">
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+        <h2 className="h4 mb-3">Premium Matches</h2>
+        <ul className="nav nav-tabs">
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
           <li className="nav-item">
             <button
               className={`nav-link ${activeTab === "new" ? "active" : ""}`}
               onClick={() => setActiveTab("new")}
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
               style={{
@@ -268,6 +324,8 @@ const PremiumUserDashboard = () => {
                 fontWeight: activeTab === "new" ? "600" : "normal",
               }}
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
             >
               New Matches
             </button>
@@ -276,6 +334,7 @@ const PremiumUserDashboard = () => {
             <button
               className={`nav-link ${activeTab === "premium" ? "active" : ""}`}
               onClick={() => setActiveTab("premium")}
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
               style={{
@@ -286,11 +345,16 @@ const PremiumUserDashboard = () => {
                 fontWeight: activeTab === "premium" ? "600" : "normal",
               }}
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
             >
               Premium Profiles
             </button>
           </li>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
           <li className="nav-item">
             <button
               className={`nav-link ${activeTab === "compatible" ? "active" : ""}`}
@@ -299,12 +363,16 @@ const PremiumUserDashboard = () => {
               Most Compatible
             </button>
           </li>
+<<<<<<< HEAD
 =======
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
           <li className="nav-item d-none d-md-block">
             <button
               className={`nav-link ${activeTab === "recent" ? "active" : ""}`}
               onClick={() => setActiveTab("recent")}
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
               style={{
@@ -315,6 +383,8 @@ const PremiumUserDashboard = () => {
                 fontWeight: activeTab === "recent" ? "600" : "normal",
               }}
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
             >
               Recently Viewed
             </button>
@@ -322,6 +392,7 @@ const PremiumUserDashboard = () => {
         </ul>
       </div>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       {/* Profile Cards Grid */}
       <div className="row g-3 g-md-4">
@@ -337,74 +408,21 @@ const PremiumUserDashboard = () => {
       </div>
 =======
       {/* Profile Cards Grid - Responsive */}
+=======
+      {/* Profile Cards Grid */}
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
       <div className="row g-3 g-md-4">
         {profiles.map((profile) => (
           <div key={profile.id} className="col-12 col-md-6 col-lg-4">
-            <div className="card profile-card h-100 border-0 shadow-sm">
-              {/* Profile Image */}
-              <div className="position-relative">
-                <div
-                  className="profile-image"
-                  style={{
-                    backgroundImage: `url(${profile.image})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    height: "250px",
-                    borderRadius: "10px 10px 0 0",
-                  }}
-                >
-                  {profile.online && (
-                    <span
-                      className="position-absolute top-0 end-0 m-2 badge bg-success"
-                      style={{ fontSize: "0.75rem" }}
-                    >
-                      🟢 Online
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Profile Details */}
-              <div className="card-body p-3">
-                <h5 className="card-title mb-2">{profile.name}</h5>
-                <div className="profile-details text-muted small mb-3">
-                  <div className="mb-1">
-                    {profile.age} years, {profile.height}
-                  </div>
-                  <div className="mb-1">
-                    {profile.education}, {profile.occupation}
-                  </div>
-                  <div className="mb-1">{profile.location}</div>
-                  <div>
-                    {profile.religion}, {profile.maritalStatus}
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="d-grid gap-2">
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleSendProposal(profile.name)}
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #5a0d14 0%, #ae1700 100%)",
-                      border: "none",
-                    }}
-                  >
-                    Send Proposal
-                  </button>
-                  <button
-                    className="btn btn-outline-secondary"
-                    onClick={() => handleViewProfile(profile.id)}
-                  >
-                    View Profile
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ProfileCard
+              profile={profile}
+              onSendProposal={handleSendProposal}
+              onViewProfile={handleViewProfile}
+            />
           </div>
         ))}
       </div>
+<<<<<<< HEAD
 
       {/* Premium Benefits Banner */}
       <div className="card border-0 shadow-sm mt-4">
@@ -463,6 +481,8 @@ const PremiumUserDashboard = () => {
         }
       `}</style>
 >>>>>>> a66b085 (chore: reorganize project structure and subscription components)
+=======
+>>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
     </div>
   );
 };
