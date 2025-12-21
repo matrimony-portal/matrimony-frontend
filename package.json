@@ -33,11 +33,11 @@
     "bootstrap": "^5.3.8",
     "date-fns": "^4.1.0",
     "formik": "^2.4.9",
+    "prop-types": "^15.8.1",
     "react": "^19.2.3",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.3",
     "react-router": "^7.11.0",
-    "react-router-dom": "^7.11.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {
