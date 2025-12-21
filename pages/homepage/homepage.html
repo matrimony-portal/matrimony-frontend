@@ -1,1267 +1,1347 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bandan - Find Your Life Partner</title>
-    <link rel="icon" type="image/png" href="../../assets/favicon/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="../../assets/favicon/favicon.svg" />
-<link rel="shortcut icon" href="../../assets/favicon/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png" />
-<link rel="manifest" href="../../assets/favicon/site.webmanifest" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../assets/favicon/favicon-96x96.png"
+      sizes="96x96"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="../../assets/favicon/favicon.svg"
+    />
+    <link rel="shortcut icon" href="../../assets/favicon/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="../../assets/favicon/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="../../assets/favicon/site.webmanifest" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+      /*--------------*/
+      header {
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        color: white;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: opacity 0.3s;
+      }
+
+      .nav-links a:hover {
+        opacity: 0.8;
+      }
+      /*-------------------*/
+      .login-link {
+        padding: 0.5rem 1.25rem;
+        border-radius: 5px;
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .login-link:hover {
+        padding: 0.5rem 1.25rem;
+        border-radius: 5px;
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.25);
+        opacity: 1;
+      }
+
+      .register-link {
+        padding: 0.5rem 1.25rem;
+        border-radius: 5px;
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .register-link:hover {
+        padding: 0.5rem 1.25rem;
+        border-radius: 5px;
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.3);
+        opacity: 1;
+      }
+
+      .subscribe-btn {
+        background: #fbbf24 !important;
+        color: #1f2937 !important;
+        font-weight: 700 !important;
+        padding: 0.65rem 1.5rem !important;
+        border-radius: 25px !important;
+        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      .subscribe-btn:hover {
+        background: #f59e0b !important;
+        opacity: 1 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(251, 191, 36, 0.5);
+      }
+
+      /*---------*/
+      .nav-main {
+        display: flex;
+        gap: 1.5rem;
+        padding-right: 2rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      /*------------*/
+
+      /*----------------*/
+      .hero {
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .search-box {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 800px;
+        margin: 0 auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .search-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        color: #333;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-group select,
+      .form-group input {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      .search-btn {
+        grid-column: 1 / -1;
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 5px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .search-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .features {
+        max-width: 1200px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+      }
+
+      .features h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 3rem;
+        color: #ae1700;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .feature-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .feature-card h3 {
+        color: #ae1700;
+        margin-bottom: 1rem;
+      }
+
+      .success-stories {
+        background: #f8f9fa;
+        padding: 4rem 2rem;
+        margin-top: 4rem;
+      }
+
+      .success-stories h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 3rem;
+        /*color: #ae1700;*/
+      }
+
+      .stories-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .story-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .story-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .story-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+      }
+
+      .stats {
+        background: #ffffff;
+        color: #ae1700;
+        padding: 3rem 2rem;
+        text-align: center;
+      }
+
+      .stats-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+      }
+
+      .stat-item-main h3 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      footer {
+        background: #2d3748;
+        color: white;
+        padding: 3rem 2rem 1rem;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .footer-section h3 {
+        margin-bottom: 1rem;
+        color: #ffffff;
+      }
+
+      .footer-section ul {
+        list-style: none;
+      }
+
+      .footer-section ul li {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-section a {
+        color: #cbd5e0;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .footer-section a:hover {
+        color: white;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid #4a5568;
+        color: #cbd5e0;
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+
+      .btn {
+        padding: 1rem 2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.3s;
+      }
+
+      .btn-primary {
+        background: white;
+        color: #ae1700;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .front {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .slider-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out;
+      }
+
+      .slide.active {
+        opacity: 1;
+      }
+
+      .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .slider-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.4) 0%,
+          rgba(0, 0, 0, 0.2) 50%,
+          rgba(0, 0, 0, 0.5) 100%
+        );
+        z-index: 1;
+      }
+
+      .slogan-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        text-align: center;
+        color: white;
+        width: 90%;
+        max-width: 1000px;
+      }
+
+      .slogan-container h1 {
+        font-size: 4rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.7);
+        line-height: 1.2;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      .slogan-container p {
+        font-size: 1.8rem;
+        font-weight: 400;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        opacity: 0.95;
+        animation: fadeInUp 1s ease-out 0.3s backwards;
+      }
+
+      .slogan-subtitle {
+        font-size: 1.3rem;
+        font-weight: 300;
+        opacity: 0.9;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+        animation: fadeInUp 1s ease-out 0.6s backwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-/*--------------*/
-        header {
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+      }
 
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
+      .slider-dots {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        display: flex;
+        gap: 12px;
+      }
 
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+      }
 
+      .dot.active {
+        background: white;
+        transform: scale(1.3);
+        border-color: rgba(255, 255, 255, 0.5);
+      }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
+      .dot:hover {
+        background: rgba(255, 255, 255, 0.8);
+      }
 
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: opacity 0.3s;
-        }
-
-        .nav-links a:hover {
-            opacity: 0.8;
-        }
-        /*-------------------*/
-        .login-link {
-            padding: 0.5rem 1.25rem;
-            border-radius: 5px;
-            transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .login-link:hover {
-            padding: 0.5rem 1.25rem;
-            border-radius: 5px;
-            transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.25);
-            opacity: 1;
-        }
-
-        .register-link {
-            padding: 0.5rem 1.25rem;
-            border-radius: 5px;
-            transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .register-link:hover {
-            padding: 0.5rem 1.25rem;
-            border-radius: 5px;
-            transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.3);
-            opacity: 1;
-        }
-
-        .subscribe-btn {
-            background: #fbbf24 !important;
-            color: #1f2937 !important;
-            font-weight: 700 !important;
-            padding: 0.65rem 1.5rem !important;
-            border-radius: 25px !important;
-            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .subscribe-btn:hover {
-            background: #f59e0b !important;
-            opacity: 1 !important;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(251, 191, 36, 0.5);
-        }
-
-
-        /*---------*/
-        .nav-main{
-            display: flex;
-            gap: 1.5rem;
-            padding-right: 2rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.3);
-        }
-/*------------*/
-
-/*----------------*/
-        .hero {
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .search-box {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 800px;
-            margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .search-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            color: #333;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-group select,
-        .form-group input {
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .search-btn {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-            color: white;
-            border: none;
-            padding: 1rem;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .search-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .features {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 0 2rem;
-        }
-
-        .features h2 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            color: #ae1700;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            color: #ae1700;
-            margin-bottom: 1rem;
-        }
-
-        .success-stories {
-            background: #f8f9fa;
-            padding: 4rem 2rem;
-            margin-top: 4rem;
-        }
-
-        .success-stories h2 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            /*color: #ae1700;*/
-        }
-
-        .stories-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .story-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .story-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .story-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background:linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            margin-right: 1rem;
-        }
-
-        .stats {
-            background: #ffffff;
-            color: #ae1700;
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .stats-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-
-        .stat-item-main h3 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        footer {
-            background: #2d3748;
-            color: white;
-            padding: 3rem 2rem 1rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            color: #ffffff;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section a {
-            color: #cbd5e0;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-section a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid #4a5568;
-            color: #cbd5e0;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.3s;
-        }
-
-        .btn-primary {
-            background: white;
-            color: #ae1700;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .front {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .slider-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out;
-        }
-
-        .slide.active {
-            opacity: 1;
-        }
-
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-        }
-
-        .slider-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(0, 0, 0, 0.4) 0%,
-                rgba(0, 0, 0, 0.2) 50%,
-                rgba(0, 0, 0, 0.5) 100%
-            );
-            z-index: 1;
-        }
-
-        .slogan-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-            text-align: center;
-            color: white;
-            width: 90%;
-            max-width: 1000px;
-        }
-
+      @media (max-width: 768px) {
         .slogan-container h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.7);
-            line-height: 1.2;
-            animation: fadeInUp 1s ease-out;
+          font-size: 2.5rem;
         }
 
         .slogan-container p {
-            font-size: 1.8rem;
-            font-weight: 400;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-            opacity: 0.95;
-            animation: fadeInUp 1s ease-out 0.3s backwards;
+          font-size: 1.3rem;
         }
 
         .slogan-subtitle {
-            font-size: 1.3rem;
-            font-weight: 300;
-            opacity: 0.9;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-            animation: fadeInUp 1s ease-out 0.6s backwards;
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .slogan-container h1 {
+          font-size: 2rem;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .slogan-container p {
+          font-size: 1.1rem;
         }
 
-        .slider-dots {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-            display: flex;
-            gap: 12px;
+        .slogan-subtitle {
+          font-size: 0.9rem;
         }
+      }
 
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
+      /*--------------------------*/
+      /* Hero Section for Success Stories */
+      .success-hero {
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        color: white;
+        text-align: center;
+        padding: 3rem 2rem;
+      }
 
-        .dot.active {
-            background: white;
-            transform: scale(1.3);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
+      .success-hero h2 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
 
-        .dot:hover {
-            background: rgba(255, 255, 255, 0.8);
-        }
+      .success-hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+      }
 
-        @media (max-width: 768px) {
-            .slogan-container h1 {
-                font-size: 2.5rem;
-            }
+      /* Stats Bar */
+      .stats-bar {
+        background: white;
+        padding: 2rem;
+        margin: -2rem auto 3rem;
+        max-width: 1200px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        text-align: center;
+      }
 
-            .slogan-container p {
-                font-size: 1.3rem;
-            }
+      .stat-item h3 {
+        color: #ae1700;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
 
-            .slogan-subtitle {
-                font-size: 1rem;
-            }
-        }
+      .stat-item p {
+        color: #666;
+        font-size: 0.95rem;
+      }
 
-        @media (max-width: 480px) {
-            .slogan-container h1 {
-                font-size: 2rem;
-            }
+      /* Success Stories Container */
+      .success-stories {
+        padding: 0 2rem 4rem;
+        overflow: hidden;
+      }
 
-            .slogan-container p {
-                font-size: 1.1rem;
-            }
+      .stories-wrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+        position: relative;
+      }
 
-            .slogan-subtitle {
-                font-size: 0.9rem;
-            }
-        }
+      .view-all-container {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
 
-        /*--------------------------*/
-                /* Hero Section for Success Stories */
-        .success-hero {
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-            color: white;
-            text-align: center;
-            padding: 3rem 2rem;
-        }
+      .view-all-btn {
+        display: inline-block;
+        padding: 1rem 2.5rem;
+        background: #ae1700;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
 
+      .view-all-btn:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      /* Scrollable Stories Grid */
+      .stories-scroll-container {
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #ae1700 #e2e8f0;
+        padding: 1rem 0;
+        margin: 0 -2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+
+      .stories-scroll-container::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      .stories-scroll-container::-webkit-scrollbar-track {
+        background: #e2e8f0;
+        border-radius: 10px;
+      }
+
+      .stories-scroll-container::-webkit-scrollbar-thumb {
+        background: #ae1700;
+        border-radius: 10px;
+      }
+
+      .stories-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #5568d3;
+      }
+
+      .stories-grid {
+        display: flex;
+        gap: 2rem;
+        padding-bottom: 1rem;
+      }
+
+      /* Story Cards */
+      .story-card {
+        flex: 0 0 350px;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+
+      .story-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .story-image {
+        width: 100%;
+        height: 200px;
+        background-size: cover; /* ensures the image covers the entire box */
+        background-position: center; /* centers the image */
+        background-repeat: no-repeat;
+        /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);*/
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3.5rem;
+        position: relative;
+      }
+
+      .story-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: white;
+        color: #ae1700;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .story-content {
+        padding: 1.5rem;
+      }
+
+      .couple-names {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+      }
+
+      .story-meta {
+        display: flex;
+        gap: 1rem;
+        color: #666;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .story-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .story-text {
+        color: #666;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .story-details {
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      .story-details p {
+        margin-bottom: 0.4rem;
+      }
+
+      .story-details p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
         .success-hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+          font-size: 2rem;
         }
 
         .success-hero p {
-            font-size: 1.2rem;
-            opacity: 0.95;
+          font-size: 1rem;
         }
 
-        /* Stats Bar */
         .stats-bar {
-            background: white;
-            padding: 2rem;
-            margin: -2rem auto 3rem;
-            max-width: 1200px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            text-align: center;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.5rem;
+          padding: 1.5rem;
         }
 
         .stat-item h3 {
-            color: #ae1700;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+          font-size: 2rem;
         }
 
         .stat-item p {
-            color: #666;
-            font-size: 0.95rem;
+          font-size: 0.85rem;
         }
 
-        /* Success Stories Container */
-        .success-stories {
-            padding: 0 2rem 4rem;
-            overflow: hidden;
-        }
-
-        .stories-wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .view-all-container {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .view-all-btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: #ae1700;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .view-all-btn:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        /* Scrollable Stories Grid */
-        .stories-scroll-container {
-            overflow-x: auto;
-            overflow-y: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: #ae1700 #e2e8f0;
-            padding: 1rem 0;
-            margin: 0 -2rem;
-            padding-left: 2rem;
-            padding-right: 2rem;
-        }
-
-        .stories-scroll-container::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .stories-scroll-container::-webkit-scrollbar-track {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-
-        .stories-scroll-container::-webkit-scrollbar-thumb {
-            background: #ae1700;
-            border-radius: 10px;
-        }
-
-        .stories-scroll-container::-webkit-scrollbar-thumb:hover {
-            background: #5568d3;
-        }
-
-        .stories-grid {
-            display: flex;
-            gap: 2rem;
-            padding-bottom: 1rem;
-        }
-
-        /* Story Cards */
         .story-card {
-            flex: 0 0 350px;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+          flex: 0 0 300px;
         }
 
-        .story-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        .stories-scroll-container {
+          margin: 0 -1rem;
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .success-stories {
+          padding: 0 1rem 3rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .success-hero h2 {
+          font-size: 1.5rem;
+        }
+
+        .stats-bar {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .story-card {
+          flex: 0 0 280px;
         }
 
         .story-image {
-            width: 100%;
-            height: 200px;
-            background-size: cover;       /* ensures the image covers the entire box */
-  background-position: center;  /* centers the image */
-  background-repeat: no-repeat;
-            /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);*/
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3.5rem;
-            position: relative;
+          width: 100%;
+          height: 250px; /* adjust as needed */
+          background-size: cover; /* ensures the image covers the entire box */
+          background-position: center; /* centers the image */
+          background-repeat: no-repeat; /* avoids tiling */
+          border-radius: 10px; /* optional — smooth corners */
+          position: relative;
+          color: white; /* text (like R&P) visible */
+          display: flex;
+          align-items: flex-end; /* positions text at bottom */
+          justify-content: center;
+          font-weight: bold;
+          font-size: 18px;
+        }
+      }
+      /*--------logo--------*/
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .logo-icon {
+        height: 40px;
+        width: auto;
+      }
+
+      .logo-text {
+        height: 38px;
+        width: auto;
+      }
+
+      /* For responsive - hide text on small screens */
+      @media (max-width: 768px) {
+        .logo-text {
+          display: none;
         }
 
-
-
-        .story-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: white;
-            color: #ae1700;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .logo-icon {
+          height: 35px;
         }
-
-        .story-content {
-            padding: 1.5rem;
-        }
-
-        .couple-names {
-            font-size: 1.3rem;
-            color: #333;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-
-        .story-meta {
-            display: flex;
-            gap: 1rem;
-            color: #666;
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .story-meta span {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .story-text {
-            color: #666;
-            line-height: 1.7;
-            margin-bottom: 1rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .story-details {
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #666;
-        }
-
-        .story-details p {
-            margin-bottom: 0.4rem;
-        }
-
-        .story-details p:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .success-hero h2 {
-                font-size: 2rem;
-            }
-
-            .success-hero p {
-                font-size: 1rem;
-            }
-
-            .stats-bar {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-                padding: 1.5rem;
-            }
-
-            .stat-item h3 {
-                font-size: 2rem;
-            }
-
-            .stat-item p {
-                font-size: 0.85rem;
-            }
-
-            .story-card {
-                flex: 0 0 300px;
-            }
-
-            .stories-scroll-container {
-                margin: 0 -1rem;
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-
-            .success-stories {
-                padding: 0 1rem 3rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .success-hero h2 {
-                font-size: 1.5rem;
-            }
-
-            .stats-bar {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .story-card {
-                flex: 0 0 280px;
-            }
-
-            .story-image {
-  width: 100%;
-  height: 250px; /* adjust as needed */
-  background-size: cover;       /* ensures the image covers the entire box */
-  background-position: center;  /* centers the image */
-  background-repeat: no-repeat; /* avoids tiling */
-  border-radius: 10px;          /* optional — smooth corners */
-  position: relative;
-  color: white;                 /* text (like R&P) visible */
-  display: flex;
-  align-items: flex-end;        /* positions text at bottom */
-  justify-content: center;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-        }
-        /*--------logo--------*/
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.logo-icon {
-    height: 40px;
-    width: auto;
-}
-
-.logo-text {
-    height: 38px;
-    width: auto;
-}
-
-/* For responsive - hide text on small screens */
-@media (max-width: 768px) {
-    .logo-text {
-        display: none;
-    }
-
-    .logo-icon {
-        height: 35px;
-    }
-}
-        /*------------*/
-
+      }
+      /*------------*/
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <nav>
-            <div class="logo">
-    <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
-    <img src="../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
-</div>
-            <ul class="nav-links">
-                <div class="nav-main">
-<li><a href="homepage.html">Home</a></li>
-                <li><a href="#search-div">Search</a></li>
-                <li><a href="#why-us">Why us?</a></li>
-                <li><a href="#success-stories-div">Success Stories</a></li>
-                <li><a href="events.html">Events</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                </div>
+      <nav>
+        <div class="logo">
+          <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon" />
+          <img
+            src="../../assets/logo/bandan.svg"
+            alt="Bandan"
+            class="logo-text"
+          />
+        </div>
+        <ul class="nav-links">
+          <div class="nav-main">
+            <li><a href="homepage.html">Home</a></li>
+            <li><a href="#search-div">Search</a></li>
+            <li><a href="#why-us">Why us?</a></li>
+            <li><a href="#success-stories-div">Success Stories</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </div>
 
-                <li><a href="login.html" class="login-link">Login</a></li>
-                <li><a href="register.html" class="register-link">Register</a></li>
-                <li><a href="payment.html"  class="subscribe-btn">🜲 Subscribe</a></li>
-            </ul>
-        </nav>
+          <li><a href="login.html" class="login-link">Login</a></li>
+          <li><a href="register.html" class="register-link">Register</a></li>
+          <li><a href="payment.html" class="subscribe-btn">🜲 Subscribe</a></li>
+        </ul>
+      </nav>
     </header>
 
     <section class="front">
-        <div class="slider-container">
-            <!-- Slide 1 -->
-            <div class="slide active">
-                <img src="../../assets/images/happy-couple/awesome-sauce-creative-uRWekN5S39g-unsplash.jpg" alt="Happy Couple 1">
-            </div>
-
-            <!-- Slide 2 -->
-            <div class="slide">
-                <img src="../../assets/images/happy-couple/arto-suraj-U24mGMjnIIo-unsplash.jpg" alt="Happy Couple 2">
-            </div>
-
-            <!-- Slide 3 -->
-            <div class="slide">
-                <img src="../../assets/images/happy-couple/alan-morales-NegpLeQFDh4-unsplash.jpg" alt="Happy Couple 3">
-            </div>
-
-            <!-- Slide 4 -->
-            <div class="slide">
-                <img src="../../assets/images/happy-couple/amish-thakkar-REmCdjjUeB8-unsplash.jpg" alt="Happy Couple 4">
-            </div>
-
-            <!-- Slide 5 -->
-            <div class="slide">
-                <img src="../../assets/images/happy-couple/monojit-dutta-MU5dYw2pmiY-unsplash.jpg" alt="Happy Couple 5">
-            </div>
-
-            <!-- Slide 6 -->
-            <div class="slide">
-                <img src="../../assets/images/happy-couple/picnu-IXJJiTahl_s-unsplash.jpg" alt="Happy Couple 6">
-            </div>
-
-            <!-- Slide 7 -->
-            <div class="slide">
-                <img src="../../assets/images/happy-couple/mohammed-sultan-farooqui-JjOm8445mXw-unsplash.jpg" alt="Happy Couple 7">
-            </div>
-
-            <!-- Slide 8 -->
-            <div class="slide">
-                <img src="../../assets/images/happy-couple/naeem-ad-qZqjCgYEWl4-unsplash.jpg" alt="Happy Couple 8">
-            </div>
-
-            <!-- Slide 9 -->
-            <div class="slide">
-                <img src="../../assets/images/happy-couple/sagar-shrestha-WNYPL_-8hEc-unsplash.jpg" alt="Happy Couple 9">
-            </div>
-
-            <!-- Slide 10 -->
-            <div class="slide">
-                <img src="../../assets/images/happy-couple/pradeep-potter-cLKTteolrWc-unsplash.jpg" alt="Happy Couple 10">
-            </div>
-
-            <!-- Overlay -->
-            <div class="slider-overlay"></div>
-
-            <!-- Slogan -->
-            <div class="slogan-container">
-                <h1>Where Love Stories Begin</h1>
-                <p>Find Your Perfect Match Today</p>
-                <div class="slogan-subtitle">Join thousands of happy couples who found their soulmate</div>
-            </div>
-
-            <!-- Navigation Dots -->
-            <div class="slider-dots">
-                <span class="dot active" onclick="goToSlide(0)"></span>
-                <span class="dot" onclick="goToSlide(1)"></span>
-                <span class="dot" onclick="goToSlide(2)"></span>
-                <span class="dot" onclick="goToSlide(3)"></span>
-                <span class="dot" onclick="goToSlide(4)"></span>
-                <span class="dot" onclick="goToSlide(5)"></span>
-                <span class="dot" onclick="goToSlide(6)"></span>
-                <span class="dot" onclick="goToSlide(7)"></span>
-                <span class="dot" onclick="goToSlide(8)"></span>
-                <span class="dot" onclick="goToSlide(9)"></span>
-            </div>
+      <div class="slider-container">
+        <!-- Slide 1 -->
+        <div class="slide active">
+          <img
+            src="../../assets/images/happy-couple/awesome-sauce-creative-uRWekN5S39g-unsplash.jpg"
+            alt="Happy Couple 1"
+          />
         </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+          <img
+            src="../../assets/images/happy-couple/arto-suraj-U24mGMjnIIo-unsplash.jpg"
+            alt="Happy Couple 2"
+          />
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+          <img
+            src="../../assets/images/happy-couple/alan-morales-NegpLeQFDh4-unsplash.jpg"
+            alt="Happy Couple 3"
+          />
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+          <img
+            src="../../assets/images/happy-couple/amish-thakkar-REmCdjjUeB8-unsplash.jpg"
+            alt="Happy Couple 4"
+          />
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+          <img
+            src="../../assets/images/happy-couple/monojit-dutta-MU5dYw2pmiY-unsplash.jpg"
+            alt="Happy Couple 5"
+          />
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide">
+          <img
+            src="../../assets/images/happy-couple/picnu-IXJJiTahl_s-unsplash.jpg"
+            alt="Happy Couple 6"
+          />
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide">
+          <img
+            src="../../assets/images/happy-couple/mohammed-sultan-farooqui-JjOm8445mXw-unsplash.jpg"
+            alt="Happy Couple 7"
+          />
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide">
+          <img
+            src="../../assets/images/happy-couple/naeem-ad-qZqjCgYEWl4-unsplash.jpg"
+            alt="Happy Couple 8"
+          />
+        </div>
+
+        <!-- Slide 9 -->
+        <div class="slide">
+          <img
+            src="../../assets/images/happy-couple/sagar-shrestha-WNYPL_-8hEc-unsplash.jpg"
+            alt="Happy Couple 9"
+          />
+        </div>
+
+        <!-- Slide 10 -->
+        <div class="slide">
+          <img
+            src="../../assets/images/happy-couple/pradeep-potter-cLKTteolrWc-unsplash.jpg"
+            alt="Happy Couple 10"
+          />
+        </div>
+
+        <!-- Overlay -->
+        <div class="slider-overlay"></div>
+
+        <!-- Slogan -->
+        <div class="slogan-container">
+          <h1>Where Love Stories Begin</h1>
+          <p>Find Your Perfect Match Today</p>
+          <div class="slogan-subtitle">
+            Join thousands of happy couples who found their soulmate
+          </div>
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="slider-dots">
+          <span class="dot active" onclick="goToSlide(0)"></span>
+          <span class="dot" onclick="goToSlide(1)"></span>
+          <span class="dot" onclick="goToSlide(2)"></span>
+          <span class="dot" onclick="goToSlide(3)"></span>
+          <span class="dot" onclick="goToSlide(4)"></span>
+          <span class="dot" onclick="goToSlide(5)"></span>
+          <span class="dot" onclick="goToSlide(6)"></span>
+          <span class="dot" onclick="goToSlide(7)"></span>
+          <span class="dot" onclick="goToSlide(8)"></span>
+          <span class="dot" onclick="goToSlide(9)"></span>
+        </div>
+      </div>
     </section>
 
-
-    <section class="stats" >
-        <div class="stats-grid">
-            <div class="stat-item-main">
-                <h3>2M+</h3>
-                <p>Active Members</p>
-            </div>
-            <div class="stat-item-main">
-                <h3>50K+</h3>
-                <p>Success Stories</p>
-            </div>
-            <div class="stat-item-main">
-                <h3>500+</h3>
-                <p>Daily Matches</p>
-            </div>
-            <div class="stat-item-main">
-                <h3>100%</h3>
-                <p>Verified Profiles</p>
-            </div>
+    <section class="stats">
+      <div class="stats-grid">
+        <div class="stat-item-main">
+          <h3>2M+</h3>
+          <p>Active Members</p>
         </div>
+        <div class="stat-item-main">
+          <h3>50K+</h3>
+          <p>Success Stories</p>
+        </div>
+        <div class="stat-item-main">
+          <h3>500+</h3>
+          <p>Daily Matches</p>
+        </div>
+        <div class="stat-item-main">
+          <h3>100%</h3>
+          <p>Verified Profiles</p>
+        </div>
+      </div>
     </section>
 
     <section class="hero" id="search-div">
-        <h1>Find Your Perfect Life Partner</h1>
-        <p>Trusted by millions. Join the most successful matrimonial platform.</p>
+      <h1>Find Your Perfect Life Partner</h1>
+      <p>Trusted by millions. Join the most successful matrimonial platform.</p>
 
-        <div class="search-box">
-            <form class="search-form" onsubmit="return validateQuickSearch()">
-                <div class="form-group">
-                    <label for="gender">I'm looking for</label>
-                    <select id="gender" name="gender" required>
-                        <option value="">Select</option>
-                        <option value="bride">Bride</option>
-                        <option value="groom">Groom</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="age-from">Age</label>
-                    <select id="age-from" name="age-from" required>
-                        <option value="">From</option>
-                        <option value="22">22</option>
-                        <option value="25">25</option>
-                        <option value="30">30</option>
-                        <option value="35">35</option>
-                        <option value="40">40</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="age-to">To</label>
-                    <select id="age-to" name="age-to" required>
-                        <option value="">To</option>
-                        <option value="25">25</option>
-                        <option value="30">30</option>
-                        <option value="35">35</option>
-                        <option value="40">40</option>
-                        <option value="45">45</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="religion">Religion</label>
-                    <select id="religion" name="religion">
-                        <option value="">Any</option>
-                        <option value="hindu">Hindu</option>
-                        <option value="muslim">Muslim</option>
-                        <option value="christian">Christian</option>
-                        <option value="sikh">Sikh</option>
-                        <option value="buddhist">Buddhist</option>
-                        <option value="jain">Jain</option>
-                    </select>
-                </div>
-                <button type="submit" class="search-btn">Search Matches</button>
-            </form>
-        </div>
+      <div class="search-box">
+        <form class="search-form" onsubmit="return validateQuickSearch();">
+          <div class="form-group">
+            <label for="gender">I'm looking for</label>
+            <select id="gender" name="gender" required>
+              <option value="">Select</option>
+              <option value="bride">Bride</option>
+              <option value="groom">Groom</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="age-from">Age</label>
+            <select id="age-from" name="age-from" required>
+              <option value="">From</option>
+              <option value="22">22</option>
+              <option value="25">25</option>
+              <option value="30">30</option>
+              <option value="35">35</option>
+              <option value="40">40</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="age-to">To</label>
+            <select id="age-to" name="age-to" required>
+              <option value="">To</option>
+              <option value="25">25</option>
+              <option value="30">30</option>
+              <option value="35">35</option>
+              <option value="40">40</option>
+              <option value="45">45</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="religion">Religion</label>
+            <select id="religion" name="religion">
+              <option value="">Any</option>
+              <option value="hindu">Hindu</option>
+              <option value="muslim">Muslim</option>
+              <option value="christian">Christian</option>
+              <option value="sikh">Sikh</option>
+              <option value="buddhist">Buddhist</option>
+              <option value="jain">Jain</option>
+            </select>
+          </div>
+          <button type="submit" class="search-btn">Search Matches</button>
+        </form>
+      </div>
 
-        <div class="cta-buttons">
-            <a href="register.html" class="btn btn-primary">Register Free</a>
-            <a href="login.html" class="btn btn-secondary">Log In</a>
-        </div>
+      <div class="cta-buttons">
+        <a href="register.html" class="btn btn-primary">Register Free</a>
+        <a href="login.html" class="btn btn-secondary">Log In</a>
+      </div>
     </section>
-
-
 
     <section class="features" id="why-us">
-        <h2>Why Choose Perfect Match?</h2>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>Secure & Private</h3>
-                <p>Your data is protected with industry-standard encryption. Complete privacy control over your profile.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">✓</div>
-                <h3>Verified Profiles</h3>
-                <p>All profiles are manually verified for authenticity. Meet genuine people looking for serious relationships.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">💬</div>
-                <h3>Instant Messaging</h3>
-                <p>Connect instantly with matches through our secure chat system. Start meaningful conversations.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Smart Matching</h3>
-                <p>Advanced algorithms find compatible matches based on your preferences and interests.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📅</div>
-                <h3>Exclusive Events</h3>
-                <p>Participate in curated meetup events to meet potential matches in person.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🌟</div>
-                <h3>Premium Support</h3>
-                <p>24/7 customer support to help you throughout your journey to find the perfect match.</p>
-            </div>
+      <h2>Why Choose Perfect Match?</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure & Private</h3>
+          <p>
+            Your data is protected with industry-standard encryption. Complete
+            privacy control over your profile.
+          </p>
         </div>
+        <div class="feature-card">
+          <div class="feature-icon">✓</div>
+          <h3>Verified Profiles</h3>
+          <p>
+            All profiles are manually verified for authenticity. Meet genuine
+            people looking for serious relationships.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Instant Messaging</h3>
+          <p>
+            Connect instantly with matches through our secure chat system. Start
+            meaningful conversations.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Smart Matching</h3>
+          <p>
+            Advanced algorithms find compatible matches based on your
+            preferences and interests.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Exclusive Events</h3>
+          <p>
+            Participate in curated meetup events to meet potential matches in
+            person.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌟</div>
+          <h3>Premium Support</h3>
+          <p>
+            24/7 customer support to help you throughout your journey to find
+            the perfect match.
+          </p>
+        </div>
+      </div>
     </section>
-
-
 
     <section class="success-stories" id="success-stories-div">
-        <!-- Success Stories Hero Section -->
-    <section class="success-hero">
+      <!-- Success Stories Hero Section -->
+      <section class="success-hero">
         <h2>💑 Success Stories</h2>
-        <p>Real couples, real love stories. Your happily ever after starts here!</p>
-    </section>
+        <p>
+          Real couples, real love stories. Your happily ever after starts here!
+        </p>
+      </section>
 
-    <!-- Stats Bar -->
-    <div class="stats-bar">
+      <!-- Stats Bar -->
+      <div class="stats-bar">
         <div class="stat-item">
-            <h3>50,000+</h3>
-            <p>Happy Couples</p>
+          <h3>50,000+</h3>
+          <p>Happy Couples</p>
         </div>
         <div class="stat-item">
-            <h3>2,500+</h3>
-            <p>This Year</p>
+          <h3>2,500+</h3>
+          <p>This Year</p>
         </div>
         <div class="stat-item">
-            <h3>95%</h3>
-            <p>Success Rate</p>
+          <h3>95%</h3>
+          <p>Success Rate</p>
         </div>
         <div class="stat-item">
-            <h3>200+</h3>
-            <p>Cities</p>
+          <h3>200+</h3>
+          <p>Cities</p>
         </div>
-    </div>
+      </div>
 
-    <!-- Success Stories Section -->
-    <section class="success-stories">
+      <!-- Success Stories Section -->
+      <section class="success-stories">
         <div class="stories-wrapper">
-            <div class="stories-scroll-container">
-                <div class="stories-grid">
-                    <!-- Story Card 1 -->
-                    <div class="story-card">
-                        <div class="story-image" style="background-image: url(../../assets/images/happy-couple/arto-suraj-U24mGMjnIIo-unsplash.jpg);">
-                            <span class="story-badge">Recent</span>
-
-                        </div>
-                        <div class="story-content">
-                            <h3 class="couple-names">Rahul & Priya</h3>
-                            <div class="story-meta">
-                                <span>📍 Mumbai</span>
-                                <span>💑 Married Oct 2025</span>
-                            </div>
-                            <p class="story-text">
-                                "We found each other on Perfect Match and it's been an incredible journey. The platform made it so easy to connect with like-minded people. The verification process gave us confidence and peace of mind."
-                            </p>
-                            <div class="story-details">
-                                <p><strong>Met:</strong> Speed Dating Event</p>
-                                <p><strong>Time to Match:</strong> 2 months</p>
-                                <p><strong>Status:</strong> Happily Married</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Story Card 2 -->
-                    <div class="story-card">
-                        <div class="story-image" style="background-image: url(../../assets/images/happy-couple/mohammed-sultan-farooqui-JjOm8445mXw-unsplash.jpg);"></div>
-                        <div class="story-content">
-                            <h3 class="couple-names">Amit & Sneha</h3>
-                            <div class="story-meta">
-                                <span>📍 Delhi</span>
-                                <span>💑 Married Jan 2025</span>
-                            </div>
-                            <p class="story-text">
-                                "Perfect Match helped us find our soulmates. The verification process ensured we only met genuine people. We're happily married now, thanks to this wonderful platform and its amazing features!"
-                            </p>
-                            <div class="story-details">
-                                <p><strong>Met:</strong> Online Platform</p>
-                                <p><strong>Time to Match:</strong> 1 month</p>
-                                <p><strong>Status:</strong> Happily Married</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Story Card 3 -->
-                    <div class="story-card">
-                        <div class="story-image" style="background-image: url(../../assets/images/happy-couple/picnu-IXJJiTahl_s-unsplash.jpg);"></div>
-                        <div class="story-content">
-                            <h3 class="couple-names">Vikram & Meera</h3>
-                            <div class="story-meta">
-                                <span>📍 Bangalore</span>
-                                <span>💑 Married May 2025</span>
-                            </div>
-                            <p class="story-text">
-                                "The smart matching algorithm of Perfect Match is amazing! We connected instantly and found we had so much in common. Couldn't be happier with our decision to join this platform!"
-                            </p>
-                            <div class="story-details">
-                                <p><strong>Met:</strong> Cultural Evening</p>
-                                <p><strong>Time to Match:</strong> 6 weeks</p>
-                                <p><strong>Status:</strong> Happily Married</p>
-                            </div>
-                        </div>
-                    </div>
-
-
+          <div class="stories-scroll-container">
+            <div class="stories-grid">
+              <!-- Story Card 1 -->
+              <div class="story-card">
+                <div
+                  class="story-image"
+                  style="
+                    background-image: url(../../assets/images/happy-couple/arto-suraj-U24mGMjnIIo-unsplash.jpg);
+                  "
+                >
+                  <span class="story-badge">Recent</span>
                 </div>
+                <div class="story-content">
+                  <h3 class="couple-names">Rahul & Priya</h3>
+                  <div class="story-meta">
+                    <span>📍 Mumbai</span>
+                    <span>💑 Married Oct 2025</span>
+                  </div>
+                  <p class="story-text">
+                    "We found each other on Perfect Match and it's been an
+                    incredible journey. The platform made it so easy to connect
+                    with like-minded people. The verification process gave us
+                    confidence and peace of mind."
+                  </p>
+                  <div class="story-details">
+                    <p><strong>Met:</strong> Speed Dating Event</p>
+                    <p><strong>Time to Match:</strong> 2 months</p>
+                    <p><strong>Status:</strong> Happily Married</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Story Card 2 -->
+              <div class="story-card">
+                <div
+                  class="story-image"
+                  style="
+                    background-image: url(../../assets/images/happy-couple/mohammed-sultan-farooqui-JjOm8445mXw-unsplash.jpg);
+                  "
+                ></div>
+                <div class="story-content">
+                  <h3 class="couple-names">Amit & Sneha</h3>
+                  <div class="story-meta">
+                    <span>📍 Delhi</span>
+                    <span>💑 Married Jan 2025</span>
+                  </div>
+                  <p class="story-text">
+                    "Perfect Match helped us find our soulmates. The
+                    verification process ensured we only met genuine people.
+                    We're happily married now, thanks to this wonderful platform
+                    and its amazing features!"
+                  </p>
+                  <div class="story-details">
+                    <p><strong>Met:</strong> Online Platform</p>
+                    <p><strong>Time to Match:</strong> 1 month</p>
+                    <p><strong>Status:</strong> Happily Married</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Story Card 3 -->
+              <div class="story-card">
+                <div
+                  class="story-image"
+                  style="
+                    background-image: url(../../assets/images/happy-couple/picnu-IXJJiTahl_s-unsplash.jpg);
+                  "
+                ></div>
+                <div class="story-content">
+                  <h3 class="couple-names">Vikram & Meera</h3>
+                  <div class="story-meta">
+                    <span>📍 Bangalore</span>
+                    <span>💑 Married May 2025</span>
+                  </div>
+                  <p class="story-text">
+                    "The smart matching algorithm of Perfect Match is amazing!
+                    We connected instantly and found we had so much in common.
+                    Couldn't be happier with our decision to join this
+                    platform!"
+                  </p>
+                  <div class="story-details">
+                    <p><strong>Met:</strong> Cultural Evening</p>
+                    <p><strong>Time to Match:</strong> 6 weeks</p>
+                    <p><strong>Status:</strong> Happily Married</p>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-    </section>
+      </section>
     </section>
 
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>About Us</h3>
-                <ul>
-                    <li><a href="#">Our Story</a></li>
-                    <li><a href="#">How it Works</a></li>
-                    <li><a href="#">Trust & Safety</a></li>
-                    <li><a href="#">Careers</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Support</h3>
-                <ul>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Report Profile</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                    <li><a href="#">Community Guidelines</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Connect</h3>
-                <ul>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">LinkedIn</a></li>
-                </ul>
-            </div>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>About Us</h3>
+          <ul>
+            <li><a href="#">Our Story</a></li>
+            <li><a href="#">How it Works</a></li>
+            <li><a href="#">Trust & Safety</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Perfect Match. All rights reserved.</p>
+        <div class="footer-section">
+          <h3>Support</h3>
+          <ul>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Report Profile</a></li>
+          </ul>
         </div>
+        <div class="footer-section">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#">Community Guidelines</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Connect</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Perfect Match. All rights reserved.</p>
+      </div>
     </footer>
 
     <script>
-        function validateQuickSearch() {
-    const ageFrom = document.getElementById('age-from').value;
-    const ageTo = document.getElementById('age-to').value;
+      function validateQuickSearch() {
+        const ageFrom = document.getElementById("age-from").value;
+        const ageTo = document.getElementById("age-to").value;
 
-    if (!ageFrom || !ageTo) {
-        alert('Please select both Age From and Age To');
+        if (!ageFrom || !ageTo) {
+          alert("Please select both Age From and Age To");
+          return false;
+        }
+
+        if (parseInt(ageFrom) > parseInt(ageTo)) {
+          alert('Age "To" must be greater than or equal to Age "From"');
+          return false;
+        }
+
+        alert(
+          "Search functionality will be implemented with backend integration",
+        );
         return false;
-    }
+      }
 
-    if (parseInt(ageFrom) > parseInt(ageTo)) {
-        alert('Age "To" must be greater than or equal to Age "From"');
-        return false;
-    }
+      let currentSlide = 0;
+      const slides = document.querySelectorAll(".slide");
+      const dots = document.querySelectorAll(".dot");
+      const totalSlides = slides.length;
+      let autoSlideInterval;
 
-    alert('Search functionality will be implemented with backend integration');
-    return false;
-}
+      function showSlide(index) {
+        slides.forEach((slide) => slide.classList.remove("active"));
+        dots.forEach((dot) => dot.classList.remove("active"));
 
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+      }
 
-
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.dot');
-    const totalSlides = slides.length;
-    let autoSlideInterval;
-
-    function showSlide(index) {
-        slides.forEach(slide => slide.classList.remove('active'));
-        dots.forEach(dot => dot.classList.remove('active'));
-
-        slides[index].classList.add('active');
-        dots[index].classList.add('active');
-    }
-
-    function nextSlide() {
+      function nextSlide() {
         currentSlide = (currentSlide + 1) % totalSlides;
         showSlide(currentSlide);
-    }
+      }
 
-    function goToSlide(index) {
+      function goToSlide(index) {
         currentSlide = index;
         showSlide(currentSlide);
         resetAutoSlide();
-    }
+      }
 
-    function resetAutoSlide() {
+      function resetAutoSlide() {
         clearInterval(autoSlideInterval);
         autoSlideInterval = setInterval(nextSlide, 4000); //  4 second
-    }
+      }
 
-    // Start auto-sliding
-    autoSlideInterval = setInterval(nextSlide, 4000);
+      // Start auto-sliding
+      autoSlideInterval = setInterval(nextSlide, 4000);
 
-    // Pause on hover
-    /*document.querySelector('.slider-container').addEventListener('mouseenter', () => {
+      // Pause on hover
+      /*document.querySelector('.slider-container').addEventListener('mouseenter', () => {
         clearInterval(autoSlideInterval);
     });
 
@@ -1269,22 +1349,19 @@
         resetAutoSlide();
     });*/
 
-    // Restart auto-slide when page/tab becomes visible again
-    document.addEventListener("visibilitychange", () => {
+      // Restart auto-slide when page/tab becomes visible again
+      document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
-            clearInterval(autoSlideInterval);
+          clearInterval(autoSlideInterval);
         } else {
-            resetAutoSlide();
+          resetAutoSlide();
         }
-    });
+      });
 
-    // Restart auto-slide when user scrolls
-    window.addEventListener("scroll", () => {
+      // Restart auto-slide when user scrolls
+      window.addEventListener("scroll", () => {
         resetAutoSlide();
-    });
-
-
-
+      });
     </script>
-</body>
+  </body>
 </html>

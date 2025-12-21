@@ -1,30 +1,42 @@
 // Mock service for development/testing
 export const mockAuthService = {
-  login: async (email, password, userType) => {
+  //login: async (email, password, userType) => {
+  login: async (email, password) => {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     const credentials = {
-      "user@test.com": { password: "User@123", userType: "user" },
-      "paid-user@test.com": { password: "User@123", userType: "user" },
+      "user@test.com": {
+        password: "User@123",
+        userType: "user",
+        subscriptionStatus: "inactive",
+        subscriptionTier: "free",
+        subscriptionExpiry: null,
+      },
+      "paid-user@test.com": {
+        password: "User@123",
+        userType: "user",
+        subscriptionStatus: "active",
+        subscriptionTier: "premium",
+        subscriptionExpiry: "2025-12-31",
+      },
       "organizer@test.com": { password: "Org@123", userType: "organizer" },
       "admin@test.com": { password: "Admin@123", userType: "admin" },
     };
 
     const userCredentials = credentials[email];
 
-    if (
-      userCredentials &&
-      userCredentials.password === password &&
-      userCredentials.userType === userType
-    ) {
+    if (userCredentials && userCredentials.password === password) {
       return {
         token: "mock-jwt-token-" + Math.random().toString(36).substr(2, 9),
         user: {
           id: Math.random().toString(36).substr(2, 9),
           email,
           name: email.split("@")[0],
-          userType,
+          userType: userCredentials.userType,
+          subscriptionStatus: userCredentials.subscriptionStatus || null,
+          subscriptionTier: userCredentials.subscriptionTier || null,
+          subscriptionExpiry: userCredentials.subscriptionExpiry || null,
         },
       };
     }
@@ -48,6 +60,10 @@ export const mockAuthService = {
       user: {
         id: Math.random().toString(36).substr(2, 9),
         ...userData,
+        userType: "user",
+        subscriptionStatus: "inactive",
+        subscriptionTier: "free",
+        subscriptionExpiry: null,
         isVerified: false,
         createdAt: new Date().toISOString(),
       },

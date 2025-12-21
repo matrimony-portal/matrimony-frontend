@@ -1,410 +1,432 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Event - Perfect Match</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+    />
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f7fa;
+      }
 
-        .header {
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .header {
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        color: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
 
-        .back-btn {
-            background: white;
-            color: #059669;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            text-decoration: none;
-        }
+      .back-btn {
+        background: white;
+        color: #059669;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+      }
 
-        .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+      .container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
+
+      .event-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 3rem;
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .page-header h1 {
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-header p {
+        color: #666;
+      }
+
+      .form-section {
+        margin-bottom: 2.5rem;
+      }
+
+      .form-section h3 {
+        color: #333;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #059669;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+      }
+
+      .required {
+        color: #e53e3e;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-family: inherit;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #059669;
+      }
+
+      .help-text {
+        font-size: 0.875rem;
+        color: #666;
+        margin-top: 0.25rem;
+      }
+
+      .event-type-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+
+      .event-type-option {
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .event-type-option:hover {
+        border-color: #059669;
+        background: #f0fdf4;
+      }
+
+      .event-type-option.active {
+        border-color: #059669;
+        background: #f0fdf4;
+      }
+
+      .event-type-option input[type="radio"] {
+        display: none;
+      }
+
+      .event-type-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .event-type-label {
+        font-weight: 600;
+        color: #333;
+      }
+
+      .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+      }
+
+      .checkbox-item input {
+        width: auto;
+        margin-right: 0.5rem;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        padding-top: 2rem;
+        border-top: 2px solid #e2e8f0;
+      }
+
+      .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background: #059669;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #047857;
+      }
+
+      .btn-secondary {
+        background: #e2e8f0;
+        color: #666;
+      }
+
+      .btn-secondary:hover {
+        background: #cbd5e0;
+      }
+
+      .preview-section {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-top: 2rem;
+      }
+
+      .preview-section h4 {
+        color: #333;
+        margin-bottom: 1rem;
+      }
+
+      .preview-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .error {
+        color: #e53e3e;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
         }
 
         .event-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 3rem;
+          padding: 2rem 1.5rem;
         }
+      }
 
-        .page-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
+      /*-------*/
 
-        .page-header h1 {
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
+      /* Sidebar styles */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 48px 0 0;
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+      }
 
-        .page-header p {
-            color: #666;
-        }
+      .sidebar-sticky {
+        position: relative;
+        top: 0;
+        height: calc(100vh - 48px);
+        padding-top: 0.5rem;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
 
-        .form-section {
-            margin-bottom: 2.5rem;
-        }
+      .sidebar .nav-link {
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+        padding: 0.75rem 1.5rem;
+        border-left: 3px solid transparent;
+      }
 
-        .form-section h3 {
-            color: #333;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #059669;
-        }
+      .sidebar .nav-link:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        border-left-color: #fff;
+      }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
+      .sidebar .nav-link.active {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.15);
+        border-left-color: #fff;
+        font-weight: 600;
+      }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+      .sidebar-heading {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.6);
+        padding: 1.5rem 1.5rem 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .required {
-            color: #e53e3e;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-family: inherit;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #059669;
-        }
-
-        .help-text {
-            font-size: 0.875rem;
-            color: #666;
-            margin-top: 0.25rem;
-        }
-
-        .event-type-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-        }
-
-        .event-type-option {
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .event-type-option:hover {
-            border-color: #059669;
-            background: #f0fdf4;
-        }
-
-        .event-type-option.active {
-            border-color: #059669;
-            background: #f0fdf4;
-        }
-
-        .event-type-option input[type="radio"] {
-            display: none;
-        }
-
-        .event-type-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .event-type-label {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-item input {
-            width: auto;
-            margin-right: 0.5rem;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-            padding-top: 2rem;
-            border-top: 2px solid #e2e8f0;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: #059669;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #047857;
-        }
-
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #666;
-        }
-
-        .btn-secondary:hover {
-            background: #cbd5e0;
-        }
-
-        .preview-section {
-            background: #f8fafc;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-top: 2rem;
-        }
-
-        .preview-section h4 {
-            color: #333;
-            margin-bottom: 1rem;
-        }
-
-        .preview-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .error {
-            color: #e53e3e;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .event-card {
-                padding: 2rem 1.5rem;
-            }
-        }
-
-        /*-------*/
-        
-        /* Sidebar styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-            padding: 48px 0 0;
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-        }
-
-        .sidebar-sticky {
-            position: relative;
-            top: 0;
-            height: calc(100vh - 48px);
-            padding-top: .5rem;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-
-        .sidebar .nav-link {
-            font-weight: 500;
-            color: rgba(255,255,255,0.8);
-            padding: 0.75rem 1.5rem;
-            border-left: 3px solid transparent;
-        }
-
-        .sidebar .nav-link:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.1);
-            border-left-color: #fff;
-        }
-
-        .sidebar .nav-link.active {
-            color: #fff;
-            background: rgba(255,255,255,0.15);
-            border-left-color: #fff;
-            font-weight: 600;
-        }
-
-        .sidebar-heading {
-            font-size: .75rem;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.6);
-            padding: 1.5rem 1.5rem 0.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* Top navbar */
-        .navbar-brand {
-            padding-top: .75rem;
-            padding-bottom: .75rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+      /* Top navbar */
+      .navbar-brand {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);*/
-        }
+      }
 
-        .navbar {
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-        }
+      .navbar {
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+      }
 
-        /* Logo styles */
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: left;
-        }
+      /* Logo styles */
+      .logo {
+        display: flex;
+        align-items: center;
+        justify-content: left;
+      }
 
-        .logo-icon {
-            height: 50px;
-            width: auto;
-        }
+      .logo-icon {
+        height: 50px;
+        width: auto;
+      }
 
-        .logo-text {
-            height: 40px;
-            width: auto;
-        }
+      .logo-text {
+        height: 40px;
+        width: auto;
+      }
 
-        /* Main content */
-        main {
-            padding-top: 20px;
-        }
+      /* Main content */
+      main {
+        padding-top: 20px;
+      }
     </style>
-</head>
-<body>
-        <!-- Top Navbar -->
+  </head>
+  <body>
+    <!-- Top Navbar -->
     <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
-            <div class="logo">
-                <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
-                <img src="../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
-            </div>
-        </a>
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-nav">
-            <div class="nav-item text-nowrap">
-                <a class="nav-link px-3 text-white" href="#" onclick="logout()">Logout</a>
-            </div>
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
+        <div class="logo">
+          <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon" />
+          <img
+            src="../../assets/logo/bandan.svg"
+            alt="Bandan"
+            class="logo-text"
+          />
         </div>
+      </a>
+      <button
+        class="navbar-toggler position-absolute d-md-none collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+          <a class="nav-link px-3 text-white" href="#" onclick="logout()"
+            >Logout</a
+          >
+        </div>
+      </div>
     </nav>
 
     <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-                <div class="position-sticky">
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
-                        <span>Welcome, Meera</span>
-                    </h6>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="organizer-dashboard.html">
-                                <i class="bi bi-house-door"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="my-events.html">
-                                <i class="bi bi-calendar-event"></i> My Events
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="create-event.html">
-                                <i class="bi bi-plus-circle"></i> Create Event
-                            </a>
-                        </li>
-                        <!--<li class="nav-item">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav
+          id="sidebarMenu"
+          class="col-md-3 col-lg-2 d-md-block sidebar collapse"
+        >
+          <div class="position-sticky">
+            <h6
+              class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white"
+            >
+              <span>Welcome, Meera</span>
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="organizer-dashboard.html">
+                  <i class="bi bi-house-door"></i> Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="my-events.html">
+                  <i class="bi bi-calendar-event"></i> My Events
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="create-event.html">
+                  <i class="bi bi-plus-circle"></i> Create Event
+                </a>
+              </li>
+              <!--<li class="nav-item">
                             <a class="nav-link" href="participants.html">
                                 <i class="bi bi-people"></i> Participants
                             </a>
                         </li>-->
-                        <li class="nav-item">
-                            <a class="nav-link" href="event-requests.html">
-                                <i class="bi bi-inbox"></i> Event Requests
-                            </a>
-                        </li>
-                        <!--<li class="nav-item">
+              <li class="nav-item">
+                <a class="nav-link" href="event-requests.html">
+                  <i class="bi bi-inbox"></i> Event Requests
+                </a>
+              </li>
+              <!--<li class="nav-item">
                             <a class="nav-link" href="analytics.html">
                                 <i class="bi bi-graph-up"></i> Analytics
                             </a>
@@ -414,330 +436,535 @@
                                 <i class="bi bi-chat-dots"></i> Messages
                             </a>
                         </li>-->
-                        <li class="nav-item">
-                            <a class="nav-link" href="organizer-profile.html">
-                                <i class="bi bi-person-circle"></i> My Profile
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link" href="blocked-users.html">
-                            <i class="bi bi-x-circle"></i> Blocked Users
-                        </a>
-                    </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="organizer-settings.html">
-                                <i class="bi bi-gear"></i> Settings
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+              <li class="nav-item">
+                <a class="nav-link" href="organizer-profile.html">
+                  <i class="bi bi-person-circle"></i> My Profile
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="blocked-users.html">
+                  <i class="bi bi-x-circle"></i> Blocked Users
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="organizer-settings.html">
+                  <i class="bi bi-gear"></i> Settings
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
 
-            <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-
-    <div class="container">
-        <div class="event-card">
-            <div class="page-header">
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <div class="container">
+            <div class="event-card">
+              <div class="page-header">
                 <h1>Create New Event</h1>
                 <p>Set up a meetup event for Perfect Match members</p>
-            </div>
+              </div>
 
-            <form id="createEventForm" onsubmit="return createEvent()" novalidate>
+              <form
+                id="createEventForm"
+                onsubmit="return createEvent();"
+                novalidate
+              >
                 <div class="form-section">
-                    <h3>Event Type</h3>
-                    <div class="event-type-selector">
-                        <div class="event-type-option active" onclick="selectEventType('speed-dating')">
-                            <input type="radio" name="eventType" id="typeSpeed" value="speed-dating" checked>
-                            <div class="event-type-icon">⚡</div>
-                            <div class="event-type-label">Speed Dating</div>
-                        </div>
-                        <div class="event-type-option" onclick="selectEventType('coffee-meetup')">
-                            <input type="radio" name="eventType" id="typeCoffee" value="coffee-meetup">
-                            <div class="event-type-icon">☕</div>
-                            <div class="event-type-label">Coffee Meetup</div>
-                        </div>
-                        <div class="event-type-option" onclick="selectEventType('dinner')">
-                            <input type="radio" name="eventType" id="typeDinner" value="dinner">
-                            <div class="event-type-icon">🍽️</div>
-                            <div class="event-type-label">Dinner Event</div>
-                        </div>
-                        <div class="event-type-option" onclick="selectEventType('cultural')">
-                            <input type="radio" name="eventType" id="typeCultural" value="cultural">
-                            <div class="event-type-icon">🎭</div>
-                            <div class="event-type-label">Cultural Evening</div>
-                        </div>
+                  <h3>Event Type</h3>
+                  <div class="event-type-selector">
+                    <div
+                      class="event-type-option active"
+                      onclick="selectEventType('speed-dating')"
+                    >
+                      <input
+                        type="radio"
+                        name="eventType"
+                        id="typeSpeed"
+                        value="speed-dating"
+                        checked
+                      />
+                      <div class="event-type-icon">⚡</div>
+                      <div class="event-type-label">Speed Dating</div>
                     </div>
+                    <div
+                      class="event-type-option"
+                      onclick="selectEventType('coffee-meetup')"
+                    >
+                      <input
+                        type="radio"
+                        name="eventType"
+                        id="typeCoffee"
+                        value="coffee-meetup"
+                      />
+                      <div class="event-type-icon">☕</div>
+                      <div class="event-type-label">Coffee Meetup</div>
+                    </div>
+                    <div
+                      class="event-type-option"
+                      onclick="selectEventType('dinner')"
+                    >
+                      <input
+                        type="radio"
+                        name="eventType"
+                        id="typeDinner"
+                        value="dinner"
+                      />
+                      <div class="event-type-icon">🍽️</div>
+                      <div class="event-type-label">Dinner Event</div>
+                    </div>
+                    <div
+                      class="event-type-option"
+                      onclick="selectEventType('cultural')"
+                    >
+                      <input
+                        type="radio"
+                        name="eventType"
+                        id="typeCultural"
+                        value="cultural"
+                      />
+                      <div class="event-type-icon">🎭</div>
+                      <div class="event-type-label">Cultural Evening</div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>Basic Details</h3>
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label for="eventTitle">Event Title <span class="required">*</span></label>
-                            <input type="text" id="eventTitle" required placeholder="e.g., Speed Dating Evening in Mumbai">
-                            <div class="help-text">Make it catchy and descriptive</div>
-                            <div class="error" id="titleError">Please enter an event title</div>
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="eventDescription">Event Description <span class="required">*</span></label>
-                            <textarea id="eventDescription" required placeholder="Describe what participants can expect from this event..."></textarea>
-                            <div class="help-text">Minimum 100 characters</div>
-                            <div class="error" id="descError">Description must be at least 100 characters</div>
-                        </div>
+                  <h3>Basic Details</h3>
+                  <div class="form-grid">
+                    <div class="form-group full-width">
+                      <label for="eventTitle"
+                        >Event Title <span class="required">*</span></label
+                      >
+                      <input
+                        type="text"
+                        id="eventTitle"
+                        required
+                        placeholder="e.g., Speed Dating Evening in Mumbai"
+                      />
+                      <div class="help-text">
+                        Make it catchy and descriptive
+                      </div>
+                      <div class="error" id="titleError">
+                        Please enter an event title
+                      </div>
                     </div>
+
+                    <div class="form-group full-width">
+                      <label for="eventDescription"
+                        >Event Description
+                        <span class="required">*</span></label
+                      >
+                      <textarea
+                        id="eventDescription"
+                        required
+                        placeholder="Describe what participants can expect from this event..."
+                      ></textarea>
+                      <div class="help-text">Minimum 100 characters</div>
+                      <div class="error" id="descError">
+                        Description must be at least 100 characters
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>Date & Time</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="eventDate">Event Date <span class="required">*</span></label>
-                            <input type="date" id="eventDate" required min="2025-10-22">
-                            <div class="error" id="dateError">Please select a valid future date</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="eventTime">Start Time <span class="required">*</span></label>
-                            <input type="time" id="eventTime" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="duration">Duration (hours) <span class="required">*</span></label>
-                            <select id="duration" required>
-                                <option value="">Select Duration</option>
-                                <option value="1">1 hour</option>
-                                <option value="2">2 hours</option>
-                                <option value="3">3 hours</option>
-                                <option value="4">4 hours</option>
-                                <option value="5">5 hours</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="registrationDeadline">Registration Deadline <span class="required">*</span></label>
-                            <input type="date" id="registrationDeadline" required>
-                            <div class="help-text">Last date to register</div>
-                        </div>
+                  <h3>Date & Time</h3>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="eventDate"
+                        >Event Date <span class="required">*</span></label
+                      >
+                      <input
+                        type="date"
+                        id="eventDate"
+                        required
+                        min="2025-10-22"
+                      />
+                      <div class="error" id="dateError">
+                        Please select a valid future date
+                      </div>
                     </div>
+
+                    <div class="form-group">
+                      <label for="eventTime"
+                        >Start Time <span class="required">*</span></label
+                      >
+                      <input type="time" id="eventTime" required />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="duration"
+                        >Duration (hours) <span class="required">*</span></label
+                      >
+                      <select id="duration" required>
+                        <option value="">Select Duration</option>
+                        <option value="1">1 hour</option>
+                        <option value="2">2 hours</option>
+                        <option value="3">3 hours</option>
+                        <option value="4">4 hours</option>
+                        <option value="5">5 hours</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="registrationDeadline"
+                        >Registration Deadline
+                        <span class="required">*</span></label
+                      >
+                      <input type="date" id="registrationDeadline" required />
+                      <div class="help-text">Last date to register</div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>Location</h3>
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label for="venueName">Venue Name <span class="required">*</span></label>
-                            <input type="text" id="venueName" required placeholder="e.g., The Coffee House">
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="venueAddress">Venue Address <span class="required">*</span></label>
-                            <input type="text" id="venueAddress" required placeholder="Complete address">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="city">City <span class="required">*</span></label>
-                            <input type="text" id="city" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="state">State <span class="required">*</span></label>
-                            <input type="text" id="state" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="landmark">Landmark</label>
-                            <input type="text" id="landmark" placeholder="Nearby landmark for easy location">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="mapLink">Google Maps Link</label>
-                            <input type="url" id="mapLink" placeholder="https://maps.google.com/...">
-                        </div>
+                  <h3>Location</h3>
+                  <div class="form-grid">
+                    <div class="form-group full-width">
+                      <label for="venueName"
+                        >Venue Name <span class="required">*</span></label
+                      >
+                      <input
+                        type="text"
+                        id="venueName"
+                        required
+                        placeholder="e.g., The Coffee House"
+                      />
                     </div>
+
+                    <div class="form-group full-width">
+                      <label for="venueAddress"
+                        >Venue Address <span class="required">*</span></label
+                      >
+                      <input
+                        type="text"
+                        id="venueAddress"
+                        required
+                        placeholder="Complete address"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="city"
+                        >City <span class="required">*</span></label
+                      >
+                      <input type="text" id="city" required />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="state"
+                        >State <span class="required">*</span></label
+                      >
+                      <input type="text" id="state" required />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="landmark">Landmark</label>
+                      <input
+                        type="text"
+                        id="landmark"
+                        placeholder="Nearby landmark for easy location"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="mapLink">Google Maps Link</label>
+                      <input
+                        type="url"
+                        id="mapLink"
+                        placeholder="https://maps.google.com/..."
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>Capacity & Fees</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="maxParticipants">Maximum Participants <span class="required">*</span></label>
-                            <input type="number" id="maxParticipants" required min="10" max="200" placeholder="e.g., 50">
-                            <div class="help-text">Minimum 10 participants</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="minParticipants">Minimum Participants</label>
-                            <input type="number" id="minParticipants" min="5" placeholder="e.g., 20">
-                            <div class="help-text">Event will be confirmed if this number is reached</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="entryFee">Entry Fee (₹) <span class="required">*</span></label>
-                            <input type="number" id="entryFee" required min="0" placeholder="e.g., 500">
-                            <div class="help-text">Enter 0 for free events</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="genderRatio">Gender Ratio Preference</label>
-                            <select id="genderRatio">
-                                <option value="equal">Equal (50:50)</option>
-                                <option value="flexible">Flexible</option>
-                                <option value="male-only">Male Only</option>
-                                <option value="female-only">Female Only</option>
-                            </select>
-                        </div>
+                  <h3>Capacity & Fees</h3>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="maxParticipants"
+                        >Maximum Participants
+                        <span class="required">*</span></label
+                      >
+                      <input
+                        type="number"
+                        id="maxParticipants"
+                        required
+                        min="10"
+                        max="200"
+                        placeholder="e.g., 50"
+                      />
+                      <div class="help-text">Minimum 10 participants</div>
                     </div>
+
+                    <div class="form-group">
+                      <label for="minParticipants">Minimum Participants</label>
+                      <input
+                        type="number"
+                        id="minParticipants"
+                        min="5"
+                        placeholder="e.g., 20"
+                      />
+                      <div class="help-text">
+                        Event will be confirmed if this number is reached
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="entryFee"
+                        >Entry Fee (₹) <span class="required">*</span></label
+                      >
+                      <input
+                        type="number"
+                        id="entryFee"
+                        required
+                        min="0"
+                        placeholder="e.g., 500"
+                      />
+                      <div class="help-text">Enter 0 for free events</div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="genderRatio">Gender Ratio Preference</label>
+                      <select id="genderRatio">
+                        <option value="equal">Equal (50:50)</option>
+                        <option value="flexible">Flexible</option>
+                        <option value="male-only">Male Only</option>
+                        <option value="female-only">Female Only</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>Eligibility Criteria</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="ageMin">Minimum Age <span class="required">*</span></label>
-                            <input type="number" id="ageMin" required value="21" min="18" max="60">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="ageMax">Maximum Age <span class="required">*</span></label>
-                            <input type="number" id="ageMax" required value="35" min="18" max="70">
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label>Marital Status</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="maritalStatus" value="never-married" checked> Never Married
-                                </label>
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="maritalStatus" value="divorced"> Divorced
-                                </label>
-                                <label class="checkbox-item">
-                                    <input type="checkbox" name="maritalStatus" value="widowed"> Widowed
-                                </label>
-                            </div>
-                        </div>
+                  <h3>Eligibility Criteria</h3>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="ageMin"
+                        >Minimum Age <span class="required">*</span></label
+                      >
+                      <input
+                        type="number"
+                        id="ageMin"
+                        required
+                        value="21"
+                        min="18"
+                        max="60"
+                      />
                     </div>
+
+                    <div class="form-group">
+                      <label for="ageMax"
+                        >Maximum Age <span class="required">*</span></label
+                      >
+                      <input
+                        type="number"
+                        id="ageMax"
+                        required
+                        value="35"
+                        min="18"
+                        max="70"
+                      />
+                    </div>
+
+                    <div class="form-group full-width">
+                      <label>Marital Status</label>
+                      <div class="checkbox-group">
+                        <label class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            name="maritalStatus"
+                            value="never-married"
+                            checked
+                          />
+                          Never Married
+                        </label>
+                        <label class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            name="maritalStatus"
+                            value="divorced"
+                          />
+                          Divorced
+                        </label>
+                        <label class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            name="maritalStatus"
+                            value="widowed"
+                          />
+                          Widowed
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>Additional Information</h3>
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label for="dressCode">Dress Code</label>
-                            <select id="dressCode">
-                                <option value="casual">Casual</option>
-                                <option value="smart-casual">Smart Casual</option>
-                                <option value="formal">Formal</option>
-                                <option value="traditional">Traditional</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="rules">Event Rules & Guidelines</label>
-                            <textarea id="rules" placeholder="List any specific rules or guidelines for participants..."></textarea>
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="amenities">Amenities & Inclusions</label>
-                            <textarea id="amenities" placeholder="e.g., Complimentary refreshments, parking available, photography..."></textarea>
-                        </div>
+                  <h3>Additional Information</h3>
+                  <div class="form-grid">
+                    <div class="form-group full-width">
+                      <label for="dressCode">Dress Code</label>
+                      <select id="dressCode">
+                        <option value="casual">Casual</option>
+                        <option value="smart-casual">Smart Casual</option>
+                        <option value="formal">Formal</option>
+                        <option value="traditional">Traditional</option>
+                      </select>
                     </div>
+
+                    <div class="form-group full-width">
+                      <label for="rules">Event Rules & Guidelines</label>
+                      <textarea
+                        id="rules"
+                        placeholder="List any specific rules or guidelines for participants..."
+                      ></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                      <label for="amenities">Amenities & Inclusions</label>
+                      <textarea
+                        id="amenities"
+                        placeholder="e.g., Complimentary refreshments, parking available, photography..."
+                      ></textarea>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>Contact Information</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="contactName">Contact Person <span class="required">*</span></label>
-                            <input type="text" id="contactName" required value="Meera Reddy">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="contactPhone">Contact Phone <span class="required">*</span></label>
-                            <input type="tel" id="contactPhone" required placeholder="10-digit number">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="contactEmail">Contact Email <span class="required">*</span></label>
-                            <input type="email" id="contactEmail" required>
-                        </div>
+                  <h3>Contact Information</h3>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="contactName"
+                        >Contact Person <span class="required">*</span></label
+                      >
+                      <input
+                        type="text"
+                        id="contactName"
+                        required
+                        value="Meera Reddy"
+                      />
                     </div>
+
+                    <div class="form-group">
+                      <label for="contactPhone"
+                        >Contact Phone <span class="required">*</span></label
+                      >
+                      <input
+                        type="tel"
+                        id="contactPhone"
+                        required
+                        placeholder="10-digit number"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="contactEmail"
+                        >Contact Email <span class="required">*</span></label
+                      >
+                      <input type="email" id="contactEmail" required />
+                    </div>
+                  </div>
                 </div>
 
                 <div class="action-buttons">
-                    <button type="button" class="btn btn-secondary" onclick="saveDraft()">Save as Draft</button>
-                    <button type="button" class="btn btn-secondary" onclick="previewEvent()">Preview</button>
-                    <button type="submit" class="btn btn-primary">Publish Event</button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="saveDraft()"
+                  >
+                    Save as Draft
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="previewEvent()"
+                  >
+                    Preview
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    Publish Event
+                  </button>
                 </div>
-            </form>
-        </div>
+              </form>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
-</main>
-</div>
-</div>
     <script>
-        function selectEventType(type) {
-            document.querySelectorAll('.event-type-option').forEach(el => {
-                el.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-            
-            const radioMap = {
-                'speed-dating': 'typeSpeed',
-                'coffee-meetup': 'typeCoffee',
-                'dinner': 'typeDinner',
-                'cultural': 'typeCultural'
-            };
-            document.getElementById(radioMap[type]).checked = true;
+      function selectEventType(type) {
+        document.querySelectorAll(".event-type-option").forEach((el) => {
+          el.classList.remove("active");
+        });
+        event.currentTarget.classList.add("active");
+
+        const radioMap = {
+          "speed-dating": "typeSpeed",
+          "coffee-meetup": "typeCoffee",
+          dinner: "typeDinner",
+          cultural: "typeCultural",
+        };
+        document.getElementById(radioMap[type]).checked = true;
+      }
+
+      function createEvent() {
+        let isValid = true;
+
+        // Clear previous errors
+        document
+          .querySelectorAll(".error")
+          .forEach((el) => (el.style.display = "none"));
+
+        // Validate title
+        const title = document.getElementById("eventTitle").value;
+        if (title.length < 10) {
+          document.getElementById("titleError").style.display = "block";
+          isValid = false;
         }
 
-        function createEvent() {
-            let isValid = true;
-            
-            // Clear previous errors
-            document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
-            
-            // Validate title
-            const title = document.getElementById('eventTitle').value;
-            if (title.length < 10) {
-                document.getElementById('titleError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Validate description
-            const description = document.getElementById('eventDescription').value;
-            if (description.length < 100) {
-                document.getElementById('descError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Validate date
-            const eventDate = new Date(document.getElementById('eventDate').value);
-            const today = new Date();
-            if (eventDate <= today) {
-                document.getElementById('dateError').style.display = 'block';
-                isValid = false;
-            }
-            
-            if (isValid) {
-                if (confirm('Publish this event?\n\nThe event will be visible to all Perfect Match members.')) {
-                    alert('Event created successfully!\n\nYour event is now live and members can start registering.');
-                    window.location.href = 'organizer-dashboard.html';
-                }
-            }
-            
-            return false;
+        // Validate description
+        const description = document.getElementById("eventDescription").value;
+        if (description.length < 100) {
+          document.getElementById("descError").style.display = "block";
+          isValid = false;
         }
 
-        function saveDraft() {
-            alert('Event saved as draft!\n\nYou can edit and publish it later from your dashboard.');
+        // Validate date
+        const eventDate = new Date(document.getElementById("eventDate").value);
+        const today = new Date();
+        if (eventDate <= today) {
+          document.getElementById("dateError").style.display = "block";
+          isValid = false;
         }
 
-        function previewEvent() {
-            alert('Event Preview\n\nThis will show how your event will appear to members.');
+        if (isValid) {
+          if (
+            confirm(
+              "Publish this event?\n\nThe event will be visible to all Perfect Match members.",
+            )
+          ) {
+            alert(
+              "Event created successfully!\n\nYour event is now live and members can start registering.",
+            );
+            window.location.href = "organizer-dashboard.html";
+          }
         }
+
+        return false;
+      }
+
+      function saveDraft() {
+        alert(
+          "Event saved as draft!\n\nYou can edit and publish it later from your dashboard.",
+        );
+      }
+
+      function previewEvent() {
+        alert(
+          "Event Preview\n\nThis will show how your event will appear to members.",
+        );
+      }
     </script>
-</body>
+  </body>
 </html>

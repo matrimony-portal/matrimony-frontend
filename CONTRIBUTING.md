@@ -66,6 +66,12 @@ Use conventional commits:
 npm run commit
 ```
 
+Examples:
+
+- `feat: add user registration`
+- `fix: resolve login validation`
+- `docs: update README`
+
 ## Pull Requests
 
 **Branch Flow:**
