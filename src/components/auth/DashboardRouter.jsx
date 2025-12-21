@@ -1,6 +1,6 @@
 import { Navigate } from "react-router";
-import { useAuth } from "../hooks/useAuth.jsx";
-import Loading from "./Loading.jsx";
+import { useAuth } from "../../hooks/useAuth.jsx";
+import Loading from "../common/Loading.jsx";
 
 const DashboardRouter = () => {
   const { userType, subscriptionStatus, loading } = useAuth();

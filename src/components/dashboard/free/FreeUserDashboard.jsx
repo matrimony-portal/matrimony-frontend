@@ -1,4 +1,4 @@
-import { useAuth } from "../hooks/useAuth.jsx";
+import { useAuth } from "../../../hooks/useAuth.jsx";
 import { Link } from "react-router";
 
 const FreeUserDashboard = () => {
