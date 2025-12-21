@@ -7,7 +7,7 @@ import { Link } from "react-router";
 >>>>>>> dfef089 (feat(adds subscription user components): add subscription user components)
 // src/pages/Dashboard.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import StatCard from "../../common/shared/StatCard.jsx";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";
 

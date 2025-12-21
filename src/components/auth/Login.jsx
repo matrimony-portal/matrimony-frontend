@@ -70,7 +70,11 @@ const Login = () => {
       <div className="login-container">
         {/* Branding Section */}
         <div className="login-brand">
-          <div className="brand-logo">
+          <div
+            className="brand-logo"
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer" }}
+          >
             <img src="/assets/logo/logo.svg" alt="Logo" className="logo-icon" />
             <img
               src="/assets/logo/bandan.svg"
