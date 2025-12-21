@@ -13,16 +13,19 @@
 ## Code Quality
 
 **Auto-fix everything:**
+
 ```bash
 npm run fix
 ```
 
 **Check without fixing:**
+
 ```bash
 npm run check
 ```
 
 **Individual tools:**
+
 - `npm run format` - Prettier formatting
 - `npm run lint:css` - CSS linting
 - `npm run lint:js` - JavaScript linting
@@ -42,11 +45,13 @@ src/
 ## Commit Messages
 
 Use conventional commits:
+
 ```bash
 npm run commit
 ```
 
 Examples:
+
 - `feat: add user registration`
 - `fix: resolve login validation`
 - `docs: update README`

@@ -1,934 +1,1164 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bandan - Register</title>
-<link rel="icon" type="image/png" href="../../assets/favicon/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="../../assets/favicon/favicon.svg" />
-<link rel="shortcut icon" href="../../assets/favicon/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/apple-touch-icon.png" />
-<link rel="manifest" href="../../assets/favicon/site.webmanifest" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../assets/favicon/favicon-96x96.png"
+      sizes="96x96"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="../../assets/favicon/favicon.svg"
+    />
+    <link rel="shortcut icon" href="../../assets/favicon/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="../../assets/favicon/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="../../assets/favicon/site.webmanifest" />
     <style>
-        /* CSS remains the same as the improved version, plus added styles for required 'other' inputs */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      /* CSS remains the same as the improved version, plus added styles for required 'other' inputs */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-            min-height: 100vh;
-            padding: 2rem;
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        padding: 3rem;
+      }
+
+      .logo-section {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .logo-section h1 {
+        color: #ae1700;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .logo-section p {
+        color: #666;
+      }
+
+      .form-section {
+        margin-bottom: 2rem;
+      }
+
+      .form-section h2 {
+        color: #333;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #ae1700;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+      }
+
+      .required {
+        color: #e53e3e;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #ae1700;
+      }
+
+      /* Added class for invalid state feedback */
+      .form-group input.is-invalid,
+      .form-group select.is-invalid,
+      .form-group textarea.is-invalid {
+        border-color: #e53e3e;
+      }
+
+      /* Style for the hidden 'Other' fields */
+      .other-detail {
+        margin-top: 1rem;
+        display: none;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .error {
+        color: #e53e3e;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: none;
+      }
+
+      /* Error shown by default when validation fails */
+      .error.show {
+        display: block;
+      }
+
+      .radio-group,
+      .checkbox-group {
+        /*display: flex;*/
+        gap: 1.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .radio-group {
+        display: flex;
+      }
+
+      .radio-group label,
+      .checkbox-group label {
+        display: flex;
+        align-items: center;
+        font-weight: normal;
+      }
+
+      .radio-group input,
+      .checkbox-group input {
+        width: auto;
+        margin-right: 0.5rem;
+      }
+
+      .terms {
+        margin: 1.5rem 0;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #666;
+      }
+
+      .login-link a {
+        color: #ae1700;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .login-link a:hover {
+        text-decoration: underline;
+      }
+
+      .password-strength {
+        height: 4px;
+        background: #e2e8f0;
+        border-radius: 2px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+      }
+
+      .password-strength-bar {
+        height: 100%;
+        width: 0;
+        transition:
+          width 0.3s,
+          background-color 0.3s;
+      }
+
+      .strength-weak {
+        background: #e53e3e;
+        width: 33%;
+      }
+
+      .strength-medium {
+        background: #ed8936;
+        width: 66%;
+      }
+
+      .strength-strong {
+        background: #48bb78;
+        width: 100%;
+      }
+
+      .help-text {
+        font-size: 0.875rem;
+        color: #666;
+        margin-top: 0.25rem;
+      }
+
+      #passwordHelp {
+        font-size: 0.875rem;
+        color: #333;
+        margin-top: 0.5rem;
+      }
+      #passwordHelp .error-item {
+        color: #e53e3e;
+        transition: color 0.3s;
+      }
+      #passwordHelp .valid-item {
+        color: #48bb78;
+        text-decoration: line-through;
+      }
+
+      @media (max-width: 768px) {
+        .form-row {
+          grid-template-columns: 1fr;
         }
 
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            padding: 3rem;
+          padding: 2rem 1.5rem;
+        }
+      }
+
+      /*--------logo--------*/
+      .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /*gap: 0.75rem;*/
+      }
+
+      .logo-icon {
+        height: 50px;
+        width: auto;
+      }
+
+      .logo-text {
+        height: 40px;
+        width: auto;
+      }
+
+      /* For responsive - hide text on small screens */
+      @media (max-width: 768px) {
+        .logo-text {
+          display: none;
         }
 
-        .logo-section {
-            text-align: center;
-            margin-bottom: 2rem;
+        .logo-icon {
+          height: 35px;
         }
-
-        .logo-section h1 {
-            color: #ae1700;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .logo-section p {
-            color: #666;
-        }
-
-        .form-section {
-            margin-bottom: 2rem;
-        }
-
-        .form-section h2 {
-            color: #333;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #ae1700;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .required {
-            color: #e53e3e;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #ae1700;
-        }
-
-        /* Added class for invalid state feedback */
-        .form-group input.is-invalid,
-        .form-group select.is-invalid,
-        .form-group textarea.is-invalid {
-            border-color: #e53e3e;
-        }
-
-        /* Style for the hidden 'Other' fields */
-        .other-detail {
-            margin-top: 1rem;
-            display: none;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .error {
-            color: #e53e3e;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-            display: none;
-        }
-
-        /* Error shown by default when validation fails */
-        .error.show {
-            display: block;
-        }
-
-        .radio-group,
-        .checkbox-group {
-            /*display: flex;*/
-            gap: 1.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .radio-group{
-            display: flex;
-        }
-
-        .radio-group label,
-        .checkbox-group label {
-            display: flex;
-            align-items: center;
-            font-weight: normal;
-        }
-
-        .radio-group input,
-        .checkbox-group input {
-            width: auto;
-            margin-right: 0.5rem;
-        }
-
-        .terms {
-            margin: 1.5rem 0;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: #666;
-        }
-
-        .login-link a {
-            color: #ae1700;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .password-strength {
-            height: 4px;
-            background: #e2e8f0;
-            border-radius: 2px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0;
-            transition: width 0.3s, background-color 0.3s;
-        }
-
-        .strength-weak {
-            background: #e53e3e;
-            width: 33%;
-        }
-
-        .strength-medium {
-            background: #ed8936;
-            width: 66%;
-        }
-
-        .strength-strong {
-            background: #48bb78;
-            width: 100%;
-        }
-
-        .help-text {
-            font-size: 0.875rem;
-            color: #666;
-            margin-top: 0.25rem;
-        }
-
-        #passwordHelp {
-            font-size: 0.875rem;
-            color: #333;
-            margin-top: 0.5rem;
-        }
-        #passwordHelp .error-item {
-            color: #e53e3e;
-            transition: color 0.3s;
-        }
-        #passwordHelp .valid-item {
-            color: #48bb78;
-            text-decoration: line-through;
-        }
-
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                padding: 2rem 1.5rem;
-            }
-        }
-
-                /*--------logo--------*/
-.logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /*gap: 0.75rem;*/
-}
-
-.logo-icon {
-    height: 50px;
-    width: auto;
-}
-
-.logo-text {
-    height: 40px;
-    width: auto;
-}
-
-/* For responsive - hide text on small screens */
-@media (max-width: 768px) {
-    .logo-text {
-        display: none;
-    }
-
-    .logo-icon {
-        height: 35px;
-    }
-}
-        /*------------*/
+      }
+      /*------------*/
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="logo-section">
-            <div class="logo">
-    <img src="../../assets/logo/logo-black.svg" alt="Logo" class="logo-icon">
-    <img src="../../assets/logo/bandan-black.svg" alt="Bandan" class="logo-text">
-</div>
-            <p>Create your free account and find your life partner</p>
+      <div class="logo-section">
+        <div class="logo">
+          <img
+            src="../../assets/logo/logo-black.svg"
+            alt="Logo"
+            class="logo-icon"
+          />
+          <img
+            src="../../assets/logo/bandan-black.svg"
+            alt="Bandan"
+            class="logo-text"
+          />
+        </div>
+        <p>Create your free account and find your life partner</p>
+      </div>
+
+      <form id="registrationForm" novalidate>
+        <div class="form-section">
+          <h2>Profile For</h2>
+          <div class="form-group" id="profileForGroup">
+            <label
+              >I'm creating this profile for
+              <span class="required">*</span></label
+            >
+            <div class="radio-group">
+              <label>
+                <input
+                  type="radio"
+                  name="profileFor"
+                  value="self"
+                  required
+                  checked
+                />
+                Myself
+              </label>
+              <label>
+                <input type="radio" name="profileFor" value="son" />
+                Son
+              </label>
+              <label>
+                <input type="radio" name="profileFor" value="daughter" />
+                Daughter
+              </label>
+              <label>
+                <input type="radio" name="profileFor" value="sibling" />
+                Sibling
+              </label>
+              <label>
+                <input type="radio" name="profileFor" value="relative" />
+                Relative
+              </label>
+            </div>
+            <div class="error" id="profileForError">
+              Please select who the profile is for.
+            </div>
+          </div>
         </div>
 
-        <form id="registrationForm" novalidate>
-            <div class="form-section">
-                <h2>Profile For</h2>
-                <div class="form-group" id="profileForGroup">
-                    <label>I'm creating this profile for <span class="required">*</span></label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="profileFor" value="self" required checked>
-                            Myself
-                        </label>
-                        <label>
-                            <input type="radio" name="profileFor" value="son">
-                            Son
-                        </label>
-                        <label>
-                            <input type="radio" name="profileFor" value="daughter">
-                            Daughter
-                        </label>
-                        <label>
-                            <input type="radio" name="profileFor" value="sibling">
-                            Sibling
-                        </label>
-                        <label>
-                            <input type="radio" name="profileFor" value="relative">
-                            Relative
-                        </label>
-                    </div>
-                     <div class="error" id="profileForError">Please select who the profile is for.</div>
-                </div>
+        <div class="form-section">
+          <h2>Basic Information</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName"
+                >First Name <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                required
+                pattern="[A-Za-z\s]{2,50}"
+              />
+              <div class="error" id="firstNameError">
+                First name must be 2-50 letters (only alphabets and spaces).
+              </div>
             </div>
-
-            <div class="form-section">
-                <h2>Basic Information</h2>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="firstName">First Name <span class="required">*</span></label>
-                        <input type="text" id="firstName" name="firstName" required pattern="[A-Za-z\s]{2,50}">
-                        <div class="error" id="firstNameError">First name must be 2-50 letters (only alphabets and spaces).</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name <span class="required">*</span></label>
-                        <input type="text" id="lastName" name="lastName" required pattern="[A-Za-z\s]{2,50}">
-                        <div class="error" id="lastNameError">Last name must be 2-50 letters (only alphabets and spaces).</div>
-                    </div>
-                </div>
-
-                <div class="form-group" id="genderGroup">
-                    <label>Gender <span class="required">*</span></label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="gender" value="male" required>
-                            Male
-                        </label>
-                        <label>
-                            <input type="radio" name="gender" value="female" required>
-                            Female
-                        </label>
-                    </div>
-                    <div class="error" id="genderError">Please select a gender.</div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="dob">Date of Birth <span class="required">*</span></label>
-                        <input type="text" id="dob" name="dob" placeholder="DD/MM/YYYY" required >
-                        <div class="error" id="dobError">You must be at least 18 years old and born after 1950.</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="maritalStatus">Marital Status <span class="required">*</span></label>
-                        <select id="maritalStatus" name="maritalStatus" required>
-                            <option value="">Select</option>
-                            <option value="never-married">Never Married</option>
-                            <option value="divorced">Divorced</option>
-                            <option value="widowed">Widowed</option>
-                            <option value="awaiting-divorce">Awaiting Divorce</option>
-                        </select>
-                        <div class="error" id="maritalStatusError">Please select a marital status.</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="religion">Religion <span class="required">*</span></label>
-                    <select id="religion" name="religion" required>
-                        <option value="">Select Religion</option>
-                        <option value="hindu">Hindu</option>
-                        <option value="muslim">Muslim</option>
-                        <option value="christian">Christian</option>
-                        <option value="sikh">Sikh</option>
-                        <option value="buddhist">Buddhist</option>
-                        <option value="jain">Jain</option>
-                        <option value="parsi">Parsi</option>
-                        <option value="atheist">Atheist</option>
-                        <option value="other">Other</option>
-                    </select>
-                    <div class="error" id="religionError">Please select a religion.</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="motherTongue">Mother Tongue <span class="required">*</span></label>
-                    <select id="motherTongue" name="motherTongue" required>
-                        <option value="">Select Language</option>
-                        <option value="hindi">Hindi</option>
-                        <option value="english">English</option>
-                        <option value="bengali">Bengali</option>
-                        <option value="tamil">Tamil</option>
-                        <option value="telugu">Telugu</option>
-                        <option value="marathi">Marathi</option>
-                        <option value="gujarati">Gujarati</option>
-                        <option value="kannada">Kannada</option>
-                        <option value="malayalam">Malayalam</option>
-                        <option value="punjabi">Punjabi</option>
-                    </select>
-                    <div class="error" id="motherTongueError">Please select a mother tongue.</div>
-                </div>
+            <div class="form-group">
+              <label for="lastName"
+                >Last Name <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                required
+                pattern="[A-Za-z\s]{2,50}"
+              />
+              <div class="error" id="lastNameError">
+                Last name must be 2-50 letters (only alphabets and spaces).
+              </div>
             </div>
+          </div>
 
-            <div class="form-section">
-                <h2>Contact Information</h2>
-                <div class="form-group">
-                    <label for="email">Email Address <span class="required">*</span></label>
-                    <input type="email" id="email" name="email" required>
-                    <div class="error" id="emailError">Please enter a valid email address (e.g., user@domain.com).</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Mobile Number <span class="required">*</span></label>
-                    <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}">
-                    <div class="help-text">10-digit mobile number without country code</div>
-                    <div class="error" id="phoneError">Please enter a valid 10-digit mobile number.</div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="city">City <span class="required">*</span></label>
-                        <input type="text" id="city" name="city" required>
-                        <div class="error" id="cityError">Please enter your city.</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="state">State <span class="required">*</span></label>
-                        <input type="text" id="state" name="state" required>
-                        <div class="error" id="stateError">Please enter your state.</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="country">Country <span class="required">*</span></label>
-                    <select id="country" name="country" required>
-                        <option value="">Select Country</option>
-                        <option value="india" selected>India</option>
-                        <option value="usa">United States</option>
-                        <option value="uk">United Kingdom</option>
-                        <option value="canada">Canada</option>
-                        <option value="australia">Australia</option>
-                        <option value="uae">UAE</option>
-                        <option value="singapore">Singapore</option>
-                    </select>
-                    <div class="error" id="countryError">Please select your country.</div>
-                </div>
+          <div class="form-group" id="genderGroup">
+            <label>Gender <span class="required">*</span></label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="gender" value="male" required />
+                Male
+              </label>
+              <label>
+                <input type="radio" name="gender" value="female" required />
+                Female
+              </label>
             </div>
+            <div class="error" id="genderError">Please select a gender.</div>
+          </div>
 
-            <div class="form-section">
-                <h2>Professional Details</h2>
-                <div class="form-group">
-                    <label for="education">Highest Education <span class="required">*</span></label>
-                    <select id="education" name="education" required onchange="toggleOtherField('education')">
-                        <option value="">Select Education</option>
-                        <option value="bachelors">Bachelor's Degree</option>
-                        <option value="masters">Master's Degree</option>
-                        <option value="doctorate">Doctorate/PhD</option>
-                        <option value="diploma">Diploma</option>
-                        <option value="high-school">High School</option>
-                        <option value="other">Other</option>
-                    </select>
-                    <div class="error" id="educationError">Please select your highest education.</div>
-                    <div class="other-detail" id="otherEducationGroup">
-                        <label for="otherEducation">Specify Education <span class="required">*</span></label>
-                        <input type="text" id="otherEducation" name="otherEducation" placeholder="e.g., Professional Certification, Vocational Training">
-                        <div class="error" id="otherEducationError">Please specify your education.</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="occupation">Occupation <span class="required">*</span></label>
-                    <select id="occupation" name="occupation" required onchange="toggleOtherField('occupation')">
-                        <option value="">Select Occupation</option>
-                        <option value="engineer">Engineer</option>
-                        <option value="doctor">Doctor</option>
-                        <option value="teacher">Teacher</option>
-                        <option value="business">Business Owner</option>
-                        <option value="government">Government Employee</option>
-                        <option value="private">Private Sector</option>
-                        <option value="student">Student</option>
-                        <option value="homemaker">Homemaker</option>
-                        <option value="other">Other</option>
-                    </select>
-                    <div class="error" id="occupationError">Please select your occupation.</div>
-                    <div class="other-detail" id="otherOccupationGroup">
-                        <label for="otherOccupation">Specify Occupation <span class="required">*</span></label>
-                        <input type="text" id="otherOccupation" name="otherOccupation" placeholder="e.g., Content Creator, Artist, Pilot">
-                        <div class="error" id="otherOccupationError">Please specify your occupation.</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="income">Annual Income</label>
-                    <select id="income" name="income">
-                        <option value="">Select Range (Optional)</option>
-                        <option value="0-3">Below 3 Lakhs</option>
-                        <option value="3-5">3-5 Lakhs</option>
-                        <option value="5-10">5-10 Lakhs</option>
-                        <option value="10-20">10-20 Lakhs</option>
-                        <option value="20-50">20-50 Lakhs</option>
-                        <option value="50+">Above 50 Lakhs</option>
-                    </select>
-                </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dob"
+                >Date of Birth <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="dob"
+                name="dob"
+                placeholder="DD/MM/YYYY"
+                required
+              />
+              <div class="error" id="dobError">
+                You must be at least 18 years old and born after 1950.
+              </div>
             </div>
-
-            <div class="form-section">
-                <h2>Account Security</h2>
-                <div class="form-group">
-                    <label for="password">Password <span class="required">*</span></label>
-                    <input type="password" id="password" name="password" required minlength="8" oninput="checkPasswordStrength()">
-                    <div class="password-strength">
-                        <div class="password-strength-bar" id="strengthBar"></div>
-                    </div>
-                    <div id="passwordHelp">
-                        <p>Password must contain:</p>
-                        <ul>
-                            <li id="lengthCheck" class="error-item">Minimum 8 characters</li>
-                            <li id="lowerCheck" class="error-item">At least one lowercase letter</li>
-                            <li id="upperCheck" class="error-item">At least one uppercase letter</li>
-                            <li id="numberCheck" class="error-item">At least one number</li>
-                            <li id="specialCheck" class="error-item">At least one special character (@$!%*?&amp;)</li>
-                        </ul>
-                    </div>
-                    <div class="error" id="passwordError">Password does not meet all criteria.</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required oninput="checkPasswordMatch()">
-                    <div class="error" id="confirmPasswordError">Passwords do not match.</div>
-                </div>
+            <div class="form-group">
+              <label for="maritalStatus"
+                >Marital Status <span class="required">*</span></label
+              >
+              <select id="maritalStatus" name="maritalStatus" required>
+                <option value="">Select</option>
+                <option value="never-married">Never Married</option>
+                <option value="divorced">Divorced</option>
+                <option value="widowed">Widowed</option>
+                <option value="awaiting-divorce">Awaiting Divorce</option>
+              </select>
+              <div class="error" id="maritalStatusError">
+                Please select a marital status.
+              </div>
             </div>
+          </div>
 
-            <div class="terms">
-                <label class="checkbox-group">
-                    <input type="checkbox" id="terms" name="terms" required>
-                    I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a> <span class="required">*</span>
-                </label>
-                 <div class="error" id="termsError">You must agree to the terms and conditions.</div>
+          <div class="form-group">
+            <label for="religion"
+              >Religion <span class="required">*</span></label
+            >
+            <select id="religion" name="religion" required>
+              <option value="">Select Religion</option>
+              <option value="hindu">Hindu</option>
+              <option value="muslim">Muslim</option>
+              <option value="christian">Christian</option>
+              <option value="sikh">Sikh</option>
+              <option value="buddhist">Buddhist</option>
+              <option value="jain">Jain</option>
+              <option value="parsi">Parsi</option>
+              <option value="atheist">Atheist</option>
+              <option value="other">Other</option>
+            </select>
+            <div class="error" id="religionError">
+              Please select a religion.
             </div>
+          </div>
 
-            <button type="submit" class="submit-btn">Create Account</button>
-
-            <div class="login-link">
-                Already have an account? <a href="login.html">Login here</a>
+          <div class="form-group">
+            <label for="motherTongue"
+              >Mother Tongue <span class="required">*</span></label
+            >
+            <select id="motherTongue" name="motherTongue" required>
+              <option value="">Select Language</option>
+              <option value="hindi">Hindi</option>
+              <option value="english">English</option>
+              <option value="bengali">Bengali</option>
+              <option value="tamil">Tamil</option>
+              <option value="telugu">Telugu</option>
+              <option value="marathi">Marathi</option>
+              <option value="gujarati">Gujarati</option>
+              <option value="kannada">Kannada</option>
+              <option value="malayalam">Malayalam</option>
+              <option value="punjabi">Punjabi</option>
+            </select>
+            <div class="error" id="motherTongueError">
+              Please select a mother tongue.
             </div>
-        </form>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>Contact Information</h2>
+          <div class="form-group">
+            <label for="email"
+              >Email Address <span class="required">*</span></label
+            >
+            <input type="email" id="email" name="email" required />
+            <div class="error" id="emailError">
+              Please enter a valid email address (e.g., user@domain.com).
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone"
+              >Mobile Number <span class="required">*</span></label
+            >
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              required
+              pattern="[0-9]{10}"
+            />
+            <div class="help-text">
+              10-digit mobile number without country code
+            </div>
+            <div class="error" id="phoneError">
+              Please enter a valid 10-digit mobile number.
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City <span class="required">*</span></label>
+              <input type="text" id="city" name="city" required />
+              <div class="error" id="cityError">Please enter your city.</div>
+            </div>
+            <div class="form-group">
+              <label for="state">State <span class="required">*</span></label>
+              <input type="text" id="state" name="state" required />
+              <div class="error" id="stateError">Please enter your state.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="country">Country <span class="required">*</span></label>
+            <select id="country" name="country" required>
+              <option value="">Select Country</option>
+              <option value="india" selected>India</option>
+              <option value="usa">United States</option>
+              <option value="uk">United Kingdom</option>
+              <option value="canada">Canada</option>
+              <option value="australia">Australia</option>
+              <option value="uae">UAE</option>
+              <option value="singapore">Singapore</option>
+            </select>
+            <div class="error" id="countryError">
+              Please select your country.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>Professional Details</h2>
+          <div class="form-group">
+            <label for="education"
+              >Highest Education <span class="required">*</span></label
+            >
+            <select
+              id="education"
+              name="education"
+              required
+              onchange="toggleOtherField('education')"
+            >
+              <option value="">Select Education</option>
+              <option value="bachelors">Bachelor's Degree</option>
+              <option value="masters">Master's Degree</option>
+              <option value="doctorate">Doctorate/PhD</option>
+              <option value="diploma">Diploma</option>
+              <option value="high-school">High School</option>
+              <option value="other">Other</option>
+            </select>
+            <div class="error" id="educationError">
+              Please select your highest education.
+            </div>
+            <div class="other-detail" id="otherEducationGroup">
+              <label for="otherEducation"
+                >Specify Education <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="otherEducation"
+                name="otherEducation"
+                placeholder="e.g., Professional Certification, Vocational Training"
+              />
+              <div class="error" id="otherEducationError">
+                Please specify your education.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="occupation"
+              >Occupation <span class="required">*</span></label
+            >
+            <select
+              id="occupation"
+              name="occupation"
+              required
+              onchange="toggleOtherField('occupation')"
+            >
+              <option value="">Select Occupation</option>
+              <option value="engineer">Engineer</option>
+              <option value="doctor">Doctor</option>
+              <option value="teacher">Teacher</option>
+              <option value="business">Business Owner</option>
+              <option value="government">Government Employee</option>
+              <option value="private">Private Sector</option>
+              <option value="student">Student</option>
+              <option value="homemaker">Homemaker</option>
+              <option value="other">Other</option>
+            </select>
+            <div class="error" id="occupationError">
+              Please select your occupation.
+            </div>
+            <div class="other-detail" id="otherOccupationGroup">
+              <label for="otherOccupation"
+                >Specify Occupation <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="otherOccupation"
+                name="otherOccupation"
+                placeholder="e.g., Content Creator, Artist, Pilot"
+              />
+              <div class="error" id="otherOccupationError">
+                Please specify your occupation.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="income">Annual Income</label>
+            <select id="income" name="income">
+              <option value="">Select Range (Optional)</option>
+              <option value="0-3">Below 3 Lakhs</option>
+              <option value="3-5">3-5 Lakhs</option>
+              <option value="5-10">5-10 Lakhs</option>
+              <option value="10-20">10-20 Lakhs</option>
+              <option value="20-50">20-50 Lakhs</option>
+              <option value="50+">Above 50 Lakhs</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>Account Security</h2>
+          <div class="form-group">
+            <label for="password"
+              >Password <span class="required">*</span></label
+            >
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              minlength="8"
+              oninput="checkPasswordStrength()"
+            />
+            <div class="password-strength">
+              <div class="password-strength-bar" id="strengthBar"></div>
+            </div>
+            <div id="passwordHelp">
+              <p>Password must contain:</p>
+              <ul>
+                <li id="lengthCheck" class="error-item">
+                  Minimum 8 characters
+                </li>
+                <li id="lowerCheck" class="error-item">
+                  At least one lowercase letter
+                </li>
+                <li id="upperCheck" class="error-item">
+                  At least one uppercase letter
+                </li>
+                <li id="numberCheck" class="error-item">At least one number</li>
+                <li id="specialCheck" class="error-item">
+                  At least one special character (@$!%*?&amp;)
+                </li>
+              </ul>
+            </div>
+            <div class="error" id="passwordError">
+              Password does not meet all criteria.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword"
+              >Confirm Password <span class="required">*</span></label
+            >
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              required
+              oninput="checkPasswordMatch()"
+            />
+            <div class="error" id="confirmPasswordError">
+              Passwords do not match.
+            </div>
+          </div>
+        </div>
+
+        <div class="terms">
+          <label class="checkbox-group">
+            <input type="checkbox" id="terms" name="terms" required />
+            I agree to the <a href="#">Terms and Conditions</a> and
+            <a href="#">Privacy Policy</a> <span class="required">*</span>
+          </label>
+          <div class="error" id="termsError">
+            You must agree to the terms and conditions.
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Create Account</button>
+
+        <div class="login-link">
+          Already have an account? <a href="login.html">Login here</a>
+        </div>
+      </form>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('registrationForm');
-            const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("registrationForm");
+        const requiredInputs = form.querySelectorAll(
+          "input[required], select[required], textarea[required]",
+        );
 
-            // Attaching event listeners for real-time validation feedback
-            requiredInputs.forEach(input => {
-                // Focus: clear any previous invalid state visually
-                input.addEventListener('focus', () => {
-                    input.classList.remove('is-invalid');
-                    const errorElement = document.getElementById(input.id + 'Error');
-                    if (errorElement) {
-                        errorElement.classList.remove('show');
-                    }
-                });
+        // Attaching event listeners for real-time validation feedback
+        requiredInputs.forEach((input) => {
+          // Focus: clear any previous invalid state visually
+          input.addEventListener("focus", () => {
+            input.classList.remove("is-invalid");
+            const errorElement = document.getElementById(input.id + "Error");
+            if (errorElement) {
+              errorElement.classList.remove("show");
+            }
+          });
 
-                // Blur: validate on losing focus
-                input.addEventListener('blur', () => {
-                    // Skip radio/checkbox groups, password fields on blur for better UX
-                    if (input.type === 'radio' || input.type === 'checkbox' || input.id === 'password' || input.id === 'confirmPassword') return;
-                    validateField(input);
-                });
+          // Blur: validate on losing focus
+          input.addEventListener("blur", () => {
+            // Skip radio/checkbox groups, password fields on blur for better UX
+            if (
+              input.type === "radio" ||
+              input.type === "checkbox" ||
+              input.id === "password" ||
+              input.id === "confirmPassword"
+            )
+              return;
+            validateField(input);
+          });
 
-                // Input: validate as user types for text fields and select
-                input.addEventListener('input', () => {
-                    if (input.id === 'email' || input.id === 'phone' || input.id === 'firstName' || input.id === 'lastName' || input.id.startsWith('other')) {
-                        validateField(input);
-                    }
-                });
+          // Input: validate as user types for text fields and select
+          input.addEventListener("input", () => {
+            if (
+              input.id === "email" ||
+              input.id === "phone" ||
+              input.id === "firstName" ||
+              input.id === "lastName" ||
+              input.id.startsWith("other")
+            ) {
+              validateField(input);
+            }
+          });
 
-                // Change: for selects and date/radio/checkbox
-                input.addEventListener('change', () => {
-                    if (input.type !== 'text' && input.type !== 'email' && input.type !== 'tel' && input.type !== 'password' && !input.id.startsWith('other')) {
-                        validateField(input);
-                    }
-                });
-            });
-
-            // Specific event listeners for password
-            document.getElementById('password').addEventListener('input', checkPasswordMatch);
-            document.getElementById('confirmPassword').addEventListener('input', checkPasswordMatch);
-
-            // --- Custom validation for 'Other' fields ---
-            document.getElementById('otherEducation').addEventListener('input', () => validateField(document.getElementById('otherEducation')));
-            document.getElementById('otherOccupation').addEventListener('input', () => validateField(document.getElementById('otherOccupation')));
-
-            // Form submission handler
-            form.addEventListener('submit', (event) => {
-                event.preventDefault(); // Stop default form submission
-                if (validateForm()) {
-                    alert('Registration successful! Submitting form...');
-                    // In a real application, you would now submit the data to the server (e.g., using fetch API)
-                    // window.location.href = 'login.html';
-                } else {
-                    alert('Please correct the highlighted errors before submitting.');
-                }
-            });
+          // Change: for selects and date/radio/checkbox
+          input.addEventListener("change", () => {
+            if (
+              input.type !== "text" &&
+              input.type !== "email" &&
+              input.type !== "tel" &&
+              input.type !== "password" &&
+              !input.id.startsWith("other")
+            ) {
+              validateField(input);
+            }
+          });
         });
 
-        /**
-         * Toggles the visibility and requirement of the "Other" text input.
-         * @param {string} fieldName - 'education' or 'occupation'.
-         */
-        function toggleOtherField(fieldName) {
-            const select = document.getElementById(fieldName);
-            const otherGroup = document.getElementById('other' + fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + 'Group');
-            const otherInput = document.getElementById('other' + fieldName.charAt(0).toUpperCase() + fieldName.slice(1));
+        // Specific event listeners for password
+        document
+          .getElementById("password")
+          .addEventListener("input", checkPasswordMatch);
+        document
+          .getElementById("confirmPassword")
+          .addEventListener("input", checkPasswordMatch);
 
-            if (select.value === 'other') {
-                otherGroup.style.display = 'block';
-                otherInput.setAttribute('required', 'required');
-                validateField(otherInput); // Validate immediately to show error if empty
+        // --- Custom validation for 'Other' fields ---
+        document
+          .getElementById("otherEducation")
+          .addEventListener("input", () =>
+            validateField(document.getElementById("otherEducation")),
+          );
+        document
+          .getElementById("otherOccupation")
+          .addEventListener("input", () =>
+            validateField(document.getElementById("otherOccupation")),
+          );
+
+        // Form submission handler
+        form.addEventListener("submit", (event) => {
+          event.preventDefault(); // Stop default form submission
+          if (validateForm()) {
+            alert("Registration successful! Submitting form...");
+            // In a real application, you would now submit the data to the server (e.g., using fetch API)
+            // window.location.href = 'login.html';
+          } else {
+            alert("Please correct the highlighted errors before submitting.");
+          }
+        });
+      });
+
+      /**
+       * Toggles the visibility and requirement of the "Other" text input.
+       * @param {string} fieldName - 'education' or 'occupation'.
+       */
+      function toggleOtherField(fieldName) {
+        const select = document.getElementById(fieldName);
+        const otherGroup = document.getElementById(
+          "other" +
+            fieldName.charAt(0).toUpperCase() +
+            fieldName.slice(1) +
+            "Group",
+        );
+        const otherInput = document.getElementById(
+          "other" + fieldName.charAt(0).toUpperCase() + fieldName.slice(1),
+        );
+
+        if (select.value === "other") {
+          otherGroup.style.display = "block";
+          otherInput.setAttribute("required", "required");
+          validateField(otherInput); // Validate immediately to show error if empty
+        } else {
+          otherGroup.style.display = "none";
+          otherInput.removeAttribute("required");
+          otherInput.value = ""; // Clear value when hidden
+          // Clear any potential error state on the hidden input
+          otherInput.classList.remove("is-invalid");
+          const errorElement = document.getElementById(otherInput.id + "Error");
+          if (errorElement) errorElement.classList.remove("show");
+        }
+        validateField(select); // Validate the select field itself
+      }
+
+      /**
+       * Generic function to validate a single form element.
+       * @param {HTMLElement} input The input/select/textarea element.
+       * @returns {boolean} True if valid, false otherwise.
+       */
+      function validateField(input) {
+        let isValid = true;
+        const errorElement = document.getElementById(input.id + "Error");
+
+        // Clear previous state
+        input.classList.remove("is-invalid");
+        if (errorElement) errorElement.classList.remove("show");
+
+        // 1. Check for required fields (including selects/radios/checkboxes)
+        if (
+          input.hasAttribute("required") &&
+          (input.value.trim() === "" ||
+            input.value === "Select" ||
+            input.value === "Select Religion" ||
+            input.value === "Select Language" ||
+            input.value === "Select Country" ||
+            input.value === "Select Education" ||
+            input.value === "Select Occupation")
+        ) {
+          isValid = false;
+        }
+
+        // 2. Specific field validations
+        else if (input.id === "firstName" || input.id === "lastName") {
+          const nameRegex = /^[A-Za-z\s]{2,50}$/;
+          if (!nameRegex.test(input.value)) isValid = false;
+        } else if (input.id === "email") {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(input.value)) isValid = false;
+        } else if (input.id === "phone") {
+          const phoneRegex = /^[0-9]{10}$/;
+          if (!phoneRegex.test(input.value)) isValid = false;
+        } else if (input.id === "dob") {
+          isValid = validateAgeAgainstGender(input.value);
+        } else if (input.id === "password") {
+          isValid = validatePassword(input.value);
+        } else if (input.id === "confirmPassword") {
+          // Confirm password validation is handled by checkPasswordMatch separately but included here for consistency
+          if (document.getElementById("password").value !== input.value) {
+            isValid = false;
+          }
+        } else if (input.id === "terms") {
+          isValid = input.checked;
+        } else if (input.name === "profileFor" || input.name === "gender") {
+          // Check if at least one radio in the group is checked
+          const radioGroup = document.querySelector(
+            `input[name="${input.name}"]:checked`,
+          );
+          isValid = !!radioGroup;
+          // Group error handling for radio groups
+          const groupErrorElement = document.getElementById(
+            input.name + "Error",
+          );
+          if (groupErrorElement) {
+            if (isValid) {
+              groupErrorElement.classList.remove("show");
             } else {
-                otherGroup.style.display = 'none';
-                otherInput.removeAttribute('required');
-                otherInput.value = ''; // Clear value when hidden
-                // Clear any potential error state on the hidden input
-                otherInput.classList.remove('is-invalid');
-                const errorElement = document.getElementById(otherInput.id + 'Error');
-                if (errorElement) errorElement.classList.remove('show');
+              groupErrorElement.classList.add("show");
             }
-            validateField(select); // Validate the select field itself
+          }
         }
 
-
-        /**
-         * Generic function to validate a single form element.
-         * @param {HTMLElement} input The input/select/textarea element.
-         * @returns {boolean} True if valid, false otherwise.
-         */
-        function validateField(input) {
-            let isValid = true;
-            const errorElement = document.getElementById(input.id + 'Error');
-
-            // Clear previous state
-            input.classList.remove('is-invalid');
-            if (errorElement) errorElement.classList.remove('show');
-
-            // 1. Check for required fields (including selects/radios/checkboxes)
-            if (input.hasAttribute('required') && (
-                input.value.trim() === '' ||
-                input.value === 'Select' ||
-                input.value === 'Select Religion' ||
-                input.value === 'Select Language' ||
-                input.value === 'Select Country' ||
-                input.value === 'Select Education' ||
-                input.value === 'Select Occupation'
-            )) {
-                 isValid = false;
-            }
-
-            // 2. Specific field validations
-            else if (input.id === 'firstName' || input.id === 'lastName') {
-                 const nameRegex = /^[A-Za-z\s]{2,50}$/;
-                 if (!nameRegex.test(input.value)) isValid = false;
-            } else if (input.id === 'email') {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(input.value)) isValid = false;
-            } else if (input.id === 'phone') {
-                const phoneRegex = /^[0-9]{10}$/;
-                if (!phoneRegex.test(input.value)) isValid = false;
-            } else if (input.id === 'dob') {
-                isValid = validateAgeAgainstGender(input.value);
-            } else if (input.id === 'password') {
-                isValid = validatePassword(input.value);
-            } else if (input.id === 'confirmPassword') {
-                // Confirm password validation is handled by checkPasswordMatch separately but included here for consistency
-                if (document.getElementById('password').value !== input.value) {
-                    isValid = false;
-                }
-            } else if (input.id === 'terms') {
-                isValid = input.checked;
-            } else if (input.name === 'profileFor' || input.name === 'gender') {
-                // Check if at least one radio in the group is checked
-                const radioGroup = document.querySelector(`input[name="${input.name}"]:checked`);
-                isValid = !!radioGroup;
-                // Group error handling for radio groups
-                const groupErrorElement = document.getElementById(input.name + 'Error');
-                if (groupErrorElement) {
-                    if (isValid) {
-                        groupErrorElement.classList.remove('show');
-                    } else {
-                        groupErrorElement.classList.add('show');
-                    }
-                }
-            }
-
-
-            // 3. Update visual state if invalid, unless it's a radio/checkbox group/individual
-            if (!isValid && input.type !== 'radio' && input.type !== 'checkbox') {
-                input.classList.add('is-invalid');
-                if (errorElement) errorElement.classList.add('show');
-            }
-
-            return isValid;
+        // 3. Update visual state if invalid, unless it's a radio/checkbox group/individual
+        if (!isValid && input.type !== "radio" && input.type !== "checkbox") {
+          input.classList.add("is-invalid");
+          if (errorElement) errorElement.classList.add("show");
         }
 
-       /**
- * Validates date of birth to ensure the user is at least the required minimum age
- * and born after 1950.
- * Accepts input in "dd/mm/yyyy" format.
- * @param {string} dobValue - The date string (DD/MM/YYYY)
- * @param {number} minAge - Minimum legal age (default 18)
- * @returns {boolean} True if valid, false otherwise
- */
-function validateAge(dobValue, minAge = 18) {
-    if (!dobValue) return false;
+        return isValid;
+      }
 
-    // Validate dd/mm/yyyy format
-    const dateParts = dobValue.split('/');
-    if (dateParts.length !== 3) return false;
+      /**
+       * Validates date of birth to ensure the user is at least the required minimum age
+       * and born after 1950.
+       * Accepts input in "dd/mm/yyyy" format.
+       * @param {string} dobValue - The date string (DD/MM/YYYY)
+       * @param {number} minAge - Minimum legal age (default 18)
+       * @returns {boolean} True if valid, false otherwise
+       */
+      function validateAge(dobValue, minAge = 18) {
+        if (!dobValue) return false;
 
-    const [day, month, year] = dateParts.map(Number);
-    if (isNaN(day) || isNaN(month) || isNaN(year)) return false;
+        // Validate dd/mm/yyyy format
+        const dateParts = dobValue.split("/");
+        if (dateParts.length !== 3) return false;
 
-    // Construct a valid date
-    const dob = new Date(year, month - 1, day);
-    if (
-        dob.getDate() !== day ||
-        dob.getMonth() + 1 !== month ||
-        dob.getFullYear() !== year
-    ) {
-        return false; // Invalid real-world date
-    }
+        const [day, month, year] = dateParts.map(Number);
+        if (isNaN(day) || isNaN(month) || isNaN(year)) return false;
 
-    const now = new Date();
-    const minAgeDate = new Date(now.getFullYear() - minAge, now.getMonth(), now.getDate());
-    const maxAgeDate = new Date(1950, 0, 1); // Born after 1950-01-01
-
-    return dob <= minAgeDate && dob >= maxAgeDate;
-}
-
-/**
- * Validates DOB considering gender-specific age rules.
- * Works with dd/mm/yyyy format.
- * @param {string} dobValue - The date string (DD/MM/YYYY)
- * @returns {boolean} True if valid, false otherwise
- */
-function validateAgeAgainstGender(dobValue) {
-    if (!dobValue) return true; // Skip if empty (handled elsewhere)
-
-    let minAge = 18; // Default
-    const maleChecked = document.querySelector('input[name="gender"][value="male"]')?.checked;
-    const femaleChecked = document.querySelector('input[name="gender"][value="female"]')?.checked;
-
-    if (maleChecked) minAge = 21;
-    else if (femaleChecked) minAge = 18;
-
-    const isValid = validateAge(dobValue, minAge);
-    const dobInput = document.getElementById('dob');
-    const errorElement = document.getElementById('dobError');
-
-    // Reset previous error
-    dobInput.classList.remove('is-invalid');
-    errorElement.classList.remove('show');
-
-    if (!isValid) {
-        dobInput.classList.add('is-invalid');
-        errorElement.textContent = `You must be at least ${minAge} years old (legal requirement). Please enter DD/MM/YYYY format.`;
-        errorElement.classList.add('show');
-    }
-
-    return isValid;
-}
-
-
-
-        /**
-         * Checks password strength and updates the strength bar and specific requirements list.
-         */
-        function checkPasswordStrength() {
-            const password = document.getElementById('password').value;
-            const strengthBar = document.getElementById('strengthBar');
-
-            // Password requirements for strength and specific error messages
-            const checks = [
-                { id: 'lengthCheck', regex: /.{8,}/ },
-                { id: 'lowerCheck', regex: /[a-z]/ },
-                { id: 'upperCheck', regex: /[A-Z]/ },
-                { id: 'numberCheck', regex: /[0-9]/ },
-                { id: 'specialCheck', regex: /[^a-zA-Z0-9\s]/ }
-            ];
-
-            let strength = 0;
-
-            checks.forEach(check => {
-                const element = document.getElementById(check.id);
-                if (check.regex.test(password)) {
-                    strength++;
-                    element.className = 'valid-item';
-                } else {
-                    element.className = 'error-item';
-                }
-            });
-
-            // Update strength bar color and width
-            strengthBar.className = 'password-strength-bar';
-            if (strength <= 2) {
-                strengthBar.classList.add('strength-weak');
-            } else if (strength <= 4) {
-                strengthBar.classList.add('strength-medium');
-            } else {
-                strengthBar.classList.add('strength-strong');
-            }
-
-            // Run the main password validation for real-time error message (after strength logic)
-            validateField(document.getElementById('password'));
+        // Construct a valid date
+        const dob = new Date(year, month - 1, day);
+        if (
+          dob.getDate() !== day ||
+          dob.getMonth() + 1 !== month ||
+          dob.getFullYear() !== year
+        ) {
+          return false; // Invalid real-world date
         }
 
-        /**
-         * Checks if the two password fields match.
-         */
-        function checkPasswordMatch() {
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirmPassword');
-            const errorElement = document.getElementById('confirmPasswordError');
+        const now = new Date();
+        const minAgeDate = new Date(
+          now.getFullYear() - minAge,
+          now.getMonth(),
+          now.getDate(),
+        );
+        const maxAgeDate = new Date(1950, 0, 1); // Born after 1950-01-01
 
-            confirmPassword.classList.remove('is-invalid');
-            errorElement.classList.remove('show');
+        return dob <= minAgeDate && dob >= maxAgeDate;
+      }
 
-            if (confirmPassword.value.length > 0 && password.value !== confirmPassword.value) {
-                confirmPassword.classList.add('is-invalid');
-                errorElement.classList.add('show');
-                return false;
-            }
+      /**
+       * Validates DOB considering gender-specific age rules.
+       * Works with dd/mm/yyyy format.
+       * @param {string} dobValue - The date string (DD/MM/YYYY)
+       * @returns {boolean} True if valid, false otherwise
+       */
+      function validateAgeAgainstGender(dobValue) {
+        if (!dobValue) return true; // Skip if empty (handled elsewhere)
 
-            return true;
+        let minAge = 18; // Default
+        const maleChecked = document.querySelector(
+          'input[name="gender"][value="male"]',
+        )?.checked;
+        const femaleChecked = document.querySelector(
+          'input[name="gender"][value="female"]',
+        )?.checked;
+
+        if (maleChecked) minAge = 21;
+        else if (femaleChecked) minAge = 18;
+
+        const isValid = validateAge(dobValue, minAge);
+        const dobInput = document.getElementById("dob");
+        const errorElement = document.getElementById("dobError");
+
+        // Reset previous error
+        dobInput.classList.remove("is-invalid");
+        errorElement.classList.remove("show");
+
+        if (!isValid) {
+          dobInput.classList.add("is-invalid");
+          errorElement.textContent = `You must be at least ${minAge} years old (legal requirement). Please enter DD/MM/YYYY format.`;
+          errorElement.classList.add("show");
         }
 
-        /**
-         * Validates the password against the complete security regex.
-         * @param {string} password The password string.
-         * @returns {boolean} True if the password is valid, false otherwise.
-         */
-        function validatePassword(password) {
-             // Minimum 8 characters, at least one uppercase, one lowercase, one number, and one special character
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            return passwordRegex.test(password);
+        return isValid;
+      }
+
+      /**
+       * Checks password strength and updates the strength bar and specific requirements list.
+       */
+      function checkPasswordStrength() {
+        const password = document.getElementById("password").value;
+        const strengthBar = document.getElementById("strengthBar");
+
+        // Password requirements for strength and specific error messages
+        const checks = [
+          { id: "lengthCheck", regex: /.{8,}/ },
+          { id: "lowerCheck", regex: /[a-z]/ },
+          { id: "upperCheck", regex: /[A-Z]/ },
+          { id: "numberCheck", regex: /[0-9]/ },
+          { id: "specialCheck", regex: /[^a-zA-Z0-9\s]/ },
+        ];
+
+        let strength = 0;
+
+        checks.forEach((check) => {
+          const element = document.getElementById(check.id);
+          if (check.regex.test(password)) {
+            strength++;
+            element.className = "valid-item";
+          } else {
+            element.className = "error-item";
+          }
+        });
+
+        // Update strength bar color and width
+        strengthBar.className = "password-strength-bar";
+        if (strength <= 2) {
+          strengthBar.classList.add("strength-weak");
+        } else if (strength <= 4) {
+          strengthBar.classList.add("strength-medium");
+        } else {
+          strengthBar.classList.add("strength-strong");
         }
 
-        /**
-         * Main form validation function, iterates over all required fields.
-         * @returns {boolean} True if the entire form is valid, false otherwise.
-         */
-        function validateForm() {
-            let formValid = true;
-            const form = document.getElementById('registrationForm');
-            const requiredFields = form.querySelectorAll('[required]');
+        // Run the main password validation for real-time error message (after strength logic)
+        validateField(document.getElementById("password"));
+      }
 
-            // Clear all errors before re-validating
-            document.querySelectorAll('.error').forEach(el => el.classList.remove('show'));
-            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+      /**
+       * Checks if the two password fields match.
+       */
+      function checkPasswordMatch() {
+        const password = document.getElementById("password");
+        const confirmPassword = document.getElementById("confirmPassword");
+        const errorElement = document.getElementById("confirmPasswordError");
 
-            // 1. Validate all fields with the 'required' attribute
-            requiredFields.forEach(field => {
-                // Skip radio/checkbox inputs here as we handle them by name/ID for the group/term check
-                if (field.type === 'radio' || field.type === 'checkbox') return;
+        confirmPassword.classList.remove("is-invalid");
+        errorElement.classList.remove("show");
 
-                if (!validateField(field)) {
-                    formValid = false;
-                }
-            });
-
-            // 2. Validate special cases (radio groups, checkboxes, and 'Other' fields)
-
-            // Profile For
-            const profileForChecked = form.querySelector('input[name="profileFor"]:checked');
-            if (!profileForChecked) {
-                document.getElementById('profileForError').classList.add('show');
-                formValid = false;
-            }
-
-            // Gender
-            const genderChecked = form.querySelector('input[name="gender"]:checked');
-            if (!genderChecked) {
-                document.getElementById('genderError').classList.add('show');
-                formValid = false;
-            }
-
-            // Terms and Conditions
-            const termsCheckbox = document.getElementById('terms');
-            if (!termsCheckbox.checked) {
-                document.getElementById('termsError').classList.add('show');
-                formValid = false;
-            }
-
-            // Education 'Other' check
-            const educationSelect = document.getElementById('education');
-            const otherEducationInput = document.getElementById('otherEducation');
-            if (educationSelect.value === 'other' && otherEducationInput.value.trim() === '') {
-                validateField(otherEducationInput); // show error on the text input
-                formValid = false;
-            }
-
-            // Occupation 'Other' check
-            const occupationSelect = document.getElementById('occupation');
-            const otherOccupationInput = document.getElementById('otherOccupation');
-            if (occupationSelect.value === 'other' && otherOccupationInput.value.trim() === '') {
-                validateField(otherOccupationInput); // show error on the text input
-                formValid = false;
-            }
-
-            // Final password match check
-            if (!checkPasswordMatch()) {
-                formValid = false;
-            }
-
-            // Final password strength check (in case user never typed in confirm field)
-            if (!validatePassword(document.getElementById('password').value)) {
-                validateField(document.getElementById('password')); // Show password error if strength is low
-                formValid = false;
-            }
-
-            if (!formValid) {
-                // Focus on the first invalid field for better UX
-                const firstInvalid = form.querySelector('.is-invalid, .error.show').closest('.form-group, .terms').querySelector('input, select, textarea');
-                if (firstInvalid) {
-                    firstInvalid.focus();
-                }
-            }
-
-            return formValid;
+        if (
+          confirmPassword.value.length > 0 &&
+          password.value !== confirmPassword.value
+        ) {
+          confirmPassword.classList.add("is-invalid");
+          errorElement.classList.add("show");
+          return false;
         }
+
+        return true;
+      }
+
+      /**
+       * Validates the password against the complete security regex.
+       * @param {string} password The password string.
+       * @returns {boolean} True if the password is valid, false otherwise.
+       */
+      function validatePassword(password) {
+        // Minimum 8 characters, at least one uppercase, one lowercase, one number, and one special character
+        const passwordRegex =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(password);
+      }
+
+      /**
+       * Main form validation function, iterates over all required fields.
+       * @returns {boolean} True if the entire form is valid, false otherwise.
+       */
+      function validateForm() {
+        let formValid = true;
+        const form = document.getElementById("registrationForm");
+        const requiredFields = form.querySelectorAll("[required]");
+
+        // Clear all errors before re-validating
+        document
+          .querySelectorAll(".error")
+          .forEach((el) => el.classList.remove("show"));
+        document
+          .querySelectorAll(".is-invalid")
+          .forEach((el) => el.classList.remove("is-invalid"));
+
+        // 1. Validate all fields with the 'required' attribute
+        requiredFields.forEach((field) => {
+          // Skip radio/checkbox inputs here as we handle them by name/ID for the group/term check
+          if (field.type === "radio" || field.type === "checkbox") return;
+
+          if (!validateField(field)) {
+            formValid = false;
+          }
+        });
+
+        // 2. Validate special cases (radio groups, checkboxes, and 'Other' fields)
+
+        // Profile For
+        const profileForChecked = form.querySelector(
+          'input[name="profileFor"]:checked',
+        );
+        if (!profileForChecked) {
+          document.getElementById("profileForError").classList.add("show");
+          formValid = false;
+        }
+
+        // Gender
+        const genderChecked = form.querySelector(
+          'input[name="gender"]:checked',
+        );
+        if (!genderChecked) {
+          document.getElementById("genderError").classList.add("show");
+          formValid = false;
+        }
+
+        // Terms and Conditions
+        const termsCheckbox = document.getElementById("terms");
+        if (!termsCheckbox.checked) {
+          document.getElementById("termsError").classList.add("show");
+          formValid = false;
+        }
+
+        // Education 'Other' check
+        const educationSelect = document.getElementById("education");
+        const otherEducationInput = document.getElementById("otherEducation");
+        if (
+          educationSelect.value === "other" &&
+          otherEducationInput.value.trim() === ""
+        ) {
+          validateField(otherEducationInput); // show error on the text input
+          formValid = false;
+        }
+
+        // Occupation 'Other' check
+        const occupationSelect = document.getElementById("occupation");
+        const otherOccupationInput = document.getElementById("otherOccupation");
+        if (
+          occupationSelect.value === "other" &&
+          otherOccupationInput.value.trim() === ""
+        ) {
+          validateField(otherOccupationInput); // show error on the text input
+          formValid = false;
+        }
+
+        // Final password match check
+        if (!checkPasswordMatch()) {
+          formValid = false;
+        }
+
+        // Final password strength check (in case user never typed in confirm field)
+        if (!validatePassword(document.getElementById("password").value)) {
+          validateField(document.getElementById("password")); // Show password error if strength is low
+          formValid = false;
+        }
+
+        if (!formValid) {
+          // Focus on the first invalid field for better UX
+          const firstInvalid = form
+            .querySelector(".is-invalid, .error.show")
+            .closest(".form-group, .terms")
+            .querySelector("input, select, textarea");
+          if (firstInvalid) {
+            firstInvalid.focus();
+          }
+        }
+
+        return formValid;
+      }
     </script>
-</body>
+  </body>
 </html>

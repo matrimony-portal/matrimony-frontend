@@ -1,554 +1,621 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Profile - Perfect Match</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f7fa;
+      }
 
-        .header {
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .header {
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        color: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
 
-        .back-btn {
-            background: white;
-            color: #ae1700;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            text-decoration: none;
-        }
+      .back-btn {
+        background: white;
+        color: #ae1700;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+      }
 
-        .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
+      .container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
 
-        .profile-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 2rem;
-            margin-bottom: 2rem;
+      .profile-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 2rem;
+      }
+
+      .profile-photo-section {
+        text-align: center;
+      }
+
+      .profile-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        margin: 0 auto 1rem;
+      }
+
+      .photo-upload-btn {
+        background: #ae1700;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+
+      .profile-info {
+        flex: 1;
+      }
+
+      .profile-info h2 {
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .profile-info p {
+        color: #666;
+        margin-bottom: 1rem;
+      }
+
+      .completion-bar {
+        background: #e2e8f0;
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 1rem;
+      }
+
+      .completion-progress {
+        background: #10b981;
+        height: 100%;
+        width: 75%;
+      }
+
+      .completion-text {
+        font-size: 0.875rem;
+        color: #666;
+        margin-top: 0.5rem;
+      }
+
+      .form-section {
+        margin-bottom: 2rem;
+      }
+
+      .form-section h3 {
+        color: #333;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #ae1700;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+      }
+
+      .required {
+        color: #e53e3e;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #ae1700;
+      }
+
+      .help-text {
+        font-size: 0.875rem;
+        color: #666;
+        margin-top: 0.25rem;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        padding-top: 2rem;
+        border-top: 2px solid #e2e8f0;
+      }
+
+      .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background: #ae1700;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5568d3;
+      }
+
+      .btn-secondary {
+        background: #e2e8f0;
+        color: #666;
+      }
+
+      .btn-secondary:hover {
+        background: #cbd5e0;
+      }
+
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
         }
 
         .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 2px solid #e2e8f0;
-            margin-bottom: 2rem;
+          flex-direction: column;
+          text-align: center;
         }
-
-        .profile-photo-section {
-            text-align: center;
-        }
-
-        .profile-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3rem;
-            margin: 0 auto 1rem;
-        }
-
-        .photo-upload-btn {
-            background: #ae1700;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .profile-info {
-            flex: 1;
-        }
-
-        .profile-info h2 {
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-
-        .profile-info p {
-            color: #666;
-            margin-bottom: 1rem;
-        }
-
-        .completion-bar {
-            background: #e2e8f0;
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 1rem;
-        }
-
-        .completion-progress {
-            background: #10b981;
-            height: 100%;
-            width: 75%;
-        }
-
-        .completion-text {
-            font-size: 0.875rem;
-            color: #666;
-            margin-top: 0.5rem;
-        }
-
-        .form-section {
-            margin-bottom: 2rem;
-        }
-
-        .form-section h3 {
-            color: #333;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #ae1700;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .required {
-            color: #e53e3e;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #ae1700;
-        }
-
-        .help-text {
-            font-size: 0.875rem;
-            color: #666;
-            margin-top: 0.25rem;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-            padding-top: 2rem;
-            border-top: 2px solid #e2e8f0;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: #ae1700;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #5568d3;
-        }
-
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #666;
-        }
-
-        .btn-secondary:hover {
-            background: #cbd5e0;
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header class="header">
-        <div class="logo">💝 Perfect Match</div>
-        <a href="user-dashboard.html" class="back-btn">Back to Dashboard</a>
+      <div class="logo">💝 Perfect Match</div>
+      <a href="user-dashboard.html" class="back-btn">Back to Dashboard</a>
     </header>
 
     <div class="container">
-        <div class="profile-card">
-            <div class="profile-header">
-                <div class="profile-photo-section">
-                    <div class="profile-photo">RS</div>
-                    <input type="file" id="photoUpload" style="display: none;" accept="image/*" onchange="handlePhotoUpload()">
-                    <button class="photo-upload-btn" onclick="document.getElementById('photoUpload').click()">Change Photo</button>
-                </div>
-                <div class="profile-info">
-                    <h2>Rahul Sharma</h2>
-                    <p>ID: #U1001 | Member since: Jan 2025</p>
-                    <div class="completion-bar">
-                        <div class="completion-progress"></div>
-                    </div>
-                    <div class="completion-text">Profile 75% Complete - Add more details to get better matches!</div>
-                </div>
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-photo-section">
+            <div class="profile-photo">RS</div>
+            <input
+              type="file"
+              id="photoUpload"
+              style="display: none"
+              accept="image/*"
+              onchange="handlePhotoUpload()"
+            />
+            <button
+              class="photo-upload-btn"
+              onclick="document.getElementById('photoUpload').click()"
+            >
+              Change Photo
+            </button>
+          </div>
+          <div class="profile-info">
+            <h2>Rahul Sharma</h2>
+            <p>ID: #U1001 | Member since: Jan 2025</p>
+            <div class="completion-bar">
+              <div class="completion-progress"></div>
             </div>
-
-            <form id="editProfileForm" onsubmit="return saveProfile()" novalidate>
-                <div class="form-section">
-                    <h3>Basic Information</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="firstName">First Name <span class="required">*</span></label>
-                            <input type="text" id="firstName" value="Rahul" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="lastName">Last Name <span class="required">*</span></label>
-                            <input type="text" id="lastName" value="Sharma" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">Gender <span class="required">*</span></label>
-                            <select id="gender" required>
-                                <option value="male" selected>Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="dob">Date of Birth <span class="required">*</span></label>
-                            <input type="date" id="dob" value="1995-05-15" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="height">Height <span class="required">*</span></label>
-                            <select id="height" required>
-                                <option>Select Height</option>
-                                <option value="5.6" selected>5'6"</option>
-                                <option value="5.7">5'7"</option>
-                                <option value="5.8">5'8"</option>
-                                <option value="5.9">5'9"</option>
-                                <option value="5.10">5'10"</option>
-                                <option value="5.11">5'11"</option>
-                                <option value="6.0">6'0"</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="maritalStatus">Marital Status <span class="required">*</span></label>
-                            <select id="maritalStatus" required>
-                                <option value="never-married" selected>Never Married</option>
-                                <option value="divorced">Divorced</option>
-                                <option value="widowed">Widowed</option>
-                                <option value="awaiting-divorce">Awaiting Divorce</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Religious Background</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="religion">Religion <span class="required">*</span></label>
-                            <select id="religion" required>
-                                <option value="hindu" selected>Hindu</option>
-                                <option value="muslim">Muslim</option>
-                                <option value="christian">Christian</option>
-                                <option value="sikh">Sikh</option>
-                                <option value="buddhist">Buddhist</option>
-                                <option value="jain">Jain</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="caste">Caste/Community</label>
-                            <input type="text" id="caste" value="Brahmin">
-                        </div>
-                        <div class="form-group">
-                            <label for="motherTongue">Mother Tongue <span class="required">*</span></label>
-                            <select id="motherTongue" required>
-                                <option value="hindi" selected>Hindi</option>
-                                <option value="english">English</option>
-                                <option value="bengali">Bengali</option>
-                                <option value="tamil">Tamil</option>
-                                <option value="telugu">Telugu</option>
-                                <option value="marathi">Marathi</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="manglik">Manglik</label>
-                            <select id="manglik">
-                                <option value="">Select</option>
-                                <option value="yes">Yes</option>
-                                <option value="no" selected>No</option>
-                                <option value="anshik">Anshik</option>
-                                <option value="dont-know">Don't Know</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Location Details</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="country">Country <span class="required">*</span></label>
-                            <select id="country" required>
-                                <option value="india" selected>India</option>
-                                <option value="usa">United States</option>
-                                <option value="uk">United Kingdom</option>
-                                <option value="canada">Canada</option>
-                                <option value="australia">Australia</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="state">State <span class="required">*</span></label>
-                            <input type="text" id="state" value="Maharashtra" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="city">City <span class="required">*</span></label>
-                            <input type="text" id="city" value="Mumbai" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="citizenship">Citizenship</label>
-                            <input type="text" id="citizenship" value="Indian">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Education & Career</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="education">Highest Education <span class="required">*</span></label>
-                            <select id="education" required>
-                                <option value="bachelors" selected>Bachelor's Degree</option>
-                                <option value="masters">Master's Degree</option>
-                                <option value="doctorate">Doctorate/PhD</option>
-                                <option value="diploma">Diploma</option>
-                                <option value="high-school">High School</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="college">College/University</label>
-                            <input type="text" id="college" value="Mumbai University">
-                        </div>
-                        <div class="form-group">
-                            <label for="occupation">Occupation <span class="required">*</span></label>
-                            <select id="occupation" required>
-                                <option value="engineer" selected>Engineer</option>
-                                <option value="doctor">Doctor</option>
-                                <option value="teacher">Teacher</option>
-                                <option value="business">Business Owner</option>
-                                <option value="government">Government Employee</option>
-                                <option value="private">Private Sector</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="company">Company Name</label>
-                            <input type="text" id="company" value="Tech Solutions Pvt Ltd">
-                        </div>
-                        <div class="form-group">
-                            <label for="income">Annual Income <span class="required">*</span></label>
-                            <select id="income" required>
-                                <option value="5-10" selected>5-10 Lakhs</option>
-                                <option value="10-20">10-20 Lakhs</option>
-                                <option value="20-50">20-50 Lakhs</option>
-                                <option value="50+">Above 50 Lakhs</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Family Details</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="familyType">Family Type</label>
-                            <select id="familyType">
-                                <option value="joint">Joint Family</option>
-                                <option value="nuclear" selected>Nuclear Family</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="familyStatus">Family Status</label>
-                            <select id="familyStatus">
-                                <option value="middle-class" selected>Middle Class</option>
-                                <option value="upper-middle">Upper Middle Class</option>
-                                <option value="rich">Rich</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="fatherOccupation">Father's Occupation</label>
-                            <input type="text" id="fatherOccupation" value="Businessman">
-                        </div>
-                        <div class="form-group">
-                            <label for="motherOccupation">Mother's Occupation</label>
-                            <input type="text" id="motherOccupation" value="Homemaker">
-                        </div>
-                        <div class="form-group">
-                            <label for="brothers">Number of Brothers</label>
-                            <input type="number" id="brothers" value="1" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="sisters">Number of Sisters</label>
-                            <input type="number" id="sisters" value="0" min="0">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Lifestyle & Habits</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="diet">Diet</label>
-                            <select id="diet">
-                                <option value="vegetarian" selected>Vegetarian</option>
-                                <option value="non-vegetarian">Non-Vegetarian</option>
-                                <option value="eggetarian">Eggetarian</option>
-                                <option value="vegan">Vegan</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="smoking">Smoking</label>
-                            <select id="smoking">
-                                <option value="no" selected>No</option>
-                                <option value="occasionally">Occasionally</option>
-                                <option value="yes">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="drinking">Drinking</label>
-                            <select id="drinking">
-                                <option value="no" selected>No</option>
-                                <option value="socially">Socially</option>
-                                <option value="occasionally">Occasionally</option>
-                                <option value="yes">Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>About Me</h3>
-                    <div class="form-group full-width">
-                        <label for="aboutMe">Write something about yourself</label>
-                        <textarea id="aboutMe" placeholder="Tell potential matches about yourself, your interests, hobbies, and what you're looking for in a partner...">I am a software engineer working in Mumbai. I enjoy traveling, reading, and spending time with family. Looking for a life partner who shares similar values and interests.</textarea>
-                        <div class="help-text">Minimum 50 characters</div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Contact Information</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="email">Email Address <span class="required">*</span></label>
-                            <input type="email" id="email" value="rahul.sharma@email.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Mobile Number <span class="required">*</span></label>
-                            <input type="tel" id="phone" value="9876543210" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="whatsapp">WhatsApp Number</label>
-                            <input type="tel" id="whatsapp" value="9876543210">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
+            <div class="completion-text">
+              Profile 75% Complete - Add more details to get better matches!
+            </div>
+          </div>
         </div>
+
+        <form id="editProfileForm" onsubmit="return saveProfile();" novalidate>
+          <div class="form-section">
+            <h3>Basic Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="firstName"
+                  >First Name <span class="required">*</span></label
+                >
+                <input type="text" id="firstName" value="Rahul" required />
+              </div>
+              <div class="form-group">
+                <label for="lastName"
+                  >Last Name <span class="required">*</span></label
+                >
+                <input type="text" id="lastName" value="Sharma" required />
+              </div>
+              <div class="form-group">
+                <label for="gender"
+                  >Gender <span class="required">*</span></label
+                >
+                <select id="gender" required>
+                  <option value="male" selected>Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="dob"
+                  >Date of Birth <span class="required">*</span></label
+                >
+                <input type="date" id="dob" value="1995-05-15" required />
+              </div>
+              <div class="form-group">
+                <label for="height"
+                  >Height <span class="required">*</span></label
+                >
+                <select id="height" required>
+                  <option>Select Height</option>
+                  <option value="5.6" selected>5'6"</option>
+                  <option value="5.7">5'7"</option>
+                  <option value="5.8">5'8"</option>
+                  <option value="5.9">5'9"</option>
+                  <option value="5.10">5'10"</option>
+                  <option value="5.11">5'11"</option>
+                  <option value="6.0">6'0"</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="maritalStatus"
+                  >Marital Status <span class="required">*</span></label
+                >
+                <select id="maritalStatus" required>
+                  <option value="never-married" selected>Never Married</option>
+                  <option value="divorced">Divorced</option>
+                  <option value="widowed">Widowed</option>
+                  <option value="awaiting-divorce">Awaiting Divorce</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Religious Background</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="religion"
+                  >Religion <span class="required">*</span></label
+                >
+                <select id="religion" required>
+                  <option value="hindu" selected>Hindu</option>
+                  <option value="muslim">Muslim</option>
+                  <option value="christian">Christian</option>
+                  <option value="sikh">Sikh</option>
+                  <option value="buddhist">Buddhist</option>
+                  <option value="jain">Jain</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="caste">Caste/Community</label>
+                <input type="text" id="caste" value="Brahmin" />
+              </div>
+              <div class="form-group">
+                <label for="motherTongue"
+                  >Mother Tongue <span class="required">*</span></label
+                >
+                <select id="motherTongue" required>
+                  <option value="hindi" selected>Hindi</option>
+                  <option value="english">English</option>
+                  <option value="bengali">Bengali</option>
+                  <option value="tamil">Tamil</option>
+                  <option value="telugu">Telugu</option>
+                  <option value="marathi">Marathi</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="manglik">Manglik</label>
+                <select id="manglik">
+                  <option value="">Select</option>
+                  <option value="yes">Yes</option>
+                  <option value="no" selected>No</option>
+                  <option value="anshik">Anshik</option>
+                  <option value="dont-know">Don't Know</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Location Details</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="country"
+                  >Country <span class="required">*</span></label
+                >
+                <select id="country" required>
+                  <option value="india" selected>India</option>
+                  <option value="usa">United States</option>
+                  <option value="uk">United Kingdom</option>
+                  <option value="canada">Canada</option>
+                  <option value="australia">Australia</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="state">State <span class="required">*</span></label>
+                <input type="text" id="state" value="Maharashtra" required />
+              </div>
+              <div class="form-group">
+                <label for="city">City <span class="required">*</span></label>
+                <input type="text" id="city" value="Mumbai" required />
+              </div>
+              <div class="form-group">
+                <label for="citizenship">Citizenship</label>
+                <input type="text" id="citizenship" value="Indian" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Education & Career</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="education"
+                  >Highest Education <span class="required">*</span></label
+                >
+                <select id="education" required>
+                  <option value="bachelors" selected>Bachelor's Degree</option>
+                  <option value="masters">Master's Degree</option>
+                  <option value="doctorate">Doctorate/PhD</option>
+                  <option value="diploma">Diploma</option>
+                  <option value="high-school">High School</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="college">College/University</label>
+                <input type="text" id="college" value="Mumbai University" />
+              </div>
+              <div class="form-group">
+                <label for="occupation"
+                  >Occupation <span class="required">*</span></label
+                >
+                <select id="occupation" required>
+                  <option value="engineer" selected>Engineer</option>
+                  <option value="doctor">Doctor</option>
+                  <option value="teacher">Teacher</option>
+                  <option value="business">Business Owner</option>
+                  <option value="government">Government Employee</option>
+                  <option value="private">Private Sector</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="company">Company Name</label>
+                <input
+                  type="text"
+                  id="company"
+                  value="Tech Solutions Pvt Ltd"
+                />
+              </div>
+              <div class="form-group">
+                <label for="income"
+                  >Annual Income <span class="required">*</span></label
+                >
+                <select id="income" required>
+                  <option value="5-10" selected>5-10 Lakhs</option>
+                  <option value="10-20">10-20 Lakhs</option>
+                  <option value="20-50">20-50 Lakhs</option>
+                  <option value="50+">Above 50 Lakhs</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Family Details</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="familyType">Family Type</label>
+                <select id="familyType">
+                  <option value="joint">Joint Family</option>
+                  <option value="nuclear" selected>Nuclear Family</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="familyStatus">Family Status</label>
+                <select id="familyStatus">
+                  <option value="middle-class" selected>Middle Class</option>
+                  <option value="upper-middle">Upper Middle Class</option>
+                  <option value="rich">Rich</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="fatherOccupation">Father's Occupation</label>
+                <input type="text" id="fatherOccupation" value="Businessman" />
+              </div>
+              <div class="form-group">
+                <label for="motherOccupation">Mother's Occupation</label>
+                <input type="text" id="motherOccupation" value="Homemaker" />
+              </div>
+              <div class="form-group">
+                <label for="brothers">Number of Brothers</label>
+                <input type="number" id="brothers" value="1" min="0" />
+              </div>
+              <div class="form-group">
+                <label for="sisters">Number of Sisters</label>
+                <input type="number" id="sisters" value="0" min="0" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Lifestyle & Habits</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="diet">Diet</label>
+                <select id="diet">
+                  <option value="vegetarian" selected>Vegetarian</option>
+                  <option value="non-vegetarian">Non-Vegetarian</option>
+                  <option value="eggetarian">Eggetarian</option>
+                  <option value="vegan">Vegan</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="smoking">Smoking</label>
+                <select id="smoking">
+                  <option value="no" selected>No</option>
+                  <option value="occasionally">Occasionally</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="drinking">Drinking</label>
+                <select id="drinking">
+                  <option value="no" selected>No</option>
+                  <option value="socially">Socially</option>
+                  <option value="occasionally">Occasionally</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>About Me</h3>
+            <div class="form-group full-width">
+              <label for="aboutMe">Write something about yourself</label>
+              <textarea
+                id="aboutMe"
+                placeholder="Tell potential matches about yourself, your interests, hobbies, and what you're looking for in a partner..."
+              >
+I am a software engineer working in Mumbai. I enjoy traveling, reading, and spending time with family. Looking for a life partner who shares similar values and interests.</textarea
+              >
+              <div class="help-text">Minimum 50 characters</div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Contact Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="email"
+                  >Email Address <span class="required">*</span></label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  value="rahul.sharma@email.com"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="phone"
+                  >Mobile Number <span class="required">*</span></label
+                >
+                <input type="tel" id="phone" value="9876543210" required />
+              </div>
+              <div class="form-group">
+                <label for="whatsapp">WhatsApp Number</label>
+                <input type="tel" id="whatsapp" value="9876543210" />
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="cancelEdit()"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <script>
-        function handlePhotoUpload() {
-            const file = document.getElementById('photoUpload').files[0];
-            if (file) {
-                alert('Photo selected: ' + file.name + '\n\nThis will be uploaded when you save the profile.');
-            }
+      function handlePhotoUpload() {
+        const file = document.getElementById("photoUpload").files[0];
+        if (file) {
+          alert(
+            "Photo selected: " +
+              file.name +
+              "\n\nThis will be uploaded when you save the profile.",
+          );
         }
+      }
 
-        function saveProfile() {
-            if (confirm('Save all changes to your profile?')) {
-                alert('Profile updated successfully!\n\nAll changes have been saved.');
-                window.location.href = 'user-dashboard.html';
-            }
-            return false;
+      function saveProfile() {
+        if (confirm("Save all changes to your profile?")) {
+          alert(
+            "Profile updated successfully!\n\nAll changes have been saved.",
+          );
+          window.location.href = "user-dashboard.html";
         }
+        return false;
+      }
 
-        function cancelEdit() {
-            if (confirm('Discard all changes and go back?')) {
-                window.location.href = 'user-dashboard.html';
-            }
+      function cancelEdit() {
+        if (confirm("Discard all changes and go back?")) {
+          window.location.href = "user-dashboard.html";
         }
+      }
     </script>
-</body>
+  </body>
 </html>

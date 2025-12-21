@@ -30,6 +30,7 @@ src/
 ## Development Scripts
 
 **Main Commands:**
+
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run fix` - Auto-fix all code issues
@@ -37,6 +38,7 @@ src/
 - `npm run commit` - Create conventional commits
 
 **Individual Tools:**
+
 - `npm run format` - Prettier formatting
 - `npm run lint:css` - CSS linting with Stylelint
 - `npm run lint:js` - JavaScript linting with ESLint
@@ -55,6 +57,7 @@ src/
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 **Quick workflow:**
+
 1. Fork and clone
 2. Create feature branch
 3. Make changes
