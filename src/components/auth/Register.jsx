@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { useAuth } from "../hooks/useAuth.jsx";
+import { useAuth } from "../../hooks/useAuth.jsx";
 import {
   validateEmail,
   validatePhone,
@@ -8,8 +8,8 @@ import {
   validatePassword,
   checkPasswordStrength,
   validateAgeAgainstGender,
-} from "../utils/validation";
-import "./Register.css";
+} from "../../utils/validation.js";
+import "../../styles/Register.css";
 
 const Register = () => {
   const [currentStep, setCurrentStep] = useState(1);
