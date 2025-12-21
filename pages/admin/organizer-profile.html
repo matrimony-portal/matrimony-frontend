@@ -1,272 +1,297 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profile - Rahul Agarwal - Perfect Match</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+    />
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f7fa;
+      }
 
-        /* Sidebar styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-            padding: 48px 0 0;
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-        }
+      /* Sidebar styles */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 48px 0 0;
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+      }
 
-        .sidebar-sticky {
-            position: relative;
-            top: 0;
-            height: calc(100vh - 48px);
-            padding-top: .5rem;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
+      .sidebar-sticky {
+        position: relative;
+        top: 0;
+        height: calc(100vh - 48px);
+        padding-top: 0.5rem;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
 
-        .sidebar .nav-link {
-            font-weight: 500;
-            color: rgba(255,255,255,0.8);
-            padding: 0.75rem 1.5rem;
-            border-left: 3px solid transparent;
-        }
+      .sidebar .nav-link {
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+        padding: 0.75rem 1.5rem;
+        border-left: 3px solid transparent;
+      }
 
-        .sidebar .nav-link:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.1);
-            border-left-color: #fff;
-        }
+      .sidebar .nav-link:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        border-left-color: #fff;
+      }
 
-        .sidebar .nav-link.active {
-            color: #fff;
-            background: rgba(255,255,255,0.15);
-            border-left-color: #fff;
-            font-weight: 600;
-        }
+      .sidebar .nav-link.active {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.15);
+        border-left-color: #fff;
+        font-weight: 600;
+      }
 
-        .sidebar-heading {
-            font-size: .75rem;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.6);
-            padding: 1.5rem 1.5rem 0.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+      .sidebar-heading {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.6);
+        padding: 1.5rem 1.5rem 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-        /* Top navbar */
-        .navbar-brand {
-            padding-top: .75rem;
-            padding-bottom: .75rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+      /* Top navbar */
+      .navbar-brand {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        /*background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);*/
+      }
+
+      .navbar {
+        background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+      }
+
+      /* Profile styles */
+      main {
+        padding-top: 20px;
+      }
+
+      .profile-photo {
+        width: 250px;
+        height: 250px;
+        border-radius: 10px;
+        object-fit: cover;
+      }
+
+      .verified-badge {
+        background: #10b981;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .info-section {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .info-section h3 {
+        color: #333;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #ae1700;
+      }
+
+      .info-item {
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+      }
+
+      .info-label {
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+      }
+
+      .info-value {
+        color: #333;
+        font-weight: 600;
+      }
+
+      .photo-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+      }
+
+      .gallery-img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+        cursor: pointer;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+
+      .gallery-img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Modal lightbox */
+      .lightbox-img {
+        max-width: 90vw;
+        max-height: 90vh;
+        border-radius: 10px;
+      }
+
+      .contact-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+      }
+
+      .contact-icon {
+        font-size: 1.5rem;
+      }
+
+      /*--------logo--------*/
+      .logo {
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        /*gap: 0.75rem;*/
+      }
+
+      .logo-icon {
+        height: 50px;
+        width: auto;
+      }
+
+      .logo-text {
+        height: 40px;
+        width: auto;
+      }
+
+      /* For responsive - hide text on small screens */
+      @media (max-width: 768px) {
+        .logo-text {
+          display: none;
         }
 
-        .navbar {
-            background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+        .logo-icon {
+          height: 35px;
         }
-
-        /* Profile styles */
-        main {
-            padding-top: 20px;
-        }
-
-        .profile-photo {
-            width: 250px;
-            height: 250px;
-            border-radius: 10px;
-            object-fit: cover;
-        }
-
-        .verified-badge {
-            background: #10b981;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .info-section {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .info-section h3 {
-            color: #333;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #ae1700;
-        }
-
-        .info-item {
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: 8px;
-        }
-
-        .info-label {
-            font-size: 0.875rem;
-            color: #666;
-            margin-bottom: 0.25rem;
-        }
-
-        .info-value {
-            color: #333;
-            font-weight: 600;
-        }
-
-        .photo-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-        }
-
-        .gallery-img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .gallery-img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Modal lightbox */
-        .lightbox-img {
-            max-width: 90vw;
-            max-height: 90vh;
-            border-radius: 10px;
-        }
-
-        .contact-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: #f8fafc;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-icon {
-            font-size: 1.5rem;
-        }
-
-        /*--------logo--------*/
-.logo {
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    /*gap: 0.75rem;*/
-}
-
-.logo-icon {
-    height: 50px;
-    width: auto;
-}
-
-.logo-text {
-    height: 40px;
-    width: auto;
-}
-
-/* For responsive - hide text on small screens */
-@media (max-width: 768px) {
-    .logo-text {
-        display: none;
-    }
-
-    .logo-icon {
-        height: 35px;
-    }
-}
-        /*------------*/
+      }
+      /*------------*/
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Top Navbar -->
     <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><div class="logo">
-                <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon">
-                <img src="../../assets/logo/bandan.svg" alt="Bandan" class="logo-text">
-            </div></a>
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-nav">
-            <div class="nav-item text-nowrap">
-                <a class="nav-link px-3 text-white" href="#" onclick="logout()">Logout</a>
-            </div>
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"
+        ><div class="logo">
+          <img src="../../assets/logo/logo.svg" alt="Logo" class="logo-icon" />
+          <img
+            src="../../assets/logo/bandan.svg"
+            alt="Bandan"
+            class="logo-text"
+          /></div
+      ></a>
+      <button
+        class="navbar-toggler position-absolute d-md-none collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+          <a class="nav-link px-3 text-white" href="#" onclick="logout()"
+            >Logout</a
+          >
         </div>
+      </div>
     </nav>
 
     <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-                <div class="position-sticky">
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
-                        <div class="user" style="margin-right:20px;">
-                Welcome! Rahul
-
-            </div>
-                    </h6>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="organizer-dashboard.html">
-                                <i class="bi bi-house-door"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="my-events.html">
-                                <i class="bi bi-calendar-event"></i> My Events
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="create-event.html">
-                                <i class="bi bi-plus-circle"></i> Create Event
-                            </a>
-                        </li>
-                        <!--<li class="nav-item">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav
+          id="sidebarMenu"
+          class="col-md-3 col-lg-2 d-md-block sidebar collapse"
+        >
+          <div class="position-sticky">
+            <h6
+              class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white"
+            >
+              <div class="user" style="margin-right: 20px">Welcome! Rahul</div>
+            </h6>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="organizer-dashboard.html">
+                  <i class="bi bi-house-door"></i> Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="my-events.html">
+                  <i class="bi bi-calendar-event"></i> My Events
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="create-event.html">
+                  <i class="bi bi-plus-circle"></i> Create Event
+                </a>
+              </li>
+              <!--<li class="nav-item">
                             <a class="nav-link" href="participants.html">
                                 <i class="bi bi-people"></i> Participants
                             </a>
                         </li>-->
-                        <li class="nav-item">
-                            <a class="nav-link" href="event-requests.html">
-                                <i class="bi bi-inbox"></i> Event Requests
-                            </a>
-                        </li>
-                        <!--<li class="nav-item">
+              <li class="nav-item">
+                <a class="nav-link" href="event-requests.html">
+                  <i class="bi bi-inbox"></i> Event Requests
+                </a>
+              </li>
+              <!--<li class="nav-item">
                             <a class="nav-link" href="analytics.html">
                                 <i class="bi bi-graph-up"></i> Analytics
                             </a>
@@ -276,141 +301,153 @@
                                 <i class="bi bi-chat-dots"></i> Messages
                             </a>
                         </li>-->
-                        <li class="nav-item">
-                            <a class="nav-link active" href="organizer-profile.html">
-                                <i class="bi bi-person-circle"></i> My Profile
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link" href="blocked-users.html">
-                            <i class="bi bi-x-circle"></i> Blocked Users
-                        </a>
-                    </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="organizer-settings.html">
-                                <i class="bi bi-gear"></i> Settings
-                            </a>
-                        </li>
-                    </ul>
+              <li class="nav-item">
+                <a class="nav-link active" href="organizer-profile.html">
+                  <i class="bi bi-person-circle"></i> My Profile
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="blocked-users.html">
+                  <i class="bi bi-x-circle"></i> Blocked Users
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="organizer-settings.html">
+                  <i class="bi bi-gear"></i> Settings
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <!-- Profile Header -->
+          <div class="card mb-4 mt-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-3 text-center">
+                  <img
+                    src="../../assets/images/event-organizer/profile-pic.jpg"
+                    alt="Rahul Agarwal"
+                    class="profile-photo mb-3"
+                  />
+                  <!--<div class="verified-badge">✓ Verified Profile</div>-->
                 </div>
-            </nav>
+                <div class="col-md-9">
+                  <h1 class="mb-2">
+                    Rahul Agarwal
+                    <i class="bi bi-patch-check-fill text-primary"></i>
+                  </h1>
+                  <p class="text-muted mb-3">ID: PM768942</p>
 
-            <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <!-- Profile Header -->
-                <div class="card mb-4 mt-3">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 text-center">
-                                <img src="../../assets/images/event-organizer/profile-pic.jpg" alt="Rahul Agarwal" class="profile-photo mb-3">
-                                <!--<div class="verified-badge">✓ Verified Profile</div>-->
-                            </div>
-                            <div class="col-md-9">
-                                <h1 class="mb-2">Rahul Agarwal <i class="bi bi-patch-check-fill text-primary"></i></h1>
-                                <p class="text-muted mb-3">ID: PM768942</p>
-
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <span>📅 <strong>31 years</strong></span>
-                                    </div>
-                                    <!--<div class="col-md-6">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <span>📅 <strong>31 years</strong></span>
+                    </div>
+                    <!--<div class="col-md-6">
                                         <span>📏 <strong>5'10"</strong></span>
                                     </div>-->
-                                    <div class="col-md-6">
-                                        <span>🕉️ <strong>Hindu, Baniya</strong></span>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <span>📍 <strong>Pune, Maharashtra</strong></span>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <span>🎓 <strong>BBA</strong></span>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <span>💼 <strong>Event Organizer</strong></span>
-                                    </div>
-                                </div>
+                    <div class="col-md-6">
+                      <span>🕉️ <strong>Hindu, Baniya</strong></span>
+                    </div>
+                    <div class="col-md-6">
+                      <span>📍 <strong>Pune, Maharashtra</strong></span>
+                    </div>
+                    <div class="col-md-6">
+                      <span>🎓 <strong>BBA</strong></span>
+                    </div>
+                    <div class="col-md-6">
+                      <span>💼 <strong>Event Organizer</strong></span>
+                    </div>
+                  </div>
 
-                                <!--<div class="mt-3">
+                  <!--<div class="mt-3">
                                     <span class="badge bg-warning text-dark">⭐ Premium Member</span>
                                 </div>-->
-                            </div>
-                        </div>
-                    </div>
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <div class="row">
-                    <div class="col-lg-8">
-                        <!-- About Me -->
-                        <div class="info-section">
-                            <h3>About Me</h3>
-                            <p class="text-muted" style="text-align: justify;">
-                                I'm a 31-year-old Event Manager based in Pune, working with a leading event managing firm, Cupid Knot. I did my BBA from ISB Hyderabad.
-                                <br><br>
-                                I enjoy reading about startups, exploring new cuisines, and keeping fit through running and yoga. Family and work-life balance matter a lot to me. I believe in progressive thinking, honesty, and mutual respect in relationships.
-                                <br><br>
-                                <!--I'm looking for a partner who is kind, confident, and shares similar values. Someone who values emotional connection and enjoys both quiet evenings and spontaneous adventures.-->
-                            </p>
-                        </div>
+          <div class="row">
+            <div class="col-lg-8">
+              <!-- About Me -->
+              <div class="info-section">
+                <h3>About Me</h3>
+                <p class="text-muted" style="text-align: justify">
+                  I'm a 31-year-old Event Manager based in Pune, working with a
+                  leading event managing firm, Cupid Knot. I did my BBA from ISB
+                  Hyderabad.
+                  <br /><br />
+                  I enjoy reading about startups, exploring new cuisines, and
+                  keeping fit through running and yoga. Family and work-life
+                  balance matter a lot to me. I believe in progressive thinking,
+                  honesty, and mutual respect in relationships.
+                  <br /><br />
+                  <!--I'm looking for a partner who is kind, confident, and shares similar values. Someone who values emotional connection and enjoys both quiet evenings and spontaneous adventures.-->
+                </p>
+              </div>
 
-                        <!-- Basic Details -->
-                        <div class="info-section">
-                            <h3>Basic Details</h3>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="info-item">
-                                        <div class="info-label">Age</div>
-                                        <div class="info-value">31 years</div>
-                                    </div>
-                                </div>
-                                <!--<div class="col-md-6">
+              <!-- Basic Details -->
+              <div class="info-section">
+                <h3>Basic Details</h3>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">Age</div>
+                      <div class="info-value">31 years</div>
+                    </div>
+                  </div>
+                  <!--<div class="col-md-6">
                                     <div class="info-item">
                                         <div class="info-label">Height</div>
                                         <div class="info-value">5'10" (178 cm)</div>
                                     </div>
                                 </div>-->
-                                <!--<div class="col-md-6">
+                  <!--<div class="col-md-6">
                                     <div class="info-item">
                                         <div class="info-label">Marital Status</div>
                                         <div class="info-value">Never Married</div>
                                     </div>
                                 </div>-->
 
-                                <!--<div class="col-md-6">
+                  <!--<div class="col-md-6">
                                     <div class="info-item">
                                         <div class="info-label">Body Type</div>
                                         <div class="info-value">Fit</div>
                                     </div>
                                 </div>-->
-                                 <div class="col-md-6">
-                                    <div class="info-item">
-                                        <div class="info-label">Highest Education</div>
-                                        <div class="info-value">BBA</div>
-                                    </div>
-                                </div>
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">Highest Education</div>
+                      <div class="info-value">BBA</div>
+                    </div>
+                  </div>
 
-                                <div class="col-md-6">
-                                    <div class="info-item">
-                                        <div class="info-label">College/University</div>
-                                        <div class="info-value">ISB Hyderabad</div>
-                                    </div>
-                                </div>
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">College/University</div>
+                      <div class="info-value">ISB Hyderabad</div>
+                    </div>
+                  </div>
 
-                                <div class="col-md-6">
-                                    <div class="info-item">
-                                        <div class="info-label">Mother Tongue</div>
-                                        <div class="info-value">Hindi</div>
-                                    </div>
-                                </div>
-                                <!--<div class="col-md-6">
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">Mother Tongue</div>
+                      <div class="info-value">Hindi</div>
+                    </div>
+                  </div>
+                  <!--<div class="col-md-6">
                                     <div class="info-item">
                                         <div class="info-label">Complexion</div>
                                         <div class="info-value">Wheatish</div>
                                     </div>
                                 </div>-->
-                            </div>
-                        </div>
+                </div>
+              </div>
 
-                        <!-- Education & Career
+              <!-- Education & Career
                         <div class="info-section">
                             <h3>Education & Career</h3>
                             <div class="row g-3">
@@ -453,7 +490,7 @@
                             </div>
                         </div>-->
 
-                        <!-- Family Details
+              <!-- Family Details
                         <div class="info-section">
                             <h3>Family Details</h3>
                             <div class="row g-3">
@@ -496,7 +533,7 @@
                             </div>
                         </div>-->
 
-                        <!-- Partner Preferences
+              <!-- Partner Preferences
                         <div class="info-section">
                             <h3>Partner Preferences</h3>
                             <p class="text-muted" style="text-align: justify;">
@@ -506,114 +543,197 @@
                             </p>
                         </div>-->
 
-                        <!-- Photo Gallery -->
-                        <div class="info-section">
-                            <h3>Photo Gallery</h3>
-                            <div class="photo-gallery">
-                                <img src="../../assets/images/event-organizer/coffee.jpg" alt="Photo 1" class="gallery-img" data-bs-toggle="modal" data-bs-target="#lightboxModal" onclick="showImage(0)">
-                                <img src="../../assets/images/event-organizer/dinner-dance-2.jpg" alt="Photo 2" class="gallery-img" data-bs-toggle="modal" data-bs-target="#lightboxModal" onclick="showImage(1)">
-                                <img src="../../assets/images/event-organizer/dinner-dance.jpg" alt="Photo 3" class="gallery-img" data-bs-toggle="modal" data-bs-target="#lightboxModal" onclick="showImage(2)">
-                                <img src="../../assets/images/event-organizer/dinner.jpg" alt="Photo 4" class="gallery-img" data-bs-toggle="modal" data-bs-target="#lightboxModal" onclick="showImage(3)">
-                                <img src="../../assets/images/event-organizer/music-night-2.jpg" alt="Photo 5" class="gallery-img" data-bs-toggle="modal" data-bs-target="#lightboxModal" onclick="showImage(4)">
-                                <img src="../../assets/images/event-organizer/music-night.jpg" alt="Photo 6" class="gallery-img" data-bs-toggle="modal" data-bs-target="#lightboxModal" onclick="showImage(5)">
-                                <img src="../../assets/images/event-organizer/picnic-2.jpg" alt="Photo 7" class="gallery-img" data-bs-toggle="modal" data-bs-target="#lightboxModal" onclick="showImage(6)">
-                                <img src="../../assets/images/event-organizer/picnic.jpg" alt="Photo 8" class="gallery-img" data-bs-toggle="modal" data-bs-target="#lightboxModal" onclick="showImage(7)">
-                                <img src="../../assets/images/event-organizer/speed-dating.jpg" alt="Photo 9" class="gallery-img" data-bs-toggle="modal" data-bs-target="#lightboxModal" onclick="showImage(8)">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sidebar -->
-                    <div class="col-lg-4">
-                        <div class="contact-card mb-4">
-                            <h4>Contact Information</h4>
-                            <div class="contact-item">
-                                <span class="contact-icon">📞</span>
-                                <div>
-                                    <div style="font-size: 0.875rem; color: #666;">Phone</div>
-                                    <div style="font-weight: 600; color: #333;">+91 98765-98765</div>
-                                </div>
-                            </div>
-                            <div class="contact-item">
-                                <span class="contact-icon">📧</span>
-                                <div>
-                                    <div style="font-size: 0.875rem; color: #666;">Email</div>
-                                    <div style="font-weight: 600; color: #333;">rahul.agarwal@email.com</div>
-                                </div>
-                            </div>
-                            <div class="contact-item">
-                                <span class="contact-icon">💬</span>
-                                <div>
-                                    <div style="font-size: 0.875rem; color: #666;">WhatsApp</div>
-                                    <div style="font-weight: 600; color: #333;">Available</div>
-                                </div>
-                            </div>
-                            <div class="alert alert-warning mt-3 mb-0">
-                                <small>🔒 Contact details are visible to premium members only</small>
-                            </div>
-                        </div>
-                    </div>
+              <!-- Photo Gallery -->
+              <div class="info-section">
+                <h3>Photo Gallery</h3>
+                <div class="photo-gallery">
+                  <img
+                    src="../../assets/images/event-organizer/coffee.jpg"
+                    alt="Photo 1"
+                    class="gallery-img"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lightboxModal"
+                    onclick="showImage(0)"
+                  />
+                  <img
+                    src="../../assets/images/event-organizer/dinner-dance-2.jpg"
+                    alt="Photo 2"
+                    class="gallery-img"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lightboxModal"
+                    onclick="showImage(1)"
+                  />
+                  <img
+                    src="../../assets/images/event-organizer/dinner-dance.jpg"
+                    alt="Photo 3"
+                    class="gallery-img"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lightboxModal"
+                    onclick="showImage(2)"
+                  />
+                  <img
+                    src="../../assets/images/event-organizer/dinner.jpg"
+                    alt="Photo 4"
+                    class="gallery-img"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lightboxModal"
+                    onclick="showImage(3)"
+                  />
+                  <img
+                    src="../../assets/images/event-organizer/music-night-2.jpg"
+                    alt="Photo 5"
+                    class="gallery-img"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lightboxModal"
+                    onclick="showImage(4)"
+                  />
+                  <img
+                    src="../../assets/images/event-organizer/music-night.jpg"
+                    alt="Photo 6"
+                    class="gallery-img"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lightboxModal"
+                    onclick="showImage(5)"
+                  />
+                  <img
+                    src="../../assets/images/event-organizer/picnic-2.jpg"
+                    alt="Photo 7"
+                    class="gallery-img"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lightboxModal"
+                    onclick="showImage(6)"
+                  />
+                  <img
+                    src="../../assets/images/event-organizer/picnic.jpg"
+                    alt="Photo 8"
+                    class="gallery-img"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lightboxModal"
+                    onclick="showImage(7)"
+                  />
+                  <img
+                    src="../../assets/images/event-organizer/speed-dating.jpg"
+                    alt="Photo 9"
+                    class="gallery-img"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lightboxModal"
+                    onclick="showImage(8)"
+                  />
                 </div>
-            </main>
-        </div>
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+              <div class="contact-card mb-4">
+                <h4>Contact Information</h4>
+                <div class="contact-item">
+                  <span class="contact-icon">📞</span>
+                  <div>
+                    <div style="font-size: 0.875rem; color: #666">Phone</div>
+                    <div style="font-weight: 600; color: #333">
+                      +91 98765-98765
+                    </div>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <span class="contact-icon">📧</span>
+                  <div>
+                    <div style="font-size: 0.875rem; color: #666">Email</div>
+                    <div style="font-weight: 600; color: #333">
+                      rahul.agarwal@email.com
+                    </div>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <span class="contact-icon">💬</span>
+                  <div>
+                    <div style="font-size: 0.875rem; color: #666">WhatsApp</div>
+                    <div style="font-weight: 600; color: #333">Available</div>
+                  </div>
+                </div>
+                <div class="alert alert-warning mt-3 mb-0">
+                  <small
+                    >🔒 Contact details are visible to premium members
+                    only</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
 
     <!-- Lightbox Modal -->
     <div class="modal fade" id="lightboxModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content bg-dark">
-                <div class="modal-header border-0">
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <img id="lightboxImage" src="" class="lightbox-img" alt="Gallery Image">
-                </div>
-                <div class="modal-footer border-0 justify-content-between">
-                    <button class="btn btn-light" onclick="prevImage()">‹ Previous</button>
-                    <button class="btn btn-light" onclick="nextImage()">Next ›</button>
-                </div>
-            </div>
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-dark">
+          <div class="modal-header border-0">
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <img
+              id="lightboxImage"
+              src=""
+              class="lightbox-img"
+              alt="Gallery Image"
+            />
+          </div>
+          <div class="modal-footer border-0 justify-content-between">
+            <button class="btn btn-light" onclick="prevImage()">
+              ‹ Previous
+            </button>
+            <button class="btn btn-light" onclick="nextImage()">Next ›</button>
+          </div>
         </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const images = [
-            '../../assets/images/event-organizer/coffee.jpg',
-            '../../assets/images/event-organizer/dinner-dance-2.jpg',
-            '../../assets/images/event-organizer/dinner-dance.jpg',
-            '../../assets/images/event-organizer/dinner.jpg',
-            '../../assets/images/event-organizer/music-night-2.jpg',
-            '../../assets/images/event-organizer/music-night.jpg',
-            '../../assets/images/event-organizer/picnic-2.jpg',
-            '../../assets/images/event-organizer/picnic.jpg',
-            '../../assets/images/event-organizer/speed-dating.jpg',
+      const images = [
+        "../../assets/images/event-organizer/coffee.jpg",
+        "../../assets/images/event-organizer/dinner-dance-2.jpg",
+        "../../assets/images/event-organizer/dinner-dance.jpg",
+        "../../assets/images/event-organizer/dinner.jpg",
+        "../../assets/images/event-organizer/music-night-2.jpg",
+        "../../assets/images/event-organizer/music-night.jpg",
+        "../../assets/images/event-organizer/picnic-2.jpg",
+        "../../assets/images/event-organizer/picnic.jpg",
+        "../../assets/images/event-organizer/speed-dating.jpg",
+      ];
 
-        ];
+      let currentImageIndex = 0;
 
-        let currentImageIndex = 0;
+      function showImage(index) {
+        currentImageIndex = index;
+        document.getElementById("lightboxImage").src = images[index];
+      }
 
-        function showImage(index) {
-            currentImageIndex = index;
-            document.getElementById('lightboxImage').src = images[index];
+      function prevImage() {
+        currentImageIndex =
+          (currentImageIndex - 1 + images.length) % images.length;
+        document.getElementById("lightboxImage").src =
+          images[currentImageIndex];
+      }
+
+      function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        document.getElementById("lightboxImage").src =
+          images[currentImageIndex];
+      }
+
+      function logout() {
+        if (confirm("Are you sure you want to logout?")) {
+          alert("Logged out successfully!");
+          window.location.href = "login.html";
         }
-
-        function prevImage() {
-            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-            document.getElementById('lightboxImage').src = images[currentImageIndex];
-        }
-
-        function nextImage() {
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            document.getElementById('lightboxImage').src = images[currentImageIndex];
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                alert('Logged out successfully!');
-                window.location.href = 'login.html';
-            }
-        }
+      }
     </script>
-</body>
+  </body>
 </html>

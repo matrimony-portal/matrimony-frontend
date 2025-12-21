@@ -1,18 +1,37 @@
-import { Navigate, Route, Routes, BrowserRouter } from "react-router";
+// src/App.jsx
+import { Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./providers/AuthProvider.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 import DashboardRouter from "./components/auth/DashboardRouter.jsx";
 
-// Auth Pages
+// Public Pages
 import HomePage from "./components/HomePage";
 import Login from "./components/auth/Login.jsx";
 import Register from "./components/auth/Register.jsx";
 import ForgotPassword from "./components/ForgotPassword";
 
+// Layout
+import Layout from "./components/common/Layout/Layout.jsx";
+
 // Dashboard Pages
-import OrganizerDashboard from "./components/OrganizerDashboard";
-import AdminDashboard from "./components/AdminDashboard";
 import FreeUserDashboard from "./components/dashboard/free/FreeUserDashboard.jsx";
 import PremiumUserDashboard from "./components/dashboard/premium/PremiumUserDashboard.jsx";
+import MyProfile from "./components/dashboard/premium/MyProfile.jsx";
+import EditProfile from "./components/dashboard/premium/EditProfile.jsx";
+import ManagePhotos from "./components/dashboard/premium/ManagePhotos.jsx";
+import SearchMatches from "./components/dashboard/premium/SearchMatches.jsx";
+import Proposals from "./components/dashboard/premium/Proposals.jsx";
+import Messages from "./components/dashboard/premium/Messages.jsx";
+import Shortlist from "./components/dashboard/premium/Shortlist.jsx";
+import BlockedUsers from "./components/dashboard/premium/BlockedUsers.jsx";
+import Events from "./components/dashboard/premium/Events.jsx";
+import Settings from "./components/dashboard/premium/Settings.jsx";
+import Feedback from "./components/dashboard/premium/Feedback.jsx";
+import ProfileView from "./components/dashboard/premium/ProfileView.jsx";
+import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
+import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
+
+import "./styles/custom.css";
 
 function App() {
   return (
@@ -23,57 +42,42 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      {/* Dashboard Router - Redirects based on user type */}
+      {/* Protected Dashboard Routes with Layout */}
       <Route
         path="/dashboard"
         element={
-          <ProtectedRoute>
-            <DashboardRouter />
+          <ProtectedRoute allowedRoutes={["user", "organizer", "admin"]}>
+            <Layout />
           </ProtectedRoute>
         }
-      />
+      >
+        {/* Main Dashboard Route */}
+        <Route index element={<DashboardRouter />} />
 
-      {/* Free User Dashboard */}
-      <Route
-        path="/dashboard/free"
-        element={
-          <ProtectedRoute allowedRoles={["user"]}>
-            <FreeUserDashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* Free User Route */}
+        <Route path="free" element={<FreeUserDashboard />} />
 
-      {/* Premium User Dashboard */}
-      <Route
-        path="/dashboard/premium"
-        element={
-          <ProtectedRoute allowedRoles={["user"]}>
-            <PremiumUserDashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* Premium User Routes */}
+        <Route path="premium" element={<PremiumUserDashboard />} />
+        <Route path="my-profile" element={<MyProfile />} />
+        <Route path="edit-profile" element={<EditProfile />} />
+        <Route path="manage-photos" element={<ManagePhotos />} />
+        <Route path="search" element={<SearchMatches />} />
+        <Route path="proposals" element={<Proposals />} />
+        <Route path="messages" element={<Messages />} />
+        <Route path="shortlist" element={<Shortlist />} />
+        <Route path="blocked-users" element={<BlockedUsers />} />
+        <Route path="events" element={<Events />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="feedback" element={<Feedback />} />
+        <Route path="profile/:id" element={<ProfileView />} />
 
-      {/* Organizer Dashboard */}
-      <Route
-        path="/dashboard/organizer"
-        element={
-          <ProtectedRoute allowedRoles={["organizer"]}>
-            <OrganizerDashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* Organizer & Admin Routes */}
+        <Route path="organizer" element={<OrganizerDashboard />} />
+        <Route path="admin" element={<AdminDashboard />} />
+      </Route>
 
-      {/* Admin Dashboard */}
-      <Route
-        path="/dashboard/admin"
-        element={
-          <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Catch all - redirect to home */}
+      {/* Catch-all redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
