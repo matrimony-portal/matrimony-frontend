@@ -17,7 +17,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || "/";
+  //const from = location.state?.from?.pathname || "/";
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +52,9 @@ const Login = () => {
       const result = await login(formData.email, formData.password);
       if (result.success) {
         alert("Login successful! Redirecting to dashboard...");
-        navigate(from, { replace: true });
+        // Redirect to dashboard router which will determine correct dashboard
+        const redirectPath = location.state?.from?.pathname || "/dashboard";
+        navigate(redirectPath, { replace: true });
       }
     } catch {
       setLoginError(
