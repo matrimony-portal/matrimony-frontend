@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 
 const Navbar = ({ toggleSidebar }) => {
@@ -15,7 +15,11 @@ const Navbar = ({ toggleSidebar }) => {
 
   return (
     <nav className="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow navbar-gradient">
-      <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/dashboard">
+      <div
+        className="navbar-brand col-md-3 col-lg-2 me-0 px-3"
+        onClick={() => navigate("/")}
+        style={{ cursor: "pointer" }}
+      >
         <div className="logo d-flex align-items-center">
           <img
             src="/assets/logo/logo.svg"
@@ -30,7 +34,7 @@ const Navbar = ({ toggleSidebar }) => {
             style={{ height: "40px" }}
           />
         </div>
-      </a>
+      </div>
 
       <button
         className="navbar-toggler position-absolute d-md-none collapsed"

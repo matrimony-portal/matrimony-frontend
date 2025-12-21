@@ -1,6 +1,6 @@
 // src/components/common/Layout/Sidebar.jsx
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {

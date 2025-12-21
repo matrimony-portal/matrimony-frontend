@@ -1,7 +1,7 @@
 // src/components/dashboard/premium/MyProfile.jsx
 import React, { useState } from "react";
 //import { useAuth } from "../../../hooks/useAuth.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const MyProfile = () => {
   //const { user } = useAuth();

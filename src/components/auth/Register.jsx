@@ -188,7 +188,11 @@ const Register = () => {
       <div className="register-container">
         {/* Progress Indicator */}
         <div className="progress-header">
-          <div className="brand-logo">
+          <div
+            className="brand-logo"
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer" }}
+          >
             <img
               src="/assets/logo/logo-black.svg"
               alt="Logo"
