@@ -9,6 +9,7 @@
   --text-dark: #333;
   --text-muted: #666;
   --border-color: #e2e8f0;
+  --navbar-height: 60px;
 }
 
 body {
@@ -24,6 +25,11 @@ body {
     var(--primary-dark) 0%,
     var(--primary-color) 100%
   );
+}
+
+.navbar {
+  height: var(--navbar-height);
+  min-height: var(--navbar-height);
 }
 
 /* Sidebar Styles */
@@ -115,14 +121,14 @@ body {
 
 /* Main Content */
 .main-content {
-  padding-top: 1rem;
+  /* //padding-top: 1rem; */
   overflow-y: auto;
-  height: calc(100vh - 56px); /* Account for navbar */
+  height: calc(100vh - var(--navbar-height)); /* Account for navbar */
 }
 
 @media (width >= 768px) {
   .main-content {
-    padding-top: 1.5rem;
+    /* padding-top: 1.5rem; */
   }
 }
 
@@ -373,5 +379,130 @@ body {
   .main-content {
     margin: 0 !important;
     padding: 0 !important;
+  }
+}
+
+/* NAVBAR CSS */
+
+/* Icons + tooltips */
+.nav-icon-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-icon {
+  font-size: 1.3rem;
+  color: #fff;
+}
+
+.nav-tooltip {
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.nav-icon-wrapper:hover .nav-tooltip {
+  opacity: 1;
+}
+
+/* Profile dropdown */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #fff;
+  object-fit: cover;
+}
+
+.profile-menu {
+  position: absolute;
+  right: 0;
+  top: 48px;
+  width: 220px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 20%);
+
+  /* REMOVED: opacity: 0; transform: translateY(-10px); pointer-events: none; */
+  overflow: hidden;
+  z-index: 2000;
+}
+
+/* .profile-dropdown:hover .profile-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+} */
+
+/* Dropdown content */
+
+.profile-header {
+  padding: 12px;
+  background: #d6d6d6;
+}
+
+.profile-header .view-profile {
+  display: block;
+  font-size: 0.8rem;
+  color: #ae1700;
+  cursor: pointer;
+}
+
+.profile-section {
+  padding: 10px 12px;
+  border-top: 1px solid #bbb;
+}
+
+.profile-section div {
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.profile-section div:hover {
+  color: #ae1700;
+}
+
+.profile-section.logout {
+  font-weight: 600;
+  color: #b00000;
+}
+
+/* Mobile & iPhone fixes */
+
+/* Disable hover tooltips on touch devices */
+@media (hover: none) {
+  .nav-tooltip {
+    display: none;
+  }
+}
+
+/* Prevent dropdown overflow on small screens */
+@media (width <= 480px) {
+  .profile-menu {
+    width: 90vw;
+    max-width: 280px;
+    right: 8px;
+  }
+}
+
+/* Desktop: add left spacing for logo */
+@media (width >= 768px) {
+  .navbar .navbar-brand {
+    padding-left: 1.5rem; /* adjust: 1rem–2rem as needed */
   }
 }
