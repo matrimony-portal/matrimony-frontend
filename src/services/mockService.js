@@ -11,6 +11,39 @@ export const mockAuthService = {
     // Find user in main database
     let user = mockDatabase?.users?.find((u) => u.email === email);
 
+    // Fallback to hardcoded credentials if database lookup fails
+    if (!user) {
+      const credentials = {
+        "user@test.com": {
+          password: "User@123",
+          userType: "user",
+          subscriptionStatus: "inactive",
+          subscriptionTier: "free",
+          subscriptionExpiry: null,
+        },
+        "paid-user@test.com": {
+          password: "User@123",
+          userType: "user",
+          subscriptionStatus: "active",
+          subscriptionTier: "premium",
+          subscriptionExpiry: "2035-12-31",
+        },
+        "organizer@test.com": { password: "Org@123", userType: "organizer" },
+        "admin@test.com": { password: "Admin@123", userType: "admin" },
+      };
+      const cred = credentials[email];
+      if (cred && cred.password === password) {
+        user = {
+          email,
+          password: cred.password,
+          userType: cred.userType,
+          subscriptionStatus: cred.subscriptionStatus,
+          subscriptionTier: cred.subscriptionTier,
+          subscriptionExpiry: cred.subscriptionExpiry,
+        };
+      }
+    }
+
     // If not found in main database, check admin database
     if (!user && adminDatabase?.users) {
       user = adminDatabase.users.find((u) => u.email === email);

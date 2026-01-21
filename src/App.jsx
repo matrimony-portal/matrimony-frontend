@@ -10,6 +10,7 @@ import HomePage from "./components/HomePage";
 import Login from "./components/auth/Login.jsx";
 import Register from "./components/auth/Register.jsx";
 import ForgotPassword from "./components/ForgotPassword";
+import UpgradePage from "./components/upgrade/UpgradePage.jsx";
 
 // Layout
 import Layout from "./components/common/Layout/Layout.jsx";
@@ -75,6 +76,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/upgrade" element={<UpgradePage />} />
 
         {/* Protected Dashboard Routes with Layout */}
         <Route
