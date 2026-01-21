@@ -1,13 +1,22 @@
 // src/components/common/Layout/Layout.jsx
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true); // Default: open on desktop
+  const location = useLocation();
+  const mainRef = useRef(null);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
+  // Reset scroll position for the dashboard content container on navigation
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
 
   return (
     <div className="d-flex flex-column vh-100">
@@ -16,6 +25,7 @@ const Layout = () => {
         <div className="row h-100 g-0">
           <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
           <main
+            ref={mainRef}
             className={`main-content px-md-4 ${sidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}
             style={{
               transition:

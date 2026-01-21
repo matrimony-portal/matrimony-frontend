@@ -18,7 +18,8 @@ export const mockAuthService = {
         userType: "user",
         subscriptionStatus: "active",
         subscriptionTier: "premium",
-        subscriptionExpiry: "2025-12-31",
+        // Far future expiry so the test account always behaves as premium
+        subscriptionExpiry: "2035-12-31",
       },
       "organizer@test.com": { password: "Org@123", userType: "organizer" },
       "admin@test.com": { password: "Admin@123", userType: "admin" },

@@ -3,10 +3,12 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
+import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { user, userType } = useAuth();
   const base = useDashboardBasePath();
+  const { isFree, canMessage } = useUserCapabilities();
 
   const menuItems =
     userType === "admin" || userType === "organizer"
@@ -23,7 +25,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             icon: "bi-envelope-heart",
             label: "Proposals",
           },
-          { path: `${base}/messages`, icon: "bi-chat-dots", label: "Messages" },
+          ...(canMessage
+            ? [
+                {
+                  path: `${base}/messages`,
+                  icon: "bi-chat-dots",
+                  label: "Messages",
+                },
+              ]
+            : []),
           { path: `${base}/shortlist`, icon: "bi-star", label: "Shortlist" },
           {
             path: `${base}/events`,
@@ -31,6 +41,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             label: "Events",
           },
           { path: `${base}/settings`, icon: "bi-gear", label: "Settings" },
+          ...(isFree
+            ? [
+                {
+                  path: "/upgrade",
+                  icon: "bi-lightning-charge",
+                  label: "Upgrade",
+                },
+              ]
+            : []),
         ];
 
   return (

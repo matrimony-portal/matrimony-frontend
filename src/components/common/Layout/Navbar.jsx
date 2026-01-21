@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
+import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
 
 const Navbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
   const base = useDashboardBasePath();
+  const { isFree, canMessage } = useUserCapabilities();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -84,13 +86,15 @@ const Navbar = ({ toggleSidebar }) => {
         </NavLink>
 
         {/* Messages */}
-        <NavLink
-          to={`${base}/messages`}
-          className="nav-icon-wrapper"
-          title="Messages"
-        >
-          <i className="bi bi-chat-dots nav-icon"></i>
-        </NavLink>
+        {canMessage ? (
+          <NavLink
+            to={`${base}/messages`}
+            className="nav-icon-wrapper"
+            title="Messages"
+          >
+            <i className="bi bi-chat-dots nav-icon"></i>
+          </NavLink>
+        ) : null}
 
         {/* Profile Dropdown */}
         <div
@@ -146,6 +150,14 @@ const Navbar = ({ toggleSidebar }) => {
                   Help
                 </NavLink>
               </div>
+
+              {isFree && (
+                <div className="profile-section">
+                  <NavLink to="/upgrade" onClick={closeDropdown}>
+                    Upgrade to Premium
+                  </NavLink>
+                </div>
+              )}
 
               {/* Logout */}
               <div

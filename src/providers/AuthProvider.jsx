@@ -10,6 +10,26 @@ export const AuthProvider = ({ children }) => {
   const [subscriptionTier, setSubscriptionTier] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const normalizeSubscription = useCallback((rawUser) => {
+    if (!rawUser) return { status: null, tier: null };
+
+    const now = Date.now();
+    const expiry = rawUser.subscriptionExpiry
+      ? new Date(rawUser.subscriptionExpiry).getTime()
+      : null;
+    const isExpired = expiry && expiry < now;
+
+    // If expired, treat as inactive/free
+    if (isExpired) {
+      return { status: "inactive", tier: "free" };
+    }
+
+    return {
+      status: rawUser.subscriptionStatus ?? null,
+      tier: rawUser.subscriptionTier ?? null,
+    };
+  }, []);
+
   useEffect(() => {
     const initAuth = () => {
       try {
@@ -24,10 +44,16 @@ export const AuthProvider = ({ children }) => {
 
         if (storedUser && storedUserType) {
           const parsedUser = JSON.parse(storedUser);
+          const normalized = normalizeSubscription({
+            ...parsedUser,
+            subscriptionStatus: storedSubscriptionStatus,
+            subscriptionTier: storedSubscriptionTier,
+          });
+
           setUser(parsedUser);
           setUserType(storedUserType);
-          setSubscriptionStatus(storedSubscriptionStatus);
-          setSubscriptionTier(storedSubscriptionTier);
+          setSubscriptionStatus(normalized.status);
+          setSubscriptionTier(normalized.tier);
         }
       } catch (error) {
         console.error("Error initializing auth:", error);
@@ -41,37 +67,33 @@ export const AuthProvider = ({ children }) => {
     };
 
     initAuth();
-  }, []);
+  }, [normalizeSubscription]);
 
   const login = useCallback(async (email, password) => {
     const data = await authService.login(email, password);
+
+    const normalized = normalizeSubscription(data.user);
 
     const userData = {
       email: data.user.email,
       userType: data.user.userType,
       name: data.user.name,
       id: data.user.id,
-      subscriptionStatus: data.user.subscriptionStatus,
-      subscriptionTier: data.user.subscriptionTier,
+      subscriptionStatus: normalized.status,
+      subscriptionTier: normalized.tier,
       subscriptionExpiry: data.user.subscriptionExpiry,
     };
 
     setUser(userData);
     setUserType(data.user.userType);
-    setSubscriptionStatus(data.user.subscriptionStatus);
-    setSubscriptionTier(data.user.subscriptionTier);
+    setSubscriptionStatus(normalized.status);
+    setSubscriptionTier(normalized.tier);
 
     localStorage.setItem("matrimony_token", data.token);
     localStorage.setItem("matrimony_user", JSON.stringify(userData));
     localStorage.setItem("matrimony_userType", data.user.userType);
-    localStorage.setItem(
-      "matrimony_subscriptionStatus",
-      data.user.subscriptionStatus,
-    );
-    localStorage.setItem(
-      "matrimony_subscriptionTier",
-      data.user.subscriptionTier,
-    );
+    localStorage.setItem("matrimony_subscriptionStatus", normalized.status);
+    localStorage.setItem("matrimony_subscriptionTier", normalized.tier);
 
     return { success: true, user: userData };
   }, []);

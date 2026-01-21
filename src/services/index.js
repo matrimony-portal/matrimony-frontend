@@ -18,7 +18,8 @@ const mockUsers = [
     id: 2,
     subscriptionStatus: "active",
     subscriptionTier: "premium",
-    subscriptionExpiry: "2025-12-31",
+    // Far future expiry so the test account stays premium in mocks
+    subscriptionExpiry: "2035-12-31",
   },
   {
     email: "organizer@test.com",
