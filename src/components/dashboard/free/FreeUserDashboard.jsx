@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../hooks/useAuth.jsx";
-import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
+import { useNavigate } from "react-router";
 import StatCard from "../../common/shared/StatCard.jsx";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";
+import { useAuth } from "../../../hooks/useAuth.jsx";
+import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
 
 const FreeUserDashboard = () => {
   const { user } = useAuth();

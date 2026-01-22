@@ -83,8 +83,16 @@ Examples:
 
 **Before creating PR:**
 
-1. Run `npm run fix && npm run check`
-2. Test with `npm run dev`
-3. Ensure `npm run build` works
-4. Keep PRs < 400 lines
-5. Get at least 1 approval
+1. Update dev branch: `git checkout dev && git pull origin dev`
+2. Rebase feature branch: `git checkout feature/your-feature && git rebase dev`
+3. Run `npm run fix && npm run check`
+4. Test with `npm run dev`
+5. Ensure `npm run build` works
+6. Keep PRs < 400 lines
+7. Get at least 1 approval
+
+**Merge Style:**
+
+- Use **Rebase and Merge** for feature PRs
+- Maintains linear commit history
+- Preserves individual commits from feature branch

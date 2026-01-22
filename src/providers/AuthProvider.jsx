@@ -69,34 +69,37 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, [normalizeSubscription]);
 
-  const login = useCallback(async (email, password) => {
-    const data = await authService.login(email, password);
+  const login = useCallback(
+    async (email, password) => {
+      const data = await authService.login(email, password);
 
-    const normalized = normalizeSubscription(data.user);
+      const normalized = normalizeSubscription(data.user);
 
-    const userData = {
-      email: data.user.email,
-      userType: data.user.userType,
-      name: data.user.name,
-      id: data.user.id,
-      subscriptionStatus: normalized.status,
-      subscriptionTier: normalized.tier,
-      subscriptionExpiry: data.user.subscriptionExpiry,
-    };
+      const userData = {
+        email: data.user.email,
+        userType: data.user.userType,
+        name: data.user.name,
+        id: data.user.id,
+        subscriptionStatus: normalized.status,
+        subscriptionTier: normalized.tier,
+        subscriptionExpiry: data.user.subscriptionExpiry,
+      };
 
-    setUser(userData);
-    setUserType(data.user.userType);
-    setSubscriptionStatus(normalized.status);
-    setSubscriptionTier(normalized.tier);
+      setUser(userData);
+      setUserType(data.user.userType);
+      setSubscriptionStatus(normalized.status);
+      setSubscriptionTier(normalized.tier);
 
-    localStorage.setItem("matrimony_token", data.token);
-    localStorage.setItem("matrimony_user", JSON.stringify(userData));
-    localStorage.setItem("matrimony_userType", data.user.userType);
-    localStorage.setItem("matrimony_subscriptionStatus", normalized.status);
-    localStorage.setItem("matrimony_subscriptionTier", normalized.tier);
+      localStorage.setItem("matrimony_token", data.token);
+      localStorage.setItem("matrimony_user", JSON.stringify(userData));
+      localStorage.setItem("matrimony_userType", data.user.userType);
+      localStorage.setItem("matrimony_subscriptionStatus", normalized.status);
+      localStorage.setItem("matrimony_subscriptionTier", normalized.tier);
 
-    return { success: true, user: userData };
-  }, []);
+      return { success: true, user: userData };
+    },
+    [normalizeSubscription],
+  );
 
   const register = useCallback(async (userData) => {
     const data = await authService.register(userData);
