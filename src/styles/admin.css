@@ -1,0 +1,35 @@
+/* Admin Dashboard Styles */
+.admin-stat-card {
+  transition: transform 0.2s ease;
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.admin-activity-icon.icon-blue {
+  background-color: #dbeafe;
+  color: #1e3a8a;
+}
+
+.admin-activity-icon.icon-green {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.admin-activity-icon.icon-yellow {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.admin-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
