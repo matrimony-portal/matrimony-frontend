@@ -32,6 +32,10 @@ import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashbo
 import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
 
 import "./styles/custom.css";
+import BroadcastMessage from "./components/dashboard/admin/BroadcastMessage.jsx";
+import AddEvent from "./components/dashboard/admin/AddEvent.jsx";
+import GlobalAnnouncement from "./components/dashboard/admin/GlobalAnnouncement.jsx";
+import ReportsCounter from "./components/dashboard/admin/ReportsCounter.jsx";
 
 function App() {
   return (
@@ -41,6 +45,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/admin" element={<AdminDashboard />} />
 
       {/* Protected Dashboard Routes with Layout */}
       <Route
@@ -75,6 +80,10 @@ function App() {
         {/* Organizer & Admin Routes */}
         <Route path="organizer" element={<OrganizerDashboard />} />
         <Route path="admin" element={<AdminDashboard />} />
+        <Route path="admin/broadcast" element={<BroadcastMessage />} />
+        <Route path="admin/add-event" element={<AddEvent />} />
+        <Route path="admin/announcement" element={<GlobalAnnouncement />} />
+        <Route path="admin/reports" element={<ReportsCounter />} />
       </Route>
 
       {/* Catch-all redirect */}

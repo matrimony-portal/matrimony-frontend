@@ -1,0 +1,53 @@
+.broadcast-box textarea {
+  min-height: 120px;
+}
+
+.event-form textarea {
+  grid-column: span 2;
+  min-height: 100px;
+}
+
+.announcement-box textarea {
+  min-height: 120px;
+}
+
+.quick-actions button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6a5acd, #5b3cc4);
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.page textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+}
+
+.page textarea:focus {
+  border-color: #5b3cc4;
+  box-shadow: 0 0 5px rgb(91 60 196 / 40%);
+}
+
+.page button {
+  background: linear-gradient(135deg, #6a5acd, #5b3cc4);
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.page button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 15%);
+}
