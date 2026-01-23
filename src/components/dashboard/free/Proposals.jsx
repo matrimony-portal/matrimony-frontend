@@ -1,6 +1,6 @@
 // src/components/dashboard/premium/Proposals.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import ProposalCard from "../../common/shared/ProposalCard.jsx";
 
 const Proposals = () => {

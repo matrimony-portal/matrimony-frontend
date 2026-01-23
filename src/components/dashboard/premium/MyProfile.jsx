@@ -1,6 +1,6 @@
 // src/components/dashboard/premium/MyProfile.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 // Images (CORRECT way in React)
 import profileImg from "../../../assets/images/male/rahul.png";
