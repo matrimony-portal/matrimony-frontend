@@ -1,6 +1,6 @@
 // src/components/dashboard/premium/Shortlist.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const Shortlist = () => {
   const navigate = useNavigate();

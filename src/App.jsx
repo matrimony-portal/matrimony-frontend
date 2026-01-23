@@ -1,5 +1,5 @@
 // src/App.jsx
-import { Routes, Route, Navigate } from "react-router";
+import { Routes, Route, Navigate, Outlet } from "react-router";
 import { AuthProvider } from "./providers/AuthProvider.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 import DashboardRouter from "./components/auth/DashboardRouter.jsx";
@@ -11,6 +11,9 @@ import Login from "./components/auth/Login.jsx";
 import Register from "./components/auth/Register.jsx";
 import ForgotPassword from "./components/ForgotPassword";
 import UpgradePage from "./components/upgrade/UpgradePage.jsx";
+import PaymentPage from "./components/common/Subscription.jsx";
+import FeedbackPage from "./components/common/Feedback.jsx";
+import ContactPage from "./components/common/Contact.jsx";
 
 // Layout
 import Layout from "./components/common/Layout/Layout.jsx";
@@ -45,8 +48,19 @@ import PremiumEvents from "./components/dashboard/premium/Events.jsx";
 import PremiumSettings from "./components/dashboard/premium/Settings.jsx";
 import PremiumFeedback from "./components/dashboard/premium/Feedback.jsx";
 import PremiumProfileView from "./components/dashboard/premium/ProfileView.jsx";
-import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
+
 import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
+
+// Dashboard Pages (Event Organizer)
+import BlockedUsers from "./components/dashboard/free/BlockedUsers.jsx";
+import { EventDetails } from "./components/dashboard/organizer/EventDetails.jsx";
+import { EventForm } from "./components/dashboard/organizer/EventForm";
+import { MyEventsList } from "./components/dashboard/organizer/EventList";
+import { EventOrganizerDashboard } from "./components/dashboard/organizer/OrganizerDashboard.jsx";
+import { EventRequests } from "./components/dashboard/organizer/EventRequests";
+import { OrganizerSettings } from "./components/dashboard/organizer/OrganizerSettings";
+import { OrganizerProfile } from "./components/dashboard/organizer/OrganizerProfile";
+import { EditOrganizerProfile } from "./components/dashboard/organizer/EditOrganizer.jsx";
 
 import "./styles/custom.css";
 
@@ -59,6 +73,10 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/upgrade" element={<UpgradePage />} />
+      <Route path="/subscription" element={<PaymentPage />} />
+      <Route path="/payment" element={<PaymentPage />} />
+      <Route path="/feedback" element={<FeedbackPage />} />
+      <Route path="/contact" element={<ContactPage />} />
 
       {/* Protected Dashboard Routes with Layout */}
       <Route
@@ -87,6 +105,11 @@ function App() {
           <Route path="settings" element={<FreeSettings />} />
           <Route path="feedback" element={<FreeFeedback />} />
           <Route path="profile/:id" element={<FreeProfileView />} />
+          <Route
+            path="subscription"
+            element={<PaymentPage inLayout={true} />}
+          />
+          <Route path="contact" element={<ContactPage inLayout={true} />} />
         </Route>
 
         {/* Premium User Routes */}
@@ -105,10 +128,58 @@ function App() {
           <Route path="settings" element={<PremiumSettings />} />
           <Route path="feedback" element={<PremiumFeedback />} />
           <Route path="profile/:id" element={<PremiumProfileView />} />
+          <Route
+            path="subscription"
+            element={<PaymentPage inLayout={true} />}
+          />
+          <Route path="contact" element={<ContactPage inLayout={true} />} />
+        </Route>
+
+        {/* Event organizer Routes */}
+        <Route path="organizer" element={<Outlet />}>
+          <Route index element={<EventOrganizerDashboard />} />
+          {
+            <Route
+              path="my-profile"
+              element={<OrganizerProfile />}
+            /> /*organiser profile*/
+          }
+          {/* <Route path="manage-profile" element={<PremiumManageProfile />} /> organiser edit profile*/}
+          {
+            <Route
+              path="edit-profile"
+              element={<EditOrganizerProfile />}
+            /> /*Edit Organizer */
+          }
+          {/* <Route path="manage-photos" element={<PremiumManageEvents />} /> */}
+
+          <Route path="blocked-users" element={<BlockedUsers />} />
+          <Route path="create-event" element={<EventForm />} />
+          {/* Edit - Profile */}
+          {/* Edit - Manage Event */}
+          <Route path="event-requests" element={<EventRequests />} />
+          <Route path="event-details" element={<EventDetails />} />
+          <Route path="messages" element={<PremiumMessages />} />
+          {/* Events - ALL */}
+          <Route path="events" element={<MyEventsList />} />
+          {/* <Route path="/dashboard/organizer/event/:eventId" element={<EventDetails mode="view" />} /> */}
+          {/* <Route path="/dashboard/organizer/event-edit/:eventId" element={<EventDetails mode="edit" />} /> */}
+
+          <Route
+            path="event-view/:eventId"
+            element={<EventDetails mode="view" />}
+          />
+          <Route
+            path="event-edit/:eventId"
+            element={<EventDetails mode="edit" />}
+          />
+
+          <Route path="settings" element={<OrganizerSettings />} />
+          <Route path="contact" element={<ContactPage inLayout={true} />} />
+          {/* <Route path="feedback" element={<Feedback />} /> */}
         </Route>
 
         {/* Organizer & Admin Routes */}
-        <Route path="organizer" element={<OrganizerDashboard />} />
         <Route path="admin" element={<AdminDashboard />} />
 
         {/* Legacy routes (keep old links working, but route under correct base) */}

@@ -87,7 +87,7 @@ const FreeUserDashboard = () => {
         <div className="d-flex gap-2">
           <button
             className="btn btn-sm btn-primary"
-            onClick={() => navigate("/upgrade")}
+            onClick={() => navigate("/dashboard/free/subscription")}
           >
             See Premium Plans
           </button>
@@ -221,7 +221,7 @@ const FreeUserDashboard = () => {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => navigate("/upgrade")}
+                  onClick={() => navigate("/dashboard/free/subscription")}
                 >
                   View Plans
                 </button>
