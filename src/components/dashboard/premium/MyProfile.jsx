@@ -1,21 +1,35 @@
 // src/components/dashboard/premium/MyProfile.jsx
 import React, { useState } from "react";
-//import { useAuth } from "../../../hooks/useAuth.jsx";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+
+// Images (CORRECT way in React)
+import profileImg from "../../../assets/images/male/rahul.png";
+import g1 from "../../../assets/images/male/rahul-p1.png";
+import g2 from "../../../assets/images/male/rahul-p2.png";
+import g3 from "../../../assets/images/male/rahul-p3.png";
+import g4 from "../../../assets/images/male/rahul-p4.png";
+import g5 from "../../../assets/images/male/rahul-p5.png";
+
+// Components
+import StatCard from "../../common/shared/StatCard";
 
 const MyProfile = () => {
-  //const { user } = useAuth();
   const navigate = useNavigate();
   const [showLightbox, setShowLightbox] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const galleryImages = [
-    "../../assets/images/male/rahul-p1.png",
-    "../../assets/images/male/rahul-p2.png",
-    "../../assets/images/male/rahul-p3.png",
-    "../../assets/images/male/rahul-p4.png",
-    "../../assets/images/male/rahul-p5.png",
+  /* ---------------- MOCK DATA (replace with API later) ---------------- */
+
+  const stats = [
+    { icon: "👥", number: 26, label: "Total Matches" },
+    { icon: "💌", number: 12, label: "Sent Proposals" },
+    { icon: "📩", number: 8, label: "Received Proposals" },
+    { icon: "⭐", number: 15, label: "Shortlisted" },
+    { icon: "💬", number: 6, label: "Active Chats" },
+    { icon: "👁️", number: 145, label: "Profile Views" },
   ];
+
+  const galleryImages = [g1, g2, g3, g4, g5];
 
   const profileData = {
     name: "Rahul Agarwal",
@@ -27,8 +41,10 @@ const MyProfile = () => {
     location: "Pune, Maharashtra",
     education: "B.Tech, MBA",
     occupation: "Product Manager",
-    photo: "../../assets/images/male/rahul.png",
+    photo: profileImg,
   };
+
+  /* ---------------- HANDLERS ---------------- */
 
   const openLightbox = (index) => {
     setCurrentImageIndex(index);
@@ -45,38 +61,39 @@ const MyProfile = () => {
     );
   };
 
+  /* ---------------- RENDER ---------------- */
+
   return (
     <div className="container-fluid py-3 py-md-4">
-      {/* Profile Header Card */}
-      <div className="card mb-3 mb-md-4">
+      {/* ================= PROFILE HEADER ================= */}
+      <div className="card mb-4">
         <div className="card-body">
           <div className="row g-3">
-            {/* Profile Photo - Stacks on mobile */}
             <div className="col-12 col-md-3 text-center">
               <img
                 src={profileData.photo}
                 alt={profileData.name}
                 className="img-fluid rounded mb-3"
-                style={{ maxWidth: "250px", width: "100%" }}
+                style={{ maxWidth: "250px" }}
               />
-              <span className="badge bg-success d-inline-block">
+              <span className="badge bg-success">
                 <i className="bi bi-patch-check-fill me-1"></i>
                 Verified Profile
               </span>
             </div>
 
-            {/* Profile Info */}
             <div className="col-12 col-md-9">
-              <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start mb-3">
+              <div className="d-flex justify-content-between flex-wrap mb-3">
                 <div>
-                  <h1 className="h3 mb-2">
+                  <h1 className="h3 mb-1">
                     {profileData.name}
                     <i className="bi bi-patch-check-fill text-primary ms-2"></i>
                   </h1>
-                  <p className="text-muted mb-3">ID: {profileData.id}</p>
+                  <p className="text-muted">ID: {profileData.id}</p>
                 </div>
+
                 <button
-                  className="btn btn-outline-primary btn-sm mt-2 mt-sm-0"
+                  className="btn btn-outline-primary btn-sm"
                   onClick={() => navigate("/dashboard/edit-profile")}
                 >
                   <i className="bi bi-pencil me-1"></i>
@@ -84,143 +101,72 @@ const MyProfile = () => {
                 </button>
               </div>
 
-              {/* Quick Info Grid - Responsive */}
-              <div className="row g-2 g-md-3 mb-3">
+              <div className="row g-3 mb-3">
                 <div className="col-6 col-md-4">
-                  <span className="text-muted small d-block">Age</span>
-                  <strong>{profileData.age} years</strong>
+                  <small className="text-muted">Age</small>
+                  <div className="fw-semibold">{profileData.age} years</div>
                 </div>
                 <div className="col-6 col-md-4">
-                  <span className="text-muted small d-block">Height</span>
-                  <strong>{profileData.height}</strong>
+                  <small className="text-muted">Height</small>
+                  <div className="fw-semibold">{profileData.height}</div>
                 </div>
                 <div className="col-6 col-md-4">
-                  <span className="text-muted small d-block">Religion</span>
-                  <strong>
+                  <small className="text-muted">Religion</small>
+                  <div className="fw-semibold">
                     {profileData.religion}, {profileData.caste}
-                  </strong>
+                  </div>
                 </div>
                 <div className="col-6 col-md-4">
-                  <span className="text-muted small d-block">Location</span>
-                  <strong>{profileData.location}</strong>
+                  <small className="text-muted">Location</small>
+                  <div className="fw-semibold">{profileData.location}</div>
                 </div>
                 <div className="col-6 col-md-4">
-                  <span className="text-muted small d-block">Education</span>
-                  <strong>{profileData.education}</strong>
+                  <small className="text-muted">Education</small>
+                  <div className="fw-semibold">{profileData.education}</div>
                 </div>
                 <div className="col-6 col-md-4">
-                  <span className="text-muted small d-block">Occupation</span>
-                  <strong>{profileData.occupation}</strong>
+                  <small className="text-muted">Occupation</small>
+                  <div className="fw-semibold">{profileData.occupation}</div>
                 </div>
               </div>
 
-              <div className="d-flex flex-wrap gap-2">
-                <span className="badge bg-warning text-dark">
-                  ⭐ Premium Member
-                </span>
-              </div>
+              <span className="badge bg-warning text-dark">
+                ⭐ Premium Member
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="row g-3 g-md-4">
-        {/* Main Content */}
+      {/* ================= STATS ================= */}
+      <div className="row g-2 g-md-3 mb-4">
+        {stats.map((stat, idx) => (
+          <div key={idx} className="col-6 col-md-4 col-lg-2">
+            <StatCard {...stat} />
+          </div>
+        ))}
+      </div>
+
+      {/* ================= MAIN CONTENT ================= */}
+      <div className="row g-4">
         <div className="col-12 col-lg-8">
           {/* About Me */}
           <div className="card mb-3">
             <div className="card-body">
-              <h3 className="h5 border-bottom pb-2 mb-3">About Me</h3>
-              <p className="text-muted" style={{ textAlign: "justify" }}>
+              <h5 className="border-bottom pb-2 mb-3">About Me</h5>
+              <p className="text-muted text-justify">
                 I'm a 31-year-old Product Manager based in Pune, working with a
-                leading tech firm. I did my B.Tech from IIT Delhi and MBA from
-                ISB Hyderabad. I enjoy reading about startups, exploring new
-                cuisines, and keeping fit through running and yoga. Family and
-                work-life balance matter a lot to me. I believe in progressive
-                thinking, honesty, and mutual respect in relationships. I'm
-                looking for a partner who is kind, confident, and shares similar
-                values. Someone who values emotional connection and enjoys both
-                quiet evenings and spontaneous adventures.
+                leading tech firm. I value honesty, emotional connection, and
+                work-life balance. Looking for a partner who shares similar
+                values and enjoys both quiet moments and spontaneous adventures.
               </p>
-            </div>
-          </div>
-
-          {/* Basic Details */}
-          <div className="card mb-3">
-            <div className="card-body">
-              <h3 className="h5 border-bottom pb-2 mb-3">Basic Details</h3>
-              <div className="row g-3">
-                {[
-                  { label: "Age", value: "31 years" },
-                  { label: "Height", value: "5'10\" (178 cm)" },
-                  { label: "Marital Status", value: "Never Married" },
-                  { label: "Mother Tongue", value: "Hindi" },
-                  { label: "Body Type", value: "Fit" },
-                  { label: "Complexion", value: "Wheatish" },
-                ].map((item, idx) => (
-                  <div key={idx} className="col-6 col-md-4">
-                    <div className="p-2 p-md-3 bg-light rounded">
-                      <div className="small text-muted mb-1">{item.label}</div>
-                      <div className="fw-semibold">{item.value}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Education & Career */}
-          <div className="card mb-3">
-            <div className="card-body">
-              <h3 className="h5 border-bottom pb-2 mb-3">Education & Career</h3>
-              <div className="row g-3">
-                {[
-                  { label: "Highest Education", value: "MBA" },
-                  { label: "College/University", value: "ISB Hyderabad" },
-                  { label: "Occupation", value: "Product Manager" },
-                  { label: "Organization", value: "TechSphere Pvt. Ltd." },
-                  { label: "Annual Income", value: "₹25-30 Lakhs" },
-                  { label: "Working City", value: "Pune" },
-                ].map((item, idx) => (
-                  <div key={idx} className="col-6 col-md-4">
-                    <div className="p-2 p-md-3 bg-light rounded">
-                      <div className="small text-muted mb-1">{item.label}</div>
-                      <div className="fw-semibold">{item.value}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Family Details */}
-          <div className="card mb-3">
-            <div className="card-body">
-              <h3 className="h5 border-bottom pb-2 mb-3">Family Details</h3>
-              <div className="row g-3">
-                {[
-                  { label: "Family Type", value: "Joint Family" },
-                  { label: "Family Status", value: "Upper Middle Class" },
-                  { label: "Father's Occupation", value: "Businessman" },
-                  { label: "Mother's Occupation", value: "Homemaker" },
-                  { label: "Brothers", value: "1 (Married)" },
-                  { label: "Sisters", value: "None" },
-                ].map((item, idx) => (
-                  <div key={idx} className="col-6 col-md-4">
-                    <div className="p-2 p-md-3 bg-light rounded">
-                      <div className="small text-muted mb-1">{item.label}</div>
-                      <div className="fw-semibold">{item.value}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
 
           {/* Photo Gallery */}
           <div className="card mb-3">
             <div className="card-body">
-              <h3 className="h5 border-bottom pb-2 mb-3">Photo Gallery</h3>
+              <h5 className="border-bottom pb-2 mb-3">Photo Gallery</h5>
               <div className="row g-2">
                 {galleryImages.map((img, idx) => (
                   <div key={idx} className="col-4 col-md-3">
@@ -228,11 +174,7 @@ const MyProfile = () => {
                       src={img}
                       alt={`Gallery ${idx + 1}`}
                       className="img-fluid rounded cursor-pointer"
-                      style={{
-                        cursor: "pointer",
-                        aspectRatio: "1/1",
-                        objectFit: "cover",
-                      }}
+                      style={{ aspectRatio: "1/1", objectFit: "cover" }}
                       onClick={() => openLightbox(idx)}
                     />
                   </div>
@@ -242,39 +184,13 @@ const MyProfile = () => {
           </div>
         </div>
 
-        {/* Sidebar */}
+        {/* ================= SIDEBAR ================= */}
         <div className="col-12 col-lg-4">
-          <div className="card mb-3">
+          <div className="card">
             <div className="card-body">
-              <h4 className="h6 mb-3">Contact Information</h4>
+              <h6 className="mb-3">Contact Information</h6>
 
-              <div className="d-flex align-items-center p-2 bg-light rounded mb-2">
-                <i className="bi bi-telephone-fill me-3 fs-5"></i>
-                <div className="flex-grow-1">
-                  <div className="small text-muted">Phone</div>
-                  <div className="fw-semibold">+91 98765-98765</div>
-                </div>
-              </div>
-
-              <div className="d-flex align-items-center p-2 bg-light rounded mb-2">
-                <i className="bi bi-envelope-fill me-3 fs-5"></i>
-                <div className="flex-grow-1">
-                  <div className="small text-muted">Email</div>
-                  <div className="fw-semibold small">
-                    rahul.agarwal@email.com
-                  </div>
-                </div>
-              </div>
-
-              <div className="d-flex align-items-center p-2 bg-light rounded mb-3">
-                <i className="bi bi-whatsapp me-3 fs-5 text-success"></i>
-                <div className="flex-grow-1">
-                  <div className="small text-muted">WhatsApp</div>
-                  <div className="fw-semibold">Available</div>
-                </div>
-              </div>
-
-              <div className="alert alert-warning mb-0 small">
+              <div className="alert alert-warning small mb-0">
                 <i className="bi bi-lock-fill me-1"></i>
                 Contact details visible to premium members only
               </div>
@@ -283,20 +199,23 @@ const MyProfile = () => {
         </div>
       </div>
 
-      {/* Lightbox Modal */}
+      {/* ================= LIGHTBOX ================= */}
       {showLightbox && (
         <div
           className="modal show d-block"
           style={{ backgroundColor: "rgba(0,0,0,0.9)" }}
           onClick={() => setShowLightbox(false)}
         >
-          <div className="modal-dialog modal-dialog-centered modal-xl">
+          <div
+            className="modal-dialog modal-dialog-centered modal-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="modal-content bg-transparent border-0">
               <div className="modal-header border-0">
                 <button
                   className="btn-close btn-close-white"
                   onClick={() => setShowLightbox(false)}
-                ></button>
+                />
               </div>
               <div className="modal-body text-center">
                 <img
@@ -308,10 +227,10 @@ const MyProfile = () => {
               </div>
               <div className="modal-footer border-0 justify-content-between">
                 <button className="btn btn-light" onClick={prevImage}>
-                  <i className="bi bi-chevron-left"></i> Previous
+                  ‹ Previous
                 </button>
                 <button className="btn btn-light" onClick={nextImage}>
-                  Next <i className="bi bi-chevron-right"></i>
+                  Next ›
                 </button>
               </div>
             </div>
