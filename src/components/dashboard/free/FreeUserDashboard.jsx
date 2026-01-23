@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
 import StatCard from "../../common/shared/StatCard.jsx";

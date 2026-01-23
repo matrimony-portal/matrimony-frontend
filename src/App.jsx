@@ -1,5 +1,5 @@
 // src/App.jsx
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 import DashboardRouter from "./components/auth/DashboardRouter.jsx";
 import DashboardPathRouter from "./components/auth/DashboardPathRouter.jsx";
@@ -49,11 +49,9 @@ import PremiumFeedback from "./components/dashboard/premium/Feedback.jsx";
 import PremiumProfileView from "./components/dashboard/premium/ProfileView.jsx";
 
 // Dashboard Pages - Organizer
-import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
 import OrganizerEvents from "./components/dashboard/organizer/OrganizerEvents.jsx";
 import CreateEvent from "./components/dashboard/organizer/CreateEvent.jsx";
 import OrganizerProfilePage from "./components/dashboard/organizer/OrganizerProfilePage.jsx";
-import OrganizerSettings from "./components/dashboard/organizer/OrganizerSettings.jsx";
 
 // Dashboard Pages - Admin
 import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
@@ -95,16 +93,16 @@ function App() {
       <Route path="/contact" element={<ContactPage />} />
 
       {/* Protected Dashboard Routes with Layout */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute allowedRoles={["user", "organizer", "admin"]}>
-              <Layout />
-            </ProtectedRoute>
-          }
-        >
-          {/* Main Dashboard Route */}
-          <Route index element={<DashboardRouter />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["user", "organizer", "admin"]}>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
+        {/* Main Dashboard Route */}
+        <Route index element={<DashboardRouter />} />
 
         {/* Free User Routes */}
         <Route path="free" element={<Outlet />}>
