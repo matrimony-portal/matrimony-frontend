@@ -1,5 +1,6 @@
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import PropTypes from "prop-types";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import "./HomePage.css";
 
 // Import images
@@ -225,51 +226,126 @@ FooterColumn.propTypes = {
 function HomePage() {
   return (
     <div>
-      <div className="navbar">
-        <div className="navbar-left">
-          <div className="logo">
-            <span className="logo-icon">💍</span>
-            <span className="logo-text">Bandan</span>
-          </div>
+      <Navbar
+        expand="lg"
+        className="navbar-dark sticky-top shadow"
+        style={{
+          background: "linear-gradient(135deg, #5a0d14 0%, #ae1700 100%)",
+          padding: "0.5rem 0",
+        }}
+      >
+        <Container fluid className="px-3 px-md-4">
+          {/* Logo */}
+          <Navbar.Brand as={Link} to="/" className="me-0">
+            <div className="d-flex align-items-center">
+              <img
+                src="/assets/logo/logo.svg"
+                alt="Logo"
+                className="logo-icon"
+                style={{ height: "40px", width: "auto" }}
+              />
+              <img
+                src="/assets/logo/bandan.svg"
+                alt="Bandan"
+                className="d-none d-md-inline"
+                style={{ height: "30px", width: "auto", marginLeft: "8px" }}
+              />
+            </div>
+          </Navbar.Brand>
 
-          <nav
-            className="nav-links"
-            role="navigation"
-            aria-label="Main navigation"
-          >
-            <ul>
-              <li>
-                <a href="#home">Home</a>
-              </li>
-              <li>
-                <a href="#search">Search</a>
-              </li>
-              <li>
-                <a href="#whyUs">Why us?</a>
-              </li>
-              <li>
-                <a href="#successStories">Success Stories</a>
-              </li>
-              <li>
-                <a href="#events">Events</a>
-              </li>
-              <li>
-                <a href="#footer">Contact</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+          {/* Mobile Toggle */}
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-        <div className="navbar-right">
-          <Link to="/login" className="btn login-btn">
-            Login
-          </Link>
-          <Link to="/register" className="btn register-btn">
-            Register
-          </Link>
-          <button className="btn subscribe-btn">👑 Subscribe</button>
-        </div>
-      </div>
+          {/* Navbar Collapse */}
+          <Navbar.Collapse id="basic-navbar-nav">
+            {/* Navigation Links */}
+            <Nav className="me-auto ms-3">
+              <Nav.Link
+                href="#home"
+                className="text-white px-3"
+                style={{ fontWeight: 500 }}
+              >
+                Home
+              </Nav.Link>
+              <Nav.Link
+                href="#search"
+                className="text-white px-3"
+                style={{ fontWeight: 500 }}
+              >
+                Search
+              </Nav.Link>
+              <Nav.Link
+                href="#whyUs"
+                className="text-white px-3"
+                style={{ fontWeight: 500 }}
+              >
+                Why us?
+              </Nav.Link>
+              <Nav.Link
+                href="#successStories"
+                className="text-white px-3"
+                style={{ fontWeight: 500 }}
+              >
+                Success Stories
+              </Nav.Link>
+              <Nav.Link
+                href="#events"
+                className="text-white px-3"
+                style={{ fontWeight: 500 }}
+              >
+                Events
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/contact"
+                className="text-white px-3"
+                style={{ fontWeight: 500 }}
+              >
+                Contact
+              </Nav.Link>
+            </Nav>
+
+            {/* Action Buttons */}
+            <div className="d-flex align-items-center gap-2 ms-auto">
+              <Button
+                as={Link}
+                to="/login"
+                variant="outline-light"
+                className="px-3"
+                style={{ fontWeight: 500 }}
+              >
+                Login
+              </Button>
+              <Button
+                as={Link}
+                to="/register"
+                variant="light"
+                className="px-3"
+                style={{ fontWeight: 500, color: "#ae1700" }}
+              >
+                Register
+              </Button>
+              <Button
+                as={Link}
+                to="/subscription"
+                state={{ fromHomepage: true }}
+                variant="warning"
+                className="px-3 d-none d-md-inline-flex align-items-center"
+                style={{
+                  fontWeight: 600,
+                  background:
+                    "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)",
+                  border: "none",
+                  color: "#000",
+                }}
+              >
+                <span style={{ marginRight: "6px" }}>👑</span>
+                Subscribe
+              </Button>
+            </div>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
 
       <div className="home-happy-couple">
         <div

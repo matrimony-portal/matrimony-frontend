@@ -1,6 +1,5 @@
-// src/components/common/Layout/Layout.jsx
-import React, { useEffect, useRef, useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Outlet, useLocation } from "react-router";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 

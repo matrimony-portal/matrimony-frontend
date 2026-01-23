@@ -1,16 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate, Link, NavLink } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
 import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
 
 const Navbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
+  const { logout, user, userType } = useAuth();
   const base = useDashboardBasePath();
   const { isFree, canMessage } = useUserCapabilities();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const isOrganizer = userType === "organizer";
+  const isAdmin = userType === "admin";
 
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
@@ -19,7 +22,6 @@ const Navbar = ({ toggleSidebar }) => {
     }
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -36,17 +38,18 @@ const Navbar = ({ toggleSidebar }) => {
     };
   }, [isDropdownOpen]);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+  const closeDropdown = () => setIsDropdownOpen(false);
 
-  const closeDropdown = () => {
-    setIsDropdownOpen(false);
+  // Get profile image based on user type
+  const getProfileImage = () => {
+    if (isOrganizer) return "/assets/images/event-organizer/profile-pic.jpg";
+    if (isAdmin) return "/assets/images/admin/admin-avatar.png";
+    return "/assets/images/male/rahul.png";
   };
 
   return (
     <nav className="navbar navbar-dark sticky-top p-0 shadow navbar-gradient">
-      {/* Mobile sidebar toggle - positioned on the left */}
       <button
         className="navbar-toggler d-md-none"
         type="button"
@@ -62,7 +65,6 @@ const Navbar = ({ toggleSidebar }) => {
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      {/* Logo - with proper spacing */}
       <Link className="navbar-brand me-0" to={base}>
         <div className="logo d-flex align-items-center">
           <img src="/assets/logo/logo.svg" alt="Logo" className="logo-icon" />
@@ -74,19 +76,20 @@ const Navbar = ({ toggleSidebar }) => {
         </div>
       </Link>
 
-      {/* Right Section */}
       <div className="navbar-nav ms-auto flex-row align-items-center gap-3 pe-3">
-        {/* Notifications */}
-        <NavLink
-          to={`${base}/proposals`}
-          className="nav-icon-wrapper"
-          title="Notifications"
-        >
-          <i className="bi bi-bell nav-icon"></i>
-        </NavLink>
+        {/* Notifications - hide for organizer/admin */}
+        {!isOrganizer && !isAdmin && (
+          <NavLink
+            to={`${base}/proposals`}
+            className="nav-icon-wrapper"
+            title="Notifications"
+          >
+            <i className="bi bi-bell nav-icon"></i>
+          </NavLink>
+        )}
 
-        {/* Messages */}
-        {canMessage ? (
+        {/* Messages - for users who can message and organizers */}
+        {(canMessage || isOrganizer) && !isAdmin && (
           <NavLink
             to={`${base}/messages`}
             className="nav-icon-wrapper"
@@ -94,7 +97,21 @@ const Navbar = ({ toggleSidebar }) => {
           >
             <i className="bi bi-chat-dots nav-icon"></i>
           </NavLink>
-        ) : null}
+        )}
+
+        {/* Event Requests - only for organizer */}
+        {isOrganizer && (
+          <NavLink
+            to={`${base}/event-requests`}
+            className="nav-icon-wrapper"
+            title="Event Requests"
+          >
+            <i className="bi bi-inbox nav-icon"></i>
+            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              3<span className="visually-hidden">pending requests</span>
+            </span>
+          </NavLink>
+        )}
 
         {/* Profile Dropdown */}
         <div
@@ -102,7 +119,7 @@ const Navbar = ({ toggleSidebar }) => {
           ref={dropdownRef}
         >
           <img
-            src="/assets/images/male/rahul.png"
+            src={getProfileImage()}
             alt="Profile"
             className="profile-avatar"
             onClick={toggleDropdown}
@@ -110,17 +127,10 @@ const Navbar = ({ toggleSidebar }) => {
           />
 
           {isDropdownOpen && (
-            <div
-              className="profile-menu"
-              style={{
-                opacity: 1,
-                transform: "translateY(0)",
-                pointerEvents: "auto",
-              }}
-            >
+            <div className="profile-menu">
               {/* Header */}
               <NavLink
-                to={`${base}/my-profile`}
+                to={`${base}/${isOrganizer ? "my-profile" : "my-profile"}`}
                 className="profile-header text-decoration-none"
                 onClick={closeDropdown}
               >
@@ -130,15 +140,46 @@ const Navbar = ({ toggleSidebar }) => {
 
               {/* Profile actions */}
               <div className="profile-section">
-                <NavLink to={`${base}/edit-profile`} onClick={closeDropdown}>
-                  Edit Profile
-                </NavLink>
-                <NavLink to={`${base}/manage-photos`} onClick={closeDropdown}>
-                  Manage Photos
-                </NavLink>
-                <NavLink to={`${base}/settings`} onClick={closeDropdown}>
-                  Theme
-                </NavLink>
+                {isOrganizer ? (
+                  <>
+                    <NavLink
+                      to={`${base}/edit-profile`}
+                      onClick={closeDropdown}
+                    >
+                      Edit Profile
+                    </NavLink>
+                  </>
+                ) : isAdmin ? (
+                  <>
+                    <NavLink to={`${base}/users`} onClick={closeDropdown}>
+                      Manage Users
+                    </NavLink>
+                    <NavLink to={`${base}/organizers`} onClick={closeDropdown}>
+                      Event Organizers
+                    </NavLink>
+                    <NavLink to={`${base}/reports`} onClick={closeDropdown}>
+                      Reports
+                    </NavLink>
+                  </>
+                ) : (
+                  <>
+                    <NavLink
+                      to={`${base}/edit-profile`}
+                      onClick={closeDropdown}
+                    >
+                      Edit Profile
+                    </NavLink>
+                    <NavLink
+                      to={`${base}/manage-photos`}
+                      onClick={closeDropdown}
+                    >
+                      Manage Photos
+                    </NavLink>
+                    <NavLink to={`${base}/settings`} onClick={closeDropdown}>
+                      Theme
+                    </NavLink>
+                  </>
+                )}
               </div>
 
               {/* Support */}
@@ -146,15 +187,19 @@ const Navbar = ({ toggleSidebar }) => {
                 <NavLink to={`${base}/feedback`} onClick={closeDropdown}>
                   Send Feedback
                 </NavLink>
-                <NavLink to="/dashboard/help" onClick={closeDropdown}>
-                  Help
+                {/* <NavLink to="/feedback" onClick={closeDropdown}>
+                  Public Feedback
+                </NavLink> */}
+                <NavLink to={`${base}/contact`} onClick={closeDropdown}>
+                  Contact Us/Help
                 </NavLink>
               </div>
 
-              {isFree && (
+              {/* Upgrade - only for free users */}
+              {isFree && !isOrganizer && !isAdmin && (
                 <div className="profile-section">
-                  <NavLink to="/upgrade" onClick={closeDropdown}>
-                    Upgrade to Premium
+                  <NavLink to={`${base}/subscription`} onClick={closeDropdown}>
+                    View Plans
                   </NavLink>
                 </div>
               )}
@@ -237,7 +282,8 @@ const Navbar = ({ toggleSidebar }) => {
 
         .view-profile {
           font-size: 13px;
-          opacity: 0.9;
+          color: rgba(255, 255, 255, 0.95) !important;
+          display: block;
         }
 
         .profile-section {
@@ -279,6 +325,7 @@ const Navbar = ({ toggleSidebar }) => {
           color: white;
           text-decoration: none;
           transition: transform 0.2s ease;
+          position: relative;
         }
 
         .nav-icon-wrapper:hover {
