@@ -1,7 +1,10 @@
 import api from "./api.js";
 import { mockAdminServices } from "./mockAdminServices.js";
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
+// Default to mock in development mode unless explicitly disabled
+const USE_MOCK =
+  import.meta.env.VITE_USE_MOCK === "true" ||
+  (import.meta.env.DEV && import.meta.env.VITE_USE_MOCK !== "false");
 
 export const adminService = {
   // Dashboard & Analytics

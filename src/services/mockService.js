@@ -8,8 +8,16 @@ export const mockAuthService = {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Find user in main database
-    let user = mockDatabase?.users?.find((u) => u.email === email);
+    // Try to find user in mockDatabase first
+    let user = null;
+    if (mockDatabase?.users) {
+      user = mockDatabase.users.find((u) => u.email === email);
+    }
+
+    // If not found in main database, check admin database
+    if (!user && adminDatabase?.users) {
+      user = adminDatabase.users.find((u) => u.email === email);
+    }
 
     // Fallback to hardcoded credentials if database lookup fails
     if (!user) {
@@ -42,11 +50,6 @@ export const mockAuthService = {
           subscriptionExpiry: cred.subscriptionExpiry,
         };
       }
-    }
-
-    // If not found in main database, check admin database
-    if (!user && adminDatabase?.users) {
-      user = adminDatabase.users.find((u) => u.email === email);
     }
 
     // Check if user exists and password matches

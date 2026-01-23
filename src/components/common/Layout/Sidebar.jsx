@@ -10,37 +10,28 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const base = useDashboardBasePath();
   const { isFree, canMessage } = useUserCapabilities();
 
-  // Define menu items based on user role
+  // Define menu items based on user type
   const getMenuItems = () => {
     if (userType === "admin") {
       return [
+        { path: base, icon: "bi-speedometer2", label: "Dashboard" },
         {
-          id: "admin-dashboard",
-          path: "/dashboard/admin",
-          icon: "bi-speedometer2",
-          label: "Dashboard",
-        },
-        {
-          id: "manage-users",
-          path: "/dashboard/admin/manage-users",
+          path: `${base}/manage-users`,
           icon: "bi-people",
           label: "Manage Users",
         },
         {
-          id: "manage-organizers",
-          path: "/dashboard/admin/manage-organizers",
+          path: `${base}/manage-organizers`,
           icon: "bi-person-badge",
           label: "Event Organizers",
         },
         {
-          id: "manage-success-stories",
-          path: "/dashboard/admin/manage-success-stories",
+          path: `${base}/manage-success-stories`,
           icon: "bi-heart",
           label: "Success Stories",
         },
         {
-          id: "reports-complaints",
-          path: "/dashboard/admin/reports-complaints",
+          path: `${base}/reports-complaints`,
           icon: "bi-exclamation-triangle",
           label: "Reports & Complaints",
         },

@@ -11,7 +11,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "commit": "npx git-cz",
+    "commit": "npx cz",
     "commitlint": "npx commitlint --edit",
     "format": "prettier --write \"src/**/*.{js,jsx,css}\" \"*.html\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,css}\" \"*.html\"",
@@ -31,10 +31,8 @@
   "dependencies": {
     "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
-    "date-fns": "^4.1.0",
-    "formik": "^2.4.9",
     "prop-types": "^15.8.1",
-    "react": "^19.2.3",
+    "react": "^19.2.0",
     "react-bootstrap": "^2.10.10",
     "react-bootstrap-icons": "^1.11.6",
     "react-dom": "^19.2.3",
@@ -50,8 +48,8 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
-    "commitizen": "^3.1.2",
-    "cz-conventional-changelog": "^3.0.1",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -62,10 +60,7 @@
     "prettier": "^3.6.2",
     "stylelint": "^16.25.0",
     "stylelint-config-standard": "^39.0.1",
-    "vite": "^7.2.4",
-    "webpack": "^5.104.1",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2"
+    "vite": "^7.2.4"
   },
   "lint-staged": {
     "*.{js,jsx}": [
