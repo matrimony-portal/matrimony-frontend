@@ -25,7 +25,7 @@ const mockUsers = [
     email: "organizer@test.com",
     password: "Org@123",
     userType: "organizer",
-    name: "Test Organizer",
+    name: "Event Organizer",
     id: 3,
   },
   {
