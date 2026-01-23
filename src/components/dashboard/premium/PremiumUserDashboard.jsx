@@ -1,4 +1,3 @@
-// src/components/dashboard/premium/PremiumUserDashboard.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
