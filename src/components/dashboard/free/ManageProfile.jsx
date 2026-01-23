@@ -1,6 +1,6 @@
 // src/components/dashboard/premium/ManageProfile.jsx
 //import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 //import { useAuth } from "../../../hooks/useAuth.jsx";
 
 const ManageProfile = () => {

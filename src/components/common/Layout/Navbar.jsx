@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
 
