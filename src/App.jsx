@@ -36,59 +36,66 @@ import BroadcastMessage from "./components/dashboard/admin/BroadcastMessage.jsx"
 import AddEvent from "./components/dashboard/admin/AddEvent.jsx";
 import GlobalAnnouncement from "./components/dashboard/admin/GlobalAnnouncement.jsx";
 import ReportsCounter from "./components/dashboard/admin/ReportsCounter.jsx";
+import SuccessStories from "./components/dashboard/admin/SuccessStories.jsx";
 
 function App() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/admin" element={<AdminDashboard />} />
+    <AuthProvider>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/admin" element={<AdminDashboard />} />
 
-      {/* Protected Dashboard Routes with Layout */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute allowedRoutes={["user", "organizer", "admin"]}>
-            <Layout />
-          </ProtectedRoute>
-        }
-      >
-        {/* Main Dashboard Route */}
-        <Route index element={<DashboardRouter />} />
+        {/* Protected Dashboard Routes with Layout */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute allowedRoutes={["user", "organizer", "admin"]}>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          {/* Main Dashboard Route */}
+          <Route index element={<DashboardRouter />} />
 
-        {/* Free User Route */}
-        <Route path="free" element={<FreeUserDashboard />} />
+          {/* Free User Route */}
+          <Route path="free" element={<FreeUserDashboard />} />
 
-        {/* Premium User Routes */}
-        <Route path="premium" element={<PremiumUserDashboard />} />
-        <Route path="my-profile" element={<MyProfile />} />
-        <Route path="edit-profile" element={<EditProfile />} />
-        <Route path="manage-photos" element={<ManagePhotos />} />
-        <Route path="search" element={<SearchMatches />} />
-        <Route path="proposals" element={<Proposals />} />
-        <Route path="messages" element={<Messages />} />
-        <Route path="shortlist" element={<Shortlist />} />
-        <Route path="blocked-users" element={<BlockedUsers />} />
-        <Route path="events" element={<Events />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="feedback" element={<Feedback />} />
-        <Route path="profile/:id" element={<ProfileView />} />
+          {/* Premium User Routes */}
+          <Route path="premium" element={<PremiumUserDashboard />} />
+          <Route path="my-profile" element={<MyProfile />} />
+          <Route path="edit-profile" element={<EditProfile />} />
+          <Route path="manage-photos" element={<ManagePhotos />} />
+          <Route path="search" element={<SearchMatches />} />
+          <Route path="proposals" element={<Proposals />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="shortlist" element={<Shortlist />} />
+          <Route path="blocked-users" element={<BlockedUsers />} />
+          <Route path="events" element={<Events />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="feedback" element={<Feedback />} />
+          <Route path="profile/:id" element={<ProfileView />} />
 
-        {/* Organizer & Admin Routes */}
-        <Route path="organizer" element={<OrganizerDashboard />} />
-        <Route path="admin" element={<AdminDashboard />} />
-        <Route path="admin/broadcast" element={<BroadcastMessage />} />
-        <Route path="admin/add-event" element={<AddEvent />} />
-        <Route path="admin/announcement" element={<GlobalAnnouncement />} />
-        <Route path="admin/reports" element={<ReportsCounter />} />
-      </Route>
+          {/* Organizer Routes */}
+          <Route path="organizer" element={<OrganizerDashboard />} />
 
-      {/* Catch-all redirect */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+          {/*Admin Routes */}
+
+          <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin/broadcast" element={<BroadcastMessage />} />
+          <Route path="admin/add-event" element={<AddEvent />} />
+          <Route path="admin/announcement" element={<GlobalAnnouncement />} />
+          <Route path="admin/reports" element={<ReportsCounter />} />
+          <Route path="admin/success-stories" element={<SuccessStories />} />
+        </Route>
+
+        {/* Catch-all redirect */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 
