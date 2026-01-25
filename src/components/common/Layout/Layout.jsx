@@ -18,10 +18,16 @@ const Layout = () => {
   }, [location.pathname]);
 
   return (
-    <div className="d-flex flex-column vh-100">
+    <div
+      className="d-flex flex-column vh-100"
+      style={{ overflow: "hidden", width: "100%", maxWidth: "100vw" }}
+    >
       <Navbar toggleSidebar={toggleSidebar} />
-      <div className="container-fluid flex-grow-1 overflow-hidden p-0 m-1">
-        <div className="row h-100 g-0">
+      <div
+        className="container-fluid flex-grow-1 p-0 m-0"
+        style={{ overflow: "visible", width: "100%", maxWidth: "100vw" }}
+      >
+        <div className="row h-100 g-0 m-0" style={{ margin: 0, width: "100%" }}>
           <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
           <main
             ref={mainRef}
@@ -41,8 +47,11 @@ const Layout = () => {
         .main-content {
           padding-top: 1rem;
           overflow-y: auto;
+          overflow-x: hidden;
           height: calc(100vh - var(--navbar-height, 60px));
           width: 100%;
+          max-width: 100%;
+          margin-top: 0;
         }
 
         /* Desktop: Adjust based on sidebar state */

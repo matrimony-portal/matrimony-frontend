@@ -12,10 +12,17 @@
   --navbar-height: 60px;
 }
 
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: #f5f7fa;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 /* Navbar Gradient */
@@ -58,8 +65,19 @@ body {
 .sidebar .nav-link {
   color: rgb(255 255 255 / 80%);
   padding: 0.75rem 1.5rem;
-  border-left: 3px solid transparent;
+  border-left: none !important;
   transition: all 0.3s;
+}
+
+/* Collapsed sidebar - override padding and alignment */
+.sidebar-collapsed .nav-link {
+  padding: 0.75rem !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.sidebar-collapsed .nav-link span {
+  display: none !important;
 }
 
 .nav-tabs .nav-link {
@@ -73,14 +91,39 @@ body {
 .sidebar .nav-link:hover {
   color: #fff;
   background: rgb(255 255 255 / 10%);
-  border-left-color: #fff;
+  border-left: none !important;
 }
 
 .sidebar .nav-link.active {
   color: #fff;
   background: rgb(255 255 255 / 15%);
-  border-left-color: #fff;
+  border-left: none !important;
   font-weight: 600;
+}
+
+/* Active indicator for expanded sidebar */
+.sidebar-open .nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #fff;
+  border-radius: 0 2px 2px 0;
+  z-index: 1;
+}
+
+/* Active indicator for collapsed sidebar */
+.sidebar-collapsed .nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #fff;
+  z-index: 1;
 }
 
 .sidebar-heading {

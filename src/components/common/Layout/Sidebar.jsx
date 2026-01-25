@@ -78,6 +78,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           ]
         : []),
       { path: `${base}/shortlist`, icon: "bi-star", label: "Shortlist" },
+      {
+        path: `${base}/partner-preferences`,
+        icon: "bi-sliders",
+        label: "Partner Preferences",
+      },
       { path: `${base}/events`, icon: "bi-calendar-event", label: "Events" },
       { path: `${base}/settings`, icon: "bi-gear", label: "Settings" },
       ...(isFree
@@ -108,54 +113,59 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             right: 0,
             bottom: 0,
             zIndex: 1040,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backdropFilter: "blur(2px)",
           }}
         />
       )}
+
+      {/* Toggle Button - positioned independently with fixed position */}
+      <button
+        onClick={toggleSidebar}
+        className="btn btn-link text-white d-none d-md-flex sidebar-toggle-btn"
+        style={{
+          position: "fixed",
+          left: isOpen ? "210px" : "55px",
+          top: "calc(var(--navbar-height, 60px) + 20px)",
+          width: "30px",
+          height: "30px",
+          borderRadius: "50%",
+          background: "#ae1700",
+          border: "2px solid #fff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 0,
+          zIndex: 1050,
+          boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+          cursor: "pointer",
+          transition: "left 0.3s ease-in-out",
+        }}
+        aria-label="Toggle sidebar"
+      >
+        <i
+          className={`bi ${isOpen ? "bi-chevron-left" : "bi-chevron-right"}`}
+          style={{ fontSize: "0.875rem" }}
+        ></i>
+      </button>
 
       <nav
         className={`sidebar ${isOpen ? "sidebar-open" : "sidebar-collapsed"}`}
         style={{
           position: "fixed",
-          top: "var(--navbar-height)",
+          top: "var(--navbar-height, 60px)",
           bottom: 0,
           left: 0,
           zIndex: 1041,
-          marginTop: "0",
+          marginTop: 0,
           background: "linear-gradient(135deg, #5a0d14 0%, #ae1700 100%)",
-          transition: "width 0.3s ease-in-out",
+          transition: "width 0.3s ease-in-out, transform 0.3s ease-in-out",
           width: isOpen ? "225px" : "70px",
-          height: "calc(100vh - var(--navbar-height))",
-          //overflowY: "auto",
-          //overflowX: "hidden",
+          height: "calc(100vh - var(--navbar-height, 60px))",
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
       >
-        {/* Toggle Button - visible on desktop only */}
-        <button
-          onClick={toggleSidebar}
-          className="btn btn-link text-white d-none d-md-flex"
-          style={{
-            position: "absolute",
-            right: "-15px",
-            top: "20px",
-            width: "30px",
-            height: "30px",
-            borderRadius: "50%",
-            background: "#ae1700",
-            border: "2px solid #fff",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 0,
-            zIndex: 1042,
-            boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
-          }}
-          aria-label="Toggle sidebar"
-        >
-          <i
-            className={`bi ${isOpen ? "bi-chevron-left" : "bi-chevron-right"}`}
-            style={{ fontSize: "0.875rem" }}
-          ></i>
-        </button>
-
         <div className="pt-3">
           {isOpen && (
             <h6 className="sidebar-heading px-3 mt-2 mb-3 text-white-50 text-uppercase small">
@@ -179,17 +189,37 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     `nav-link text-white d-flex align-items-center ${isActive ? "active" : ""}`
                   }
                   onClick={() => window.innerWidth < 768 && toggleSidebar()}
-                  style={({ isActive }) => ({
-                    borderLeft: isActive
-                      ? "3px solid #fff"
-                      : "3px solid transparent",
-                    backgroundColor: isActive
-                      ? "rgba(255,255,255,0.15)"
-                      : "transparent",
-                    padding: isOpen ? "0.75rem 1.5rem" : "0.75rem 0",
-                    justifyContent: isOpen ? "flex-start" : "center",
-                    whiteSpace: "nowrap",
-                  })}
+                  style={({ isActive }) => {
+                    const baseStyle = {
+                      borderLeft: "none",
+                      backgroundColor: isActive
+                        ? "rgba(255,255,255,0.15)"
+                        : "transparent",
+                      position: "relative",
+                    };
+
+                    if (isOpen) {
+                      // Expanded state - show text, add left padding for active indicator
+                      return {
+                        ...baseStyle,
+                        padding: isActive
+                          ? "0.75rem 1.5rem 0.75rem 1.25rem"
+                          : "0.75rem 1.5rem",
+                        justifyContent: "flex-start",
+                        whiteSpace: "nowrap",
+                      };
+                    } else {
+                      // Collapsed state - center icon only
+                      return {
+                        ...baseStyle,
+                        padding: "0.75rem",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                      };
+                    }
+                  }}
                   title={!isOpen ? item.label : ""}
                 >
                   <i
@@ -233,9 +263,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           .sidebar {
             transform: translateX(-100%);
             width: 250px !important;
+            transition: transform 0.3s ease-in-out;
           }
           .sidebar.sidebar-open {
             transform: translateX(0);
+          }
+          .sidebar.sidebar-collapsed {
+            transform: translateX(-100%);
           }
         }
 
@@ -243,12 +277,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         @media (min-width: 768px) {
           .sidebar {
             transform: translateX(0) !important;
+            transition: width 0.3s ease-in-out;
           }
         }
 
         /* Smooth transitions */
         .sidebar {
-          transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+          box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
         }
 
         /* Nav link hover effects */
@@ -260,10 +295,61 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           background-color: rgba(255, 255, 255, 0.2);
         }
 
+        /* Active indicator - inset border using pseudo-element (only when expanded) */
+        .sidebar-open .nav-link.active::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background: #fff;
+          border-radius: 0 2px 2px 0;
+          z-index: 1;
+        }
+
+        /* Collapsed state - show indicator on left edge */
+        .sidebar-collapsed .nav-link.active::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background: #fff;
+          z-index: 1;
+        }
+
+        /* Ensure icon doesn't get cut off */
+        .sidebar .nav-link i {
+          flex-shrink: 0;
+          position: relative;
+          z-index: 2;
+        }
+
+        /* Ensure text doesn't get cut off when collapsed */
+        .sidebar-collapsed .nav-link {
+          overflow: hidden;
+        }
+
+        .sidebar-collapsed .nav-link span {
+          display: none !important;
+        }
+
+        /* Fix active state in collapsed sidebar */
+        .sidebar-collapsed .nav-link.active {
+          background-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* Prevent any border from appearing */
+        .sidebar .nav-link {
+          border-left: none !important;
+        }
+
         /* Tooltip for collapsed state */
-        .nav-link[title]:not(.sidebar-open .nav-link):hover::after {
+        .sidebar-collapsed .nav-link[title]:hover::after {
           content: attr(title);
-          /*position: absolute;*/
+          position: absolute;
           left: 70px;
           background: #2d0a0e;
           color: white;
@@ -272,6 +358,23 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           white-space: nowrap;
           z-index: 1050;
           box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          pointer-events: none;
+        }
+
+        .sidebar-toggle-btn:hover {
+          background: #8b0f00 !important;
+          transform: scale(1.05);
+        }
+
+        /* Sidebar base styles */
+        .sidebar {
+          overflow-x: hidden;
+        }
+
+        /* Ensure sidebar content doesn't overflow */
+        .sidebar .nav {
+          width: 100%;
+          overflow-x: hidden;
         }
 
         /* Hide tooltip on mobile */
