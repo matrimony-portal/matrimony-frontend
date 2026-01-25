@@ -82,4 +82,63 @@ export const userService = {
     const response = await api.get("/users/blocked");
     return response.data;
   },
+
+  // Preferences methods
+  getPreferences: async () => {
+    if (USE_MOCK) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return {
+        ageMin: 21,
+        ageMax: 35,
+        heightMin: 150,
+        heightMax: 180,
+        maritalStatus: ["never-married"],
+        religion: [],
+        caste: "",
+        educationMin: "bachelors",
+        occupation: [],
+        incomeMin: "any",
+        country: ["India"],
+        state: "",
+        city: "",
+        diet: "any",
+        smoking: "any",
+        drinking: "any",
+        manglik: "any",
+        motherTongue: [],
+        physicalStatus: "any",
+      };
+    }
+    const response = await api.get("/users/preferences");
+    return response.data;
+  },
+
+  updatePreferences: async (preferences) => {
+    if (USE_MOCK) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return { success: true, preferences };
+    }
+    const response = await api.put("/users/preferences", { preferences });
+    return response.data;
+  },
+
+  // Profile completion status
+  getProfileCompletion: async () => {
+    if (USE_MOCK) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return {
+        overall: 65,
+        sections: {
+          basic: { completed: true, percentage: 100 },
+          photos: { completed: false, percentage: 60 },
+          education: { completed: true, percentage: 100 },
+          family: { completed: false, percentage: 0 },
+          about: { completed: false, percentage: 50 },
+          preferences: { completed: false, percentage: 0 },
+        },
+      };
+    }
+    const response = await api.get("/users/profile/completion");
+    return response.data;
+  },
 };

@@ -4,3 +4,4 @@ export { default as Messages } from "./Messages.jsx";
 export { default as Events } from "./Events.jsx";
 export { default as ProfileView } from "./ProfileView.jsx";
 export { default as Feedback } from "./Feedback.jsx";
+export { default as PartnerPreferences } from "./PartnerPreferences.jsx";

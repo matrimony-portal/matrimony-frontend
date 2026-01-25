@@ -79,6 +79,9 @@ import { OrganizerProfile } from "./components/dashboard/organizer/OrganizerProf
 import { EditOrganizerProfile } from "./components/dashboard/organizer/EditOrganizer.jsx";
 import { ViewEventOrganizerProfile } from "./components/common/ViewEventOrganizerProfile.jsx";
 
+// Shared Components
+import { PartnerPreferences } from "./components/dashboard/shared/index.js";
+
 import "./styles/custom.css";
 
 function App() {
@@ -131,6 +134,7 @@ function App() {
           <Route path="settings" element={<FreeSettings />} />
           <Route path="feedback" element={<FreeFeedback />} />
           <Route path="profile/:id" element={<FreeProfileView />} />
+          <Route path="partner-preferences" element={<PartnerPreferences />} />
           <Route
             path="organizer-profile/:organizerId"
             element={<ViewEventOrganizerProfile />}
@@ -158,6 +162,7 @@ function App() {
           <Route path="settings" element={<PremiumSettings />} />
           <Route path="feedback" element={<PremiumFeedback />} />
           <Route path="profile/:id" element={<PremiumProfileView />} />
+          <Route path="partner-preferences" element={<PartnerPreferences />} />
           <Route
             path="organizer-profile/:organizerId"
             element={<ViewEventOrganizerProfile />}
@@ -270,6 +275,10 @@ function App() {
         <Route
           path="my-profile"
           element={<DashboardPathRouter subPath="my-profile" />}
+        />
+        <Route
+          path="partner-preferences"
+          element={<DashboardPathRouter subPath="partner-preferences" />}
         />
       </Route>
 
