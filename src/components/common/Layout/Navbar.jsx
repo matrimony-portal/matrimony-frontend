@@ -49,182 +49,256 @@ const Navbar = ({ toggleSidebar }) => {
   };
 
   return (
-    <nav className="navbar navbar-dark sticky-top p-0 shadow navbar-gradient">
-      <button
-        className="navbar-toggler d-md-none"
-        type="button"
-        onClick={toggleSidebar}
-        aria-label="Toggle sidebar"
-        style={{
-          border: "none",
-          padding: "0.5rem",
-          marginLeft: "0.5rem",
-          zIndex: 1,
-        }}
-      >
-        <span className="navbar-toggler-icon"></span>
-      </button>
-
-      <Link className="navbar-brand me-0" to={base}>
-        <div className="logo d-flex align-items-center">
-          <img src="/assets/logo/logo.svg" alt="Logo" className="logo-icon" />
-          <img
-            src="/assets/logo/bandan.svg"
-            alt="Bandan"
-            className="logo-text d-none d-md-inline"
-          />
-        </div>
-      </Link>
-
-      <div className="navbar-nav ms-auto flex-row align-items-center gap-3 pe-3">
-        {/* Notifications - hide for organizer/admin */}
-        {!isOrganizer && !isAdmin && (
-          <NavLink
-            to={`${base}/proposals`}
-            className="nav-icon-wrapper"
-            title="Notifications"
-          >
-            <i className="bi bi-bell nav-icon"></i>
-          </NavLink>
-        )}
-
-        {/* Messages - for users who can message and organizers */}
-        {(canMessage || isOrganizer) && !isAdmin && (
-          <NavLink
-            to={`${base}/messages`}
-            className="nav-icon-wrapper"
-            title="Messages"
-          >
-            <i className="bi bi-chat-dots nav-icon"></i>
-          </NavLink>
-        )}
-
-        {/* Event Requests - only for organizer */}
-        {isOrganizer && (
-          <NavLink
-            to={`${base}/event-requests`}
-            className="nav-icon-wrapper"
-            title="Event Requests"
-          >
-            <i className="bi bi-inbox nav-icon"></i>
-            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              3<span className="visually-hidden">pending requests</span>
-            </span>
-          </NavLink>
-        )}
-
-        {/* Profile Dropdown */}
-        <div
-          className={`profile-dropdown ${isDropdownOpen ? "active" : ""}`}
-          ref={dropdownRef}
+    <nav className="navbar navbar-dark sticky-top p-0 shadow navbar-gradient dashboard-navbar">
+      <div className="dashboard-navbar-container d-flex align-items-center w-100">
+        <button
+          className="navbar-toggler d-md-none"
+          type="button"
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+          style={{
+            border: "none",
+            padding: "0.5rem",
+            marginLeft: "0.5rem",
+            zIndex: 1,
+            flexShrink: 0,
+          }}
         >
-          <div className="profile-avatar-wrapper">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <Link className="navbar-brand dashboard-navbar-brand" to={base}>
+          <div className="logo d-flex align-items-center">
+            <img src="/assets/logo/logo.svg" alt="Logo" className="logo-icon" />
             <img
-              src={getProfileImage()}
-              alt="Profile"
-              className="profile-avatar"
-              onClick={toggleDropdown}
-              style={{ cursor: "pointer" }}
+              src="/assets/logo/bandan.svg"
+              alt="Bandan"
+              className="logo-text d-none d-md-inline"
             />
-            {isPremium && !isOrganizer && !isAdmin && (
-              <span className="premium-badge-navbar">
-                <i className="bi bi-star-fill"></i>
-              </span>
-            )}
           </div>
+        </Link>
 
-          {isDropdownOpen && (
-            <div className="profile-menu">
-              {/* Header */}
-              <NavLink
-                to={`${base}/${isOrganizer ? "my-profile" : "my-profile"}`}
-                className="profile-header text-decoration-none"
-                onClick={closeDropdown}
-              >
-                <strong>{user?.name || "User"}</strong>
-                <span className="view-profile">View Profile</span>
-              </NavLink>
+        <div className="navbar-nav dashboard-navbar-nav flex-row align-items-center gap-3 flex-shrink-0">
+          {/* Notifications - hide for organizer/admin */}
+          {!isOrganizer && !isAdmin && (
+            <NavLink
+              to={`${base}/proposals`}
+              className="nav-icon-wrapper"
+              title="Notifications"
+            >
+              <i className="bi bi-bell nav-icon"></i>
+            </NavLink>
+          )}
 
-              {/* Profile actions */}
-              <div className="profile-section">
-                {isOrganizer ? (
-                  <>
-                    <NavLink
-                      to={`${base}/edit-profile`}
-                      onClick={closeDropdown}
-                    >
-                      Edit Profile
-                    </NavLink>
-                  </>
-                ) : isAdmin ? (
-                  <>
-                    <NavLink to={`${base}/users`} onClick={closeDropdown}>
-                      Manage Users
-                    </NavLink>
-                    <NavLink to={`${base}/organizers`} onClick={closeDropdown}>
-                      Event Organizers
-                    </NavLink>
-                    <NavLink to={`${base}/reports`} onClick={closeDropdown}>
-                      Reports
-                    </NavLink>
-                  </>
-                ) : (
-                  <>
-                    <NavLink
-                      to={`${base}/edit-profile`}
-                      onClick={closeDropdown}
-                    >
-                      Edit Profile
-                    </NavLink>
-                    <NavLink
-                      to={`${base}/manage-photos`}
-                      onClick={closeDropdown}
-                    >
-                      Manage Photos
-                    </NavLink>
-                  </>
-                )}
-              </div>
+          {/* Messages - for users who can message and organizers */}
+          {(canMessage || isOrganizer) && !isAdmin && (
+            <NavLink
+              to={`${base}/messages`}
+              className="nav-icon-wrapper"
+              title="Messages"
+            >
+              <i className="bi bi-chat-dots nav-icon"></i>
+            </NavLink>
+          )}
 
-              {/* Support */}
-              <div className="profile-section">
-                <NavLink to={`${base}/feedback`} onClick={closeDropdown}>
-                  Send Feedback
+          {/* Event Requests - only for organizer */}
+          {isOrganizer && (
+            <NavLink
+              to={`${base}/event-requests`}
+              className="nav-icon-wrapper"
+              title="Event Requests"
+            >
+              <i className="bi bi-inbox nav-icon"></i>
+              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                3<span className="visually-hidden">pending requests</span>
+              </span>
+            </NavLink>
+          )}
+
+          {/* Profile Dropdown */}
+          <div
+            className={`profile-dropdown ${isDropdownOpen ? "active" : ""}`}
+            ref={dropdownRef}
+          >
+            <div className="profile-avatar-wrapper">
+              <img
+                src={getProfileImage()}
+                alt="Profile"
+                className="profile-avatar"
+                onClick={toggleDropdown}
+                style={{ cursor: "pointer" }}
+              />
+              {isPremium && !isOrganizer && !isAdmin && (
+                <span className="premium-badge-navbar">
+                  <i className="bi bi-star-fill"></i>
+                </span>
+              )}
+            </div>
+
+            {isDropdownOpen && (
+              <div className="profile-menu">
+                {/* Header */}
+                <NavLink
+                  to={`${base}/${isOrganizer ? "my-profile" : "my-profile"}`}
+                  className="profile-header text-decoration-none"
+                  onClick={closeDropdown}
+                >
+                  <strong>{user?.name || "User"}</strong>
+                  <span className="view-profile">View Profile</span>
                 </NavLink>
-                {/* <NavLink to="/feedback" onClick={closeDropdown}>
+
+                {/* Profile actions */}
+                <div className="profile-section">
+                  {isOrganizer ? (
+                    <>
+                      <NavLink
+                        to={`${base}/edit-profile`}
+                        onClick={closeDropdown}
+                      >
+                        Edit Profile
+                      </NavLink>
+                    </>
+                  ) : isAdmin ? (
+                    <>
+                      <NavLink to={`${base}/users`} onClick={closeDropdown}>
+                        Manage Users
+                      </NavLink>
+                      <NavLink
+                        to={`${base}/organizers`}
+                        onClick={closeDropdown}
+                      >
+                        Event Organizers
+                      </NavLink>
+                      <NavLink to={`${base}/reports`} onClick={closeDropdown}>
+                        Reports
+                      </NavLink>
+                    </>
+                  ) : (
+                    <>
+                      <NavLink
+                        to={`${base}/edit-profile`}
+                        onClick={closeDropdown}
+                      >
+                        Edit Profile
+                      </NavLink>
+                      <NavLink
+                        to={`${base}/manage-photos`}
+                        onClick={closeDropdown}
+                      >
+                        Manage Photos
+                      </NavLink>
+                    </>
+                  )}
+                </div>
+
+                {/* Support */}
+                <div className="profile-section">
+                  <NavLink to={`${base}/feedback`} onClick={closeDropdown}>
+                    Send Feedback
+                  </NavLink>
+                  {/* <NavLink to="/feedback" onClick={closeDropdown}>
                   Public Feedback
                 </NavLink> */}
-                <NavLink to={`${base}/contact`} onClick={closeDropdown}>
-                  Contact Us/Help
-                </NavLink>
-              </div>
-
-              {/* Upgrade - only for free users */}
-              {isFree && !isOrganizer && !isAdmin && (
-                <div className="profile-section">
-                  <NavLink to={`${base}/subscription`} onClick={closeDropdown}>
-                    View Plans
+                  <NavLink to={`${base}/contact`} onClick={closeDropdown}>
+                    Contact Us/Help
                   </NavLink>
                 </div>
-              )}
 
-              {/* Logout */}
-              <div
-                className="profile-section logout"
-                onClick={() => {
-                  closeDropdown();
-                  handleLogout();
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                Logout
+                {/* Upgrade - only for free users */}
+                {isFree && !isOrganizer && !isAdmin && (
+                  <div className="profile-section">
+                    <NavLink
+                      to={`${base}/subscription`}
+                      onClick={closeDropdown}
+                    >
+                      View Plans
+                    </NavLink>
+                  </div>
+                )}
+
+                {/* Logout */}
+                <div
+                  className="profile-section logout"
+                  onClick={() => {
+                    closeDropdown();
+                    handleLogout();
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  Logout
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
       <style>{`
+        /* Dashboard Navbar Specific Styles - Scoped to avoid homepage conflicts */
+        .dashboard-navbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0;
+          height: var(--navbar-height);
+          min-height: var(--navbar-height);
+        }
+
+        .dashboard-navbar-container {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          padding: 0;
+          margin: 0;
+        }
+
+        .dashboard-navbar .dashboard-navbar-brand {
+          display: flex;
+          align-items: center;
+          margin-right: auto;
+          flex-shrink: 0;
+          padding: 0 1rem;
+        }
+
+        .dashboard-navbar .dashboard-navbar-nav {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-left: auto;
+          flex-shrink: 0;
+          padding: 0;
+          margin: 0;
+          padding-right: 1rem;
+        }
+
+        .dashboard-navbar .dashboard-navbar-nav > * {
+          margin: 0;
+        }
+
+        .dashboard-navbar .logo-icon {
+          height: 35px;
+          width: auto;
+        }
+
+        .dashboard-navbar .logo-text {
+          height: 28px;
+          width: auto;
+          margin-left: 6px;
+        }
+
+        /* Ensure proper spacing on mobile */
+        @media (max-width: 767.98px) {
+          .dashboard-navbar .dashboard-navbar-brand {
+            padding: 0 0.5rem;
+          }
+
+          .dashboard-navbar .dashboard-navbar-nav {
+            gap: 0.5rem;
+            padding-right: 0.5rem;
+          }
+        }
+
+        /* Profile dropdown styles */
         .profile-dropdown {
           position: relative;
         }
