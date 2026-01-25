@@ -441,14 +441,21 @@ body > div:first-child {
 }
 
 /* Action buttons hover effects */
-.action-btn-nav:hover {
+.action-btn-nav:hover,
+.action-btn-nav:focus,
+.action-btn-nav:focus-visible {
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
   opacity: 0.9;
+  background: transparent !important;
+  border-color: rgb(255 255 255 / 50%) !important;
+  color: white !important;
 }
 
 .action-btn-nav:active {
   transform: translateY(0);
+  background: transparent !important;
+  color: white !important;
 }
 
 .home-happy-couple {
