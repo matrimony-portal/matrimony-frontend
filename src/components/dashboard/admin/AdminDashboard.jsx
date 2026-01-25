@@ -7,6 +7,35 @@ import "./AdminDashboard.css";
 export default function AdminDashboard() {
   return (
     <div className="admin-layout">
+      {/* Left Sidebar */}
+      <aside className="sidebar">
+        <div className="sidebar-header">
+          <h2 className="logo">💍 Bandan Admin</h2>
+        </div>
+        <div className="sidebar-stats">
+          <div className="stat-item">
+            <div className="stat-icon">👥</div>
+            <div className="stat-info">
+              <span className="stat-label">Total Users</span>
+              <span className="stat-value">25,890</span>
+            </div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-icon">🚫</div>
+            <div className="stat-info">
+              <span className="stat-label">Blocked Users</span>
+              <span className="stat-value">342</span>
+            </div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-icon">💰</div>
+            <div className="stat-info">
+              <span className="stat-label">Total Revenue</span>
+              <span className="stat-value">₹145.6L</span>
+            </div>
+          </div>
+        </div>
+      </aside>
       {/* Main */}
       <div className="main">
         {/* Top Bar */}
@@ -149,61 +178,165 @@ export default function AdminDashboard() {
         {/* Table + Quick Actions */}
         <div className="bottom-section">
           <div className="table-box">
-            <h3>Success Stories</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Age</th>
-                  <th>Status</th>
-                  <th>Verified</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>101</td>
-                  <td>Rahul</td>
-                  <td>20</td>
-                  <td>Active</td>
-                  <td>Yes</td>
-                  <td>
-                    <Link
-                      to="/dashboard/admin/success-stories"
-                      className="view"
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>102</td>
-                  <td>Priya</td>
-                  <td>29</td>
-                  <td>Pending</td>
-                  <td>No</td>
-                  <td>
-                    <button className="verify">Verify</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>103</td>
-                  <td>Amit</td>
-                  <td>35</td>
-                  <td>Active</td>
-                  <td>Yes</td>
-                  <td>
-                    <Link
-                      to="/dashboard/admin/success-stories"
-                      className="view"
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <h3>Revenue Analytics</h3>
+            <div className="revenue-chart-container">
+              <div className="revenue-chart">
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "70%" }}
+                  >
+                    <span className="revenue-value">₹9.6L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "45%" }}>
+                    <span className="revenue-value">₹6.4L</span>
+                  </div>
+                  <span className="month-label">Jan</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "65%" }}
+                  >
+                    <span className="revenue-value">₹8.8L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "50%" }}>
+                    <span className="revenue-value">₹7.2L</span>
+                  </div>
+                  <span className="month-label">Feb</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "85%" }}
+                  >
+                    <span className="revenue-value">₹12L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "60%" }}>
+                    <span className="revenue-value">₹8L</span>
+                  </div>
+                  <span className="month-label">Mar</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "75%" }}
+                  >
+                    <span className="revenue-value">₹10.4L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "55%" }}>
+                    <span className="revenue-value">₹7.6L</span>
+                  </div>
+                  <span className="month-label">Apr</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "90%" }}
+                  >
+                    <span className="revenue-value">₹12.8L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "70%" }}>
+                    <span className="revenue-value">₹9.6L</span>
+                  </div>
+                  <span className="month-label">May</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "80%" }}
+                  >
+                    <span className="revenue-value">₹11.2L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "65%" }}>
+                    <span className="revenue-value">₹8.8L</span>
+                  </div>
+                  <span className="month-label">Jun</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "78%" }}
+                  >
+                    <span className="revenue-value">₹10.8L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "62%" }}>
+                    <span className="revenue-value">₹8.4L</span>
+                  </div>
+                  <span className="month-label">Jul</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "88%" }}
+                  >
+                    <span className="revenue-value">₹12.4L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "68%" }}>
+                    <span className="revenue-value">₹9.2L</span>
+                  </div>
+                  <span className="month-label">Aug</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "92%" }}
+                  >
+                    <span className="revenue-value">₹13.2L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "72%" }}>
+                    <span className="revenue-value">₹10L</span>
+                  </div>
+                  <span className="month-label">Sep</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "82%" }}
+                  >
+                    <span className="revenue-value">₹11.6L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "66%" }}>
+                    <span className="revenue-value">₹8.8L</span>
+                  </div>
+                  <span className="month-label">Oct</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "86%" }}
+                  >
+                    <span className="revenue-value">₹12.2L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "69%" }}>
+                    <span className="revenue-value">₹9.4L</span>
+                  </div>
+                  <span className="month-label">Nov</span>
+                </div>
+                <div className="revenue-bar-group">
+                  <div
+                    className="revenue-bar paid-users"
+                    style={{ height: "95%" }}
+                  >
+                    <span className="revenue-value">₹13.6L</span>
+                  </div>
+                  <div className="revenue-bar events" style={{ height: "75%" }}>
+                    <span className="revenue-value">₹10.4L</span>
+                  </div>
+                  <span className="month-label">Dec</span>
+                </div>
+              </div>
+              <div className="revenue-legend">
+                <div className="legend-item">
+                  <div className="legend-color paid-users"></div>
+                  <span>Paid Users Revenue</span>
+                </div>
+                <div className="legend-item">
+                  <div className="legend-color events"></div>
+                  <span>Events Revenue</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="quick-actions">
