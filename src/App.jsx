@@ -31,6 +31,8 @@ import ProfileView from "./components/dashboard/premium/ProfileView.jsx";
 import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
 import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./styles/custom.css";
 import BroadcastMessage from "./components/dashboard/admin/BroadcastMessage.jsx";
 import AddEvent from "./components/dashboard/admin/AddEvent.jsx";
@@ -95,6 +97,7 @@ function App() {
         {/* Catch-all redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <ToastContainer position="top-right" autoClose={3000} />
     </AuthProvider>
   );
 }

@@ -23,6 +23,42 @@
   transition: 0.2s;
 }
 
+.previous-messages {
+  margin-top: 30px;
+}
+
+.previous-messages h3 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.messages-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.messages-table th,
+.messages-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.messages-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.messages-table td {
+  font-size: 14px;
+}
+
+.messages-table tr:hover {
+  background-color: #f5f5f5;
+}
+
 .page textarea {
   width: 100%;
   padding: 12px;
