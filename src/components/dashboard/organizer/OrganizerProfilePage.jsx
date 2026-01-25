@@ -1,5 +1,3 @@
-import React from "react";
-
 const OrganizerProfile = () => {
   return (
     <div className="container-fluid py-4">

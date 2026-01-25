@@ -1,5 +1,4 @@
-import React from "react";
-import FreeUserDashboard from "../../dashboard/free/FreeUserDashboard";
+import PropTypes from "prop-types";
 
 const ProfileCard = ({ profile, onSendProposal, onViewProfile }) => {
   return (
@@ -45,6 +44,23 @@ const ProfileCard = ({ profile, onSendProposal, onViewProfile }) => {
       </div>
     </div>
   );
+};
+
+ProfileCard.propTypes = {
+  profile: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    name: PropTypes.string.isRequired,
+    age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    height: PropTypes.string,
+    education: PropTypes.string,
+    occupation: PropTypes.string,
+    location: PropTypes.string,
+    religion: PropTypes.string,
+    maritalStatus: PropTypes.string,
+    image: PropTypes.string,
+  }).isRequired,
+  onSendProposal: PropTypes.func.isRequired,
+  onViewProfile: PropTypes.func.isRequired,
 };
 
 export default ProfileCard;

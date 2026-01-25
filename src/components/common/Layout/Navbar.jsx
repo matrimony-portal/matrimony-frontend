@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link, NavLink } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
@@ -8,7 +8,7 @@ const Navbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const { logout, user, userType } = useAuth();
   const base = useDashboardBasePath();
-  const { isFree, canMessage } = useUserCapabilities();
+  const { isFree, canMessage, isPremium } = useUserCapabilities();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -118,13 +118,20 @@ const Navbar = ({ toggleSidebar }) => {
           className={`profile-dropdown ${isDropdownOpen ? "active" : ""}`}
           ref={dropdownRef}
         >
-          <img
-            src={getProfileImage()}
-            alt="Profile"
-            className="profile-avatar"
-            onClick={toggleDropdown}
-            style={{ cursor: "pointer" }}
-          />
+          <div className="profile-avatar-wrapper">
+            <img
+              src={getProfileImage()}
+              alt="Profile"
+              className="profile-avatar"
+              onClick={toggleDropdown}
+              style={{ cursor: "pointer" }}
+            />
+            {isPremium && !isOrganizer && !isAdmin && (
+              <span className="premium-badge-navbar">
+                <i className="bi bi-star-fill"></i>
+              </span>
+            )}
+          </div>
 
           {isDropdownOpen && (
             <div className="profile-menu">
@@ -175,9 +182,6 @@ const Navbar = ({ toggleSidebar }) => {
                     >
                       Manage Photos
                     </NavLink>
-                    <NavLink to={`${base}/settings`} onClick={closeDropdown}>
-                      Theme
-                    </NavLink>
                   </>
                 )}
               </div>
@@ -225,6 +229,11 @@ const Navbar = ({ toggleSidebar }) => {
           position: relative;
         }
 
+        .profile-avatar-wrapper {
+          position: relative;
+          display: inline-block;
+        }
+
         .profile-avatar {
           width: 40px;
           height: 40px;
@@ -236,6 +245,28 @@ const Navbar = ({ toggleSidebar }) => {
 
         .profile-avatar:hover {
           transform: scale(1.05);
+        }
+
+        .premium-badge-navbar {
+          position: absolute;
+          bottom: -2px;
+          right: -2px;
+          background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+          color: #333;
+          border-radius: 50%;
+          width: 18px;
+          height: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid #fff;
+          font-size: 10px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          z-index: 10;
+        }
+
+        .premium-badge-navbar i {
+          font-size: 10px;
         }
 
         .profile-menu {
@@ -250,6 +281,7 @@ const Navbar = ({ toggleSidebar }) => {
           overflow: hidden;
           animation: dropdownFadeIn 0.2s ease;
         }
+
 
         @keyframes dropdownFadeIn {
           from {
@@ -290,6 +322,7 @@ const Navbar = ({ toggleSidebar }) => {
           padding: 8px 0;
           border-bottom: 1px solid #f0f0f0;
         }
+
 
         .profile-section:last-child {
           border-bottom: none;

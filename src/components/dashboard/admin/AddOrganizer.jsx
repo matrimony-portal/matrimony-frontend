@@ -1,4 +1,3 @@
-import React from "react";
 import OrganizerForm from "./OrganizerForm";
 
 const AddOrganizer = () => {

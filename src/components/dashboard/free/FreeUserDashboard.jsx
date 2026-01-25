@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
 import StatCard from "../../common/shared/StatCard.jsx";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";
+import { freeUserService } from "../../../services/jsonDataService.js";
 
 const FreeUserDashboard = () => {
   const { user } = useAuth();
@@ -14,66 +15,110 @@ const FreeUserDashboard = () => {
   const [profilesViewed, setProfilesViewed] = useState(0);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [modalContext, setModalContext] = useState("upgrade");
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const profiles = [
-    {
-      id: 1,
-      name: "Priya Agarwal",
-      age: 28,
-      height: "5'4\"",
-      education: "MBA",
-      occupation: "Software Engineer",
-      location: "Mumbai, Maharashtra",
-      religion: "Hindu",
-      maritalStatus: "Never Married",
-      image: "/assets/images/female-profile/priyanka.png",
-    },
-    {
-      id: 2,
-      name: "Sneha Kapoor",
-      age: 26,
-      height: "5'3\"",
-      education: "B.Tech",
-      occupation: "Doctor",
-      location: "Delhi, India",
-      religion: "Hindu",
-      maritalStatus: "Never Married",
-      image: "/assets/images/female-profile/sneha.png",
-    },
-    {
-      id: 3,
-      name: "Ananya Mehta",
-      age: 27,
-      height: "5'5\"",
-      education: "Masters",
-      occupation: "Business Analyst",
-      location: "Bangalore, Karnataka",
-      religion: "Hindu",
-      maritalStatus: "Never Married",
-      image: "/assets/images/female-profile/ananya.png",
-    },
-  ];
+  // Load profiles from JSON service
+  useEffect(() => {
+    const loadProfiles = async () => {
+      try {
+        setLoading(true);
+        // Get current user's gender to filter opposite gender profiles
+        const currentUserGender = user?.gender || "male";
+        const oppositeGender = currentUserGender === "male" ? "female" : "male";
 
-  const handleSendProposal = (profileName) => {
+        const allProfiles = await freeUserService.getProfiles({
+          gender: oppositeGender,
+        });
+
+        // Get user's blocked users
+        const blockedUsers = await freeUserService.getBlockedUsers(user?.id);
+        const blockedProfileIds = blockedUsers.map((b) => b.blockedUserId);
+
+        // Filter out blocked profiles
+        const filteredProfiles = allProfiles.filter(
+          (p) => !blockedProfileIds.includes(p.userId),
+        );
+
+        setProfiles(filteredProfiles);
+
+        // Load today's activity
+        const today = new Date();
+        const todayViews = await freeUserService.getProfileViews(
+          user?.id,
+          today,
+        );
+        setProfilesViewed(todayViews.length);
+
+        const todayProposals = await freeUserService.getProposals(user?.id);
+        const todayProposalsCount = todayProposals.filter((p) => {
+          const proposalDate = new Date(p.sentAt);
+          return proposalDate.toDateString() === today.toDateString();
+        }).length;
+        setProposalsSent(todayProposalsCount);
+      } catch (error) {
+        console.error("Error loading profiles:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user?.id) {
+      loadProfiles();
+    }
+  }, [user]);
+
+  const handleSendProposal = async (profileName) => {
     if (proposalsSent >= proposalDailyLimit) {
       setModalContext("proposals");
       setShowUpgradeModal(true);
       return;
     }
-    setProposalsSent((count) => count + 1);
-    alert(
-      `Proposal sent to ${profileName}! You will be notified when they respond.`,
-    );
+
+    // Find profile by name to get ID
+    const profile = profiles.find((p) => p.name === profileName);
+    if (!profile) {
+      alert("Profile not found.");
+      return;
+    }
+
+    try {
+      await freeUserService.sendProposal(user?.id, profile.id);
+      await freeUserService.trackActivity(user?.id, "proposal_sent", {
+        profileId: profile.id,
+        profileName,
+      });
+
+      setProposalsSent((count) => count + 1);
+      alert(
+        `Proposal sent to ${profileName}! You will be notified when they respond.`,
+      );
+    } catch (error) {
+      console.error("Error sending proposal:", error);
+      alert("Failed to send proposal. Please try again.");
+    }
   };
 
-  const handleViewProfile = (profileId) => {
+  const handleViewProfile = async (profileId) => {
     if (profilesViewed >= profileViewLimit) {
       setModalContext("views");
       setShowUpgradeModal(true);
       return;
     }
-    setProfilesViewed((count) => count + 1);
-    navigate(`/dashboard/free/profile/${profileId}`);
+
+    try {
+      await freeUserService.trackProfileView(user?.id, profileId);
+      await freeUserService.trackActivity(user?.id, "profile_viewed", {
+        profileId,
+      });
+
+      setProfilesViewed((count) => count + 1);
+      navigate(`/dashboard/free/profile/${profileId}`);
+    } catch (error) {
+      console.error("Error tracking profile view:", error);
+      // Still navigate even if tracking fails
+      navigate(`/dashboard/free/profile/${profileId}`);
+    }
   };
 
   return (
@@ -159,17 +204,35 @@ const FreeUserDashboard = () => {
       </div>
 
       {/* Profile Cards Grid - Responsive */}
-      <div className="row g-3 g-md-4">
-        {profiles.map((profile) => (
-          <div key={profile.id} className="col-12 col-md-6 col-lg-4">
-            <ProfileCard
-              profile={profile}
-              onSendProposal={handleSendProposal}
-              onViewProfile={handleViewProfile}
-            />
+      {loading ? (
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
-        ))}
-      </div>
+        </div>
+      ) : profiles.length === 0 ? (
+        <div className="text-center py-5">
+          <p className="text-muted">
+            No profiles found. Try adjusting your filters.
+          </p>
+        </div>
+      ) : (
+        <div className="row g-3 g-md-4">
+          {profiles.map((profile) => (
+            <div key={profile.id} className="col-12 col-md-6 col-lg-4">
+              <ProfileCard
+                profile={{
+                  ...profile,
+                  image:
+                    profile.photos?.[0] || "/assets/images/default-profile.png",
+                }}
+                onSendProposal={handleSendProposal}
+                onViewProfile={() => handleViewProfile(profile.id)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Upgrade Modal */}
       {showUpgradeModal && (

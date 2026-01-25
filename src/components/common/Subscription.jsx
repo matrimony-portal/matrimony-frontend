@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Container,
   Row,
@@ -199,23 +199,24 @@ const PaymentPage = ({ inLayout = false }) => {
                     </li>
                   ))}
                 </ul>
-                <Button
-                  variant={isFree ? "secondary" : "danger"}
-                  size="lg"
-                  onClick={() => {
-                    if (isFree) {
-                      alert(
-                        "You are currently on the Free plan. Upgrade to Premium to unlock more features!",
-                      );
-                      window.location.reload();
-                    } else {
-                      navigate("/register");
-                    }
-                  }}
-                  className="mt-auto"
-                >
-                  {isFree ? "Current Plan" : "Choose Free"}
-                </Button>
+                {isFree ? (
+                  <Badge
+                    bg="secondary"
+                    className="mt-auto text-center d-block py-3"
+                    style={{ fontSize: "1.1rem", fontWeight: "500" }}
+                  >
+                    Current Plan
+                  </Badge>
+                ) : (
+                  <Button
+                    variant="danger"
+                    size="lg"
+                    onClick={() => navigate("/register")}
+                    className="mt-auto"
+                  >
+                    Choose Free
+                  </Button>
+                )}
               </Card.Body>
             </Card>
           </Col>

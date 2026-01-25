@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 import {
   Container,
   Row,
@@ -340,6 +340,10 @@ const ContactPage = ({ inLayout = false }) => {
       {content}
     </div>
   );
+};
+
+ContactPage.propTypes = {
+  inLayout: PropTypes.bool,
 };
 
 export default ContactPage;

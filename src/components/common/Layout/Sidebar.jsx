@@ -1,5 +1,4 @@
 // src/components/common/Layout/Sidebar.jsx
-import React from "react";
 import { NavLink } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
@@ -42,7 +41,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       return [
         { path: base, icon: "bi-house-door", label: "Dashboard" },
         {
-          path: `${base}/events`,
+          path: `${base}/my-events`,
           icon: "bi-calendar-event",
           label: "My Events",
         },

@@ -1,109 +1,184 @@
-// src/components/dashboard/premium/Proposals.jsx
-import React, { useState } from "react";
+// src/components/dashboard/free/Proposals.jsx
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../../../hooks/useAuth.jsx";
 import ProposalCard from "../../common/shared/ProposalCard.jsx";
+import {
+  freeUserService,
+  jsonDataService,
+} from "../../../services/jsonDataService.js";
 
 const Proposals = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("received");
+  const [loading, setLoading] = useState(true);
+  const [receivedProposals, setReceivedProposals] = useState([]);
+  const [sentProposals, setSentProposals] = useState([]);
+  const [acceptedProposals, setAcceptedProposals] = useState([]);
+  const [declinedProposals, setDeclinedProposals] = useState([]);
 
-  const receivedProposals = [
-    {
-      id: 1,
-      name: "Priya Agarwal",
-      age: 28,
-      height: "5'4\"",
-      education: "MBA",
-      occupation: "Software Engineer",
-      location: "Mumbai, Maharashtra",
-      description: "Looking for educated partner with good family values...",
-      image: "../../assets/images/female-profile/priyanka.png",
-      isNew: true,
-      timeAgo: "2 hours ago",
-    },
-    {
-      id: 2,
-      name: "Sneha Kapoor",
-      age: 26,
-      height: "5'3\"",
-      education: "MBBS",
-      occupation: "Doctor",
-      location: "Delhi, India",
-      description: "Seeking understanding and caring life partner...",
-      image: "../../assets/images/female-profile/sneha.png",
-      isNew: false,
-      timeAgo: "1 day ago",
-    },
-    {
-      id: 3,
-      name: "Ananya Mehta",
-      age: 27,
-      height: "5'5\"",
-      education: "Masters",
-      occupation: "Business Analyst",
-      location: "Bangalore, Karnataka",
-      description: "Looking for ambitious and family-oriented partner...",
-      image: "../../assets/images/female-profile/ananya.png",
-      isNew: false,
-      timeAgo: "3 days ago",
-    },
-  ];
+  const formatTimeAgo = useCallback((dateString) => {
+    if (!dateString) return "Recently";
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
 
-  const sentProposals = [
-    {
-      id: 4,
-      name: "Neha Reddy",
-      age: 29,
-      height: "5'6\"",
-      education: "MBA",
-      occupation: "Marketing Manager",
-      location: "Hyderabad, Telangana",
-      status: "pending",
-      sentDate: "2 days ago",
-      image: "../../assets/images/female-profile/neha.png",
-    },
-    {
-      id: 5,
-      name: "Divya Patel",
-      age: 25,
-      height: "5'2\"",
-      education: "B.Tech",
-      occupation: "Teacher",
-      location: "Ahmedabad, Gujarat",
-      status: "viewed",
-      sentDate: "5 days ago",
-      image: "../../assets/images/female-profile/divya.png",
-    },
-  ];
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60)
+      return `${diffMins} minute${diffMins > 1 ? "s" : ""} ago`;
+    if (diffHours < 24)
+      return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+    return `${Math.floor(diffDays / 7)} week${Math.floor(diffDays / 7) > 1 ? "s" : ""} ago`;
+  }, []);
 
-  const acceptedProposals = [
-    {
-      id: 6,
-      name: "Riya Gupta",
-      age: 30,
-      height: "5'4\"",
-      education: "Masters",
-      occupation: "Architect",
-      location: "Pune, Maharashtra",
-      acceptedDate: "1 week ago",
-      image: "../../assets/images/female-profile/riya.png",
-    },
-  ];
+  const isNewProposal = useCallback((sentAt) => {
+    if (!sentAt) return false;
+    const sentDate = new Date(sentAt);
+    const now = new Date();
+    const diffHours = (now - sentDate) / (1000 * 60 * 60);
+    return diffHours < 24; // New if received within 24 hours
+  }, []);
 
-  const handleAccept = (proposal) => {
+  const loadProposals = useCallback(async () => {
+    try {
+      setLoading(true);
+      const allProposals = await freeUserService.getProposals(user?.id);
+      const profiles = await jsonDataService.getAll("profiles");
+
+      // Get current user's profile to identify received proposals
+      const currentUserProfile = profiles.find((p) => p.userId === user?.id);
+      const currentUserProfileId = currentUserProfile?.id;
+
+      // Separate proposals by type
+      const received = [];
+      const sent = [];
+      const accepted = [];
+      const declined = [];
+
+      for (const proposal of allProposals) {
+        let profile = null;
+        let isReceived = false;
+
+        // Determine if this is a received or sent proposal
+        if (proposal.toProfileId === currentUserProfileId) {
+          // Received proposal - get sender's profile
+          const senderProfile = profiles.find(
+            (p) => p.userId === proposal.fromUserId,
+          );
+          if (senderProfile) {
+            profile = senderProfile;
+            isReceived = true;
+          }
+        } else if (proposal.fromUserId === user?.id) {
+          // Sent proposal - get receiver's profile
+          profile = profiles.find((p) => p.id === proposal.toProfileId);
+        }
+
+        if (!profile) continue;
+
+        const enrichedProposal = {
+          ...proposal,
+          profileId: profile.id,
+          name: profile.name,
+          age: profile.age,
+          height: profile.height,
+          education: profile.education,
+          occupation: profile.occupation,
+          location: profile.location || `${profile.city}, ${profile.state}`,
+          description: profile.bio || "Looking for a compatible match...",
+          image: profile.photos?.[0] || "/assets/images/default-profile.png",
+          timeAgo: formatTimeAgo(proposal.sentAt),
+          sentDate: formatTimeAgo(proposal.sentAt),
+          acceptedDate:
+            proposal.status === "accepted"
+              ? formatTimeAgo(proposal.updatedAt)
+              : null,
+          isNew: isReceived && isNewProposal(proposal.sentAt),
+        };
+
+        if (isReceived) {
+          if (proposal.status === "accepted") {
+            accepted.push(enrichedProposal);
+          } else if (proposal.status === "declined") {
+            declined.push(enrichedProposal);
+          } else {
+            received.push(enrichedProposal);
+          }
+        } else {
+          if (proposal.status === "accepted") {
+            accepted.push(enrichedProposal);
+          } else if (proposal.status === "declined") {
+            declined.push(enrichedProposal);
+          } else {
+            sent.push(enrichedProposal);
+          }
+        }
+      }
+
+      setReceivedProposals(received);
+      setSentProposals(sent);
+      setAcceptedProposals(accepted);
+      setDeclinedProposals(declined);
+    } catch (error) {
+      console.error("Error loading proposals:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id, formatTimeAgo, isNewProposal]);
+
+  // Load proposals on mount
+  useEffect(() => {
+    loadProposals();
+  }, [loadProposals]);
+
+  // Reload when tab changes
+  useEffect(() => {
+    if (user?.id) {
+      loadProposals();
+    }
+  }, [activeTab, user?.id, loadProposals]);
+
+  const handleAccept = async (proposal) => {
     if (window.confirm(`Accept interest from ${proposal.name}?`)) {
-      alert(`Interest accepted! You can now chat with ${proposal.name}.`);
+      try {
+        await freeUserService.updateProposalStatus(proposal.id, "accepted");
+        await freeUserService.trackActivity(user?.id, "proposal_accepted", {
+          proposalId: proposal.id,
+          profileName: proposal.name,
+        });
+        alert(`Interest accepted! You can now chat with ${proposal.name}.`);
+        loadProposals(); // Reload to update the list
+      } catch (error) {
+        console.error("Error accepting proposal:", error);
+        alert("Failed to accept proposal. Please try again.");
+      }
     }
   };
 
-  const handleDecline = (proposal) => {
+  const handleDecline = async (proposal) => {
     if (window.confirm(`Decline interest from ${proposal.name}?`)) {
-      alert("Interest declined politely.");
+      try {
+        await freeUserService.updateProposalStatus(proposal.id, "declined");
+        await freeUserService.trackActivity(user?.id, "proposal_declined", {
+          proposalId: proposal.id,
+          profileName: proposal.name,
+        });
+        alert("Interest declined politely.");
+        loadProposals(); // Reload to update the list
+      } catch (error) {
+        console.error("Error declining proposal:", error);
+        alert("Failed to decline proposal. Please try again.");
+      }
     }
   };
 
-  const handleViewProfile = (proposalId) => {
-    navigate(`/dashboard/profile/${proposalId}`);
+  const handleViewProfile = (profileId) => {
+    navigate(`/dashboard/free/profile/${profileId}`);
   };
 
   const getStatusBadge = (status) => {
@@ -158,7 +233,7 @@ const Proposals = () => {
             className={`nav-link ${activeTab === "declined" ? "active" : ""}`}
             onClick={() => setActiveTab("declined")}
           >
-            Declined (5)
+            Declined ({declinedProposals.length})
           </button>
         </li>
       </ul>
@@ -166,14 +241,20 @@ const Proposals = () => {
       {/* Received Tab */}
       {activeTab === "received" && (
         <div>
-          {receivedProposals.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : receivedProposals.length > 0 ? (
             receivedProposals.map((proposal) => (
               <ProposalCard
                 key={proposal.id}
                 proposal={proposal}
-                onAccept={handleAccept}
-                onDecline={handleDecline}
-                onViewProfile={handleViewProfile}
+                onAccept={() => handleAccept(proposal)}
+                onDecline={() => handleDecline(proposal)}
+                onViewProfile={() => handleViewProfile(proposal.profileId)}
               />
             ))
           ) : (
@@ -248,7 +329,7 @@ const Proposals = () => {
                 <p className="text-muted">You haven't sent any interests yet</p>
                 <button
                   className="btn btn-danger mt-2"
-                  onClick={() => navigate("/dashboard/search")}
+                  onClick={() => navigate("/dashboard/free/search")}
                 >
                   Search Matches
                 </button>
@@ -261,7 +342,13 @@ const Proposals = () => {
       {/* Accepted Tab */}
       {activeTab === "accepted" && (
         <div>
-          {acceptedProposals.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : acceptedProposals.length > 0 ? (
             acceptedProposals.map((proposal) => (
               <div key={proposal.id} className="card mb-3">
                 <div className="card-body">
@@ -290,21 +377,21 @@ const Proposals = () => {
                         <div>{proposal.location}</div>
                       </div>
                       <span className="badge bg-success">
-                        Accepted {proposal.acceptedDate}
+                        Accepted {proposal.acceptedDate || "recently"}
                       </span>
                     </div>
                     <div className="col-auto">
                       <div className="d-flex flex-column gap-2">
                         <button
                           className="btn btn-sm btn-danger"
-                          onClick={() => navigate("/dashboard/messages")}
+                          onClick={() => navigate("/dashboard/free/messages")}
                         >
                           <i className="bi bi-chat-dots me-1"></i>
                           Chat
                         </button>
                         <button
                           className="btn btn-sm btn-outline-secondary"
-                          onClick={() => handleViewProfile(proposal.id)}
+                          onClick={() => handleViewProfile(proposal.profileId)}
                         >
                           View Profile
                         </button>
@@ -330,12 +417,68 @@ const Proposals = () => {
 
       {/* Declined Tab */}
       {activeTab === "declined" && (
-        <div className="card">
-          <div className="card-body text-center py-5">
-            <i className="bi bi-x-circle fs-1 text-muted mb-3 d-block"></i>
-            <h5>Declined Interests</h5>
-            <p className="text-muted">You have declined 5 interests</p>
-          </div>
+        <div>
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : declinedProposals.length > 0 ? (
+            declinedProposals.map((proposal) => (
+              <div key={proposal.id} className="card mb-3">
+                <div className="card-body">
+                  <div className="row g-3 align-items-center">
+                    <div className="col-auto">
+                      <div
+                        className="rounded"
+                        style={{
+                          width: "80px",
+                          height: "80px",
+                          backgroundImage: `url(${proposal.image})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      />
+                    </div>
+                    <div className="col">
+                      <h5 className="mb-1">{proposal.name}</h5>
+                      <div className="text-muted small mb-2">
+                        <div>
+                          {proposal.age} yrs, {proposal.height}
+                        </div>
+                        <div>
+                          {proposal.education}, {proposal.occupation}
+                        </div>
+                        <div>{proposal.location}</div>
+                      </div>
+                      <span className="badge bg-danger">
+                        Declined {proposal.sentDate}
+                      </span>
+                    </div>
+                    <div className="col-auto">
+                      <button
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={() => handleViewProfile(proposal.profileId)}
+                      >
+                        View Profile
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="card">
+              <div className="card-body text-center py-5">
+                <i className="bi bi-x-circle fs-1 text-muted mb-3 d-block"></i>
+                <h5>No Declined Interests</h5>
+                <p className="text-muted">
+                  You haven't declined any interests yet
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

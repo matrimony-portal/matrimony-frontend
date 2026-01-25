@@ -1,4 +1,3 @@
-import React from "react";
 import SuccessStoryForm from "./SuccessStoryForm";
 
 const EditSuccessStory = () => {

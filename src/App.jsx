@@ -69,12 +69,14 @@ import AdminOrganizerProfile from "./components/dashboard/admin/OrganizerProfile
 import BlockedUsers from "./components/dashboard/free/BlockedUsers.jsx";
 import { EventDetails } from "./components/dashboard/organizer/EventDetails.jsx";
 import { EventForm } from "./components/dashboard/organizer/EventForm";
-import { MyEventsList } from "./components/dashboard/organizer/EventList";
+import { OverallEventsList } from "./components/dashboard/organizer/EventList";
+import { MyEventsList } from "./components/dashboard/organizer/MyEventsList";
 import { EventOrganizerDashboard } from "./components/dashboard/organizer/OrganizerDashboard.jsx";
 import { EventRequests } from "./components/dashboard/organizer/EventRequests";
 import { OrganizerSettings } from "./components/dashboard/organizer/OrganizerSettings";
 import { OrganizerProfile } from "./components/dashboard/organizer/OrganizerProfile";
 import { EditOrganizerProfile } from "./components/dashboard/organizer/EditOrganizer.jsx";
+import { ViewEventOrganizerProfile } from "./components/common/ViewEventOrganizerProfile.jsx";
 
 import "./styles/custom.css";
 
@@ -120,6 +122,10 @@ function App() {
           <Route path="feedback" element={<FreeFeedback />} />
           <Route path="profile/:id" element={<FreeProfileView />} />
           <Route
+            path="organizer-profile/:organizerId"
+            element={<ViewEventOrganizerProfile />}
+          />
+          <Route
             path="subscription"
             element={<PaymentPage inLayout={true} />}
           />
@@ -142,6 +148,10 @@ function App() {
           <Route path="settings" element={<PremiumSettings />} />
           <Route path="feedback" element={<PremiumFeedback />} />
           <Route path="profile/:id" element={<PremiumProfileView />} />
+          <Route
+            path="organizer-profile/:organizerId"
+            element={<ViewEventOrganizerProfile />}
+          />
           <Route
             path="subscription"
             element={<PaymentPage inLayout={true} />}
@@ -174,8 +184,10 @@ function App() {
           <Route path="event-requests" element={<EventRequests />} />
           <Route path="event-details" element={<EventDetails />} />
           <Route path="messages" element={<PremiumMessages />} />
-          {/* Events - ALL */}
-          <Route path="events" element={<MyEventsList />} />
+          {/* My Events - Only logged-in organizer's events */}
+          <Route path="my-events" element={<MyEventsList />} />
+          {/* Overall Events - All events from all organizers */}
+          <Route path="events" element={<OverallEventsList />} />
           {/* <Route path="/dashboard/organizer/event/:eventId" element={<EventDetails mode="view" />} /> */}
           {/* <Route path="/dashboard/organizer/event-edit/:eventId" element={<EventDetails mode="edit" />} /> */}
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { useAuth } from "../../hooks/useAuth.jsx";
 import { validateEmail } from "../../utils/validation.js";

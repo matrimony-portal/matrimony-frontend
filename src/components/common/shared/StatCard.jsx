@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 const StatCard = ({ icon, number, label }) => {
   return (
@@ -17,6 +17,12 @@ const StatCard = ({ icon, number, label }) => {
       </div>
     </div>
   );
+};
+
+StatCard.propTypes = {
+  icon: PropTypes.node.isRequired,
+  number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  label: PropTypes.string.isRequired,
 };
 
 export default StatCard;

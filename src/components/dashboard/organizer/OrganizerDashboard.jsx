@@ -1,5 +1,5 @@
-import React from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
+import { OverallEventsList } from "./EventList.jsx";
 
 export const EventOrganizerDashboard = () => {
   const stats = [
@@ -18,7 +18,7 @@ export const EventOrganizerDashboard = () => {
         </Card.Body>
       </Card>
 
-      <Row className="g-4">
+      <Row className="g-4 mb-4">
         {stats.map((stat, idx) => (
           <Col key={idx} xs={12} sm={6} lg={3}>
             <Card
@@ -40,6 +40,9 @@ export const EventOrganizerDashboard = () => {
           </Col>
         ))}
       </Row>
+
+      {/* Overall Events Section */}
+      <OverallEventsList />
     </Container>
   );
 };

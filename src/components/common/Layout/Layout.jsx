@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Outlet, useLocation } from "react-router";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";

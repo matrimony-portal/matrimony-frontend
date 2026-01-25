@@ -1,9 +1,13 @@
 import { useNavigate } from "react-router";
 import { Container, Row, Col, Card, Button, Badge } from "react-bootstrap";
+import { useAuth } from "../../../hooks/useAuth.jsx";
 
-export const MyEventsList = () => {
+export const OverallEventsList = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const currentOrganizerId = user?.id || 1; // Current organizer ID
 
+  // Mock data - All events from all organizers
   const events = [
     {
       id: 1,
@@ -14,6 +18,8 @@ export const MyEventsList = () => {
       time: "6:00 PM - 9:00 PM",
       participants: "45/50",
       image: "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
+      organizerId: 1,
+      organizerName: "Meera Reddy",
     },
     {
       id: 2,
@@ -25,6 +31,8 @@ export const MyEventsList = () => {
       participants: "30/30",
       image:
         "/assets/images/event-images/nathan-dumlao-I_394sxx0ec-unsplash.jpg",
+      organizerId: 2,
+      organizerName: "Rajesh Kumar",
     },
     {
       id: 3,
@@ -35,6 +43,45 @@ export const MyEventsList = () => {
       time: "7:00 PM - 10:00 PM",
       participants: "38/60",
       image: "/assets/images/event-images/al-elmes-ULHxWq8reao-unsplash.jpg",
+      organizerId: 1,
+      organizerName: "Meera Reddy",
+    },
+    {
+      id: 4,
+      title: "Sunday Brunch Meetup",
+      status: "Upcoming",
+      location: "Pune, Maharashtra",
+      date: "27th October 2025",
+      time: "10:00 AM - 1:00 PM",
+      participants: "25/40",
+      image: "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
+      organizerId: 3,
+      organizerName: "Priya Sharma",
+    },
+    {
+      id: 5,
+      title: "Professional Networking",
+      status: "Completed",
+      location: "Hyderabad, Telangana",
+      date: "15th October 2025",
+      time: "6:00 PM - 9:00 PM",
+      participants: "50/50",
+      image:
+        "/assets/images/event-images/nathan-dumlao-I_394sxx0ec-unsplash.jpg",
+      organizerId: 2,
+      organizerName: "Rajesh Kumar",
+    },
+    {
+      id: 6,
+      title: "Dinner & Dance",
+      status: "Upcoming",
+      location: "Chennai, Tamil Nadu",
+      date: "2nd November 2025",
+      time: "7:00 PM - 11:00 PM",
+      participants: "42/60",
+      image: "/assets/images/event-images/al-elmes-ULHxWq8reao-unsplash.jpg",
+      organizerId: 3,
+      organizerName: "Priya Sharma",
     },
   ];
 
@@ -52,7 +99,7 @@ export const MyEventsList = () => {
       <Card className="shadow-sm">
         <Card.Body>
           <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-            <h2 className="mb-0">My Events</h2>
+            <h2 className="mb-0">Overall Events</h2>
             <Button
               variant="danger"
               onClick={() => navigate("/dashboard/organizer/create-event")}
@@ -89,9 +136,17 @@ export const MyEventsList = () => {
                   />
                   <Card.Body>
                     <Card.Title>{event.title}</Card.Title>
-                    <Badge bg={getStatusVariant(event.status)} className="mb-3">
-                      {event.status}
-                    </Badge>
+                    <div className="mb-2">
+                      <Badge
+                        bg={getStatusVariant(event.status)}
+                        className="me-2"
+                      >
+                        {event.status}
+                      </Badge>
+                      <Badge bg="info" className="text-white">
+                        👤 {event.organizerName}
+                      </Badge>
+                    </div>
                     <div className="text-muted small mb-3">
                       <div>📍 {event.location}</div>
                       <div>📅 {event.date}</div>
@@ -99,46 +154,63 @@ export const MyEventsList = () => {
                       <div>👥 {event.participants} Participants</div>
                     </div>
                     <div className="d-flex gap-2 flex-wrap">
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        className="flex-fill"
-                        onClick={() =>
-                          navigate(
-                            `/dashboard/organizer/event-edit/${event.id}`,
-                          )
-                        }
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outline-secondary"
-                        size="sm"
-                        className="flex-fill"
-                        onClick={() =>
-                          navigate(
-                            `/dashboard/organizer/event-view/${event.id}`,
-                          )
-                        }
-                      >
-                        View
-                      </Button>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        className="flex-fill"
-                        onClick={() => {
-                          if (
-                            window.confirm(
-                              "Cancel this event? All participants will be notified.",
+                      {event.organizerId === currentOrganizerId ? (
+                        <>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            className="flex-fill"
+                            onClick={() =>
+                              navigate(
+                                `/dashboard/organizer/event-edit/${event.id}`,
+                              )
+                            }
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            className="flex-fill"
+                            onClick={() =>
+                              navigate(
+                                `/dashboard/organizer/event-view/${event.id}`,
+                              )
+                            }
+                          >
+                            View
+                          </Button>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            className="flex-fill"
+                            onClick={() => {
+                              if (
+                                window.confirm(
+                                  "Cancel this event? All participants will be notified.",
+                                )
+                              ) {
+                                alert("Event cancelled!");
+                              }
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          variant="outline-secondary"
+                          size="sm"
+                          className="w-100"
+                          onClick={() =>
+                            navigate(
+                              `/dashboard/organizer/event-view/${event.id}`,
                             )
-                          ) {
-                            alert("Event cancelled!");
                           }
-                        }}
-                      >
-                        Cancel
-                      </Button>
+                        >
+                          View Details
+                        </Button>
+                      )}
                     </div>
                   </Card.Body>
                 </Card>

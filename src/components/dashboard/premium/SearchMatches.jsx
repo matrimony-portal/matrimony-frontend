@@ -1,5 +1,5 @@
 // src/components/dashboard/premium/SearchMatches.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";
 

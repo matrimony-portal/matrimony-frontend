@@ -1,5 +1,3 @@
-import React from "react";
-
 const OrganizerEvents = () => {
   return (
     <div className="container-fluid py-4">

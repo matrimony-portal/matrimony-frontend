@@ -1,8 +1,10 @@
 // OrganizerSettings.jsx
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { useState } from "react";
+import { useTheme } from "../../../hooks/useTheme.jsx";
 
 export const OrganizerSettings = () => {
+  const { theme, toggleTheme } = useTheme();
   const [showReportForm, setShowReportForm] = useState(false);
   const [reportForm, setReportForm] = useState({
     profileId: "",
@@ -90,6 +92,42 @@ export const OrganizerSettings = () => {
               <p className="text-muted mb-0 small">Receive updates via email</p>
             </div>
             <Form.Check type="switch" defaultChecked />
+          </div>
+        </Card.Body>
+      </Card>
+
+      <Card className="mb-4 shadow-sm">
+        <Card.Body>
+          <h5 className="mb-3 pb-2 border-bottom border-danger border-2">
+            Appearance
+          </h5>
+          <div className="bg-light p-3 rounded d-flex justify-content-between align-items-center">
+            <div>
+              <h6 className="mb-1">Theme</h6>
+              <p className="text-muted mb-0 small">
+                Choose your preferred color theme
+              </p>
+            </div>
+            <div className="d-flex gap-2">
+              <Button
+                variant={theme === "default" ? "danger" : "outline-secondary"}
+                size="sm"
+                onClick={() => toggleTheme("default")}
+                style={{ minWidth: "100px" }}
+              >
+                <i className="bi bi-sun me-2"></i>
+                Default
+              </Button>
+              <Button
+                variant={theme === "dark" ? "danger" : "outline-secondary"}
+                size="sm"
+                onClick={() => toggleTheme("dark")}
+                style={{ minWidth: "100px" }}
+              >
+                <i className="bi bi-moon me-2"></i>
+                Dark
+              </Button>
+            </div>
           </div>
         </Card.Body>
       </Card>

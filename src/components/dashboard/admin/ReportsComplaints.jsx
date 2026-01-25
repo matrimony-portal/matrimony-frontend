@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const ReportsComplaints = () => {
   const [activeTab, setActiveTab] = useState("pending");

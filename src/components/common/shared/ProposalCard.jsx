@@ -1,5 +1,5 @@
 // src/components/common/shared/ProposalCard.jsx
-import React from "react";
+import PropTypes from "prop-types";
 
 const ProposalCard = ({ proposal, onAccept, onDecline, onViewProfile }) => {
   return (
