@@ -22,20 +22,14 @@ import {
   PhoneFill,
   Wallet,
   Lock,
-  ArrowLeft,
 } from "react-bootstrap-icons";
-import { useNavigate, useLocation } from "react-router";
-import { useAuth } from "../../hooks/useAuth.jsx";
+import { useNavigate } from "react-router";
 import { useUserCapabilities } from "../../hooks/useUserCapabilities.jsx";
 
 // Payment/Subscription Component
 const PaymentPage = ({ inLayout = false }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { isAuthenticated } = useAuth();
   const { isFree } = useUserCapabilities();
-  const fromHomepage =
-    location.state?.fromHomepage || (!inLayout && !isAuthenticated());
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [showCheckout, setShowCheckout] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("card");
@@ -104,21 +98,6 @@ const PaymentPage = ({ inLayout = false }) => {
         margin: 0,
       }}
     >
-      {/* Back Button - show when coming from homepage or not in layout */}
-      {fromHomepage && !inLayout && (
-        <Container className="pt-3">
-          <Button
-            variant="link"
-            onClick={() => navigate("/")}
-            className="text-decoration-none d-flex align-items-center gap-2 mb-3"
-            style={{ color: "#ae1700", padding: 0 }}
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Homepage</span>
-          </Button>
-        </Container>
-      )}
-
       <div
         style={{
           background: "linear-gradient(135deg, #5a0d14 0%, #ae1700 100%)",

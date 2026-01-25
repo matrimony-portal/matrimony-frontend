@@ -224,6 +224,14 @@ FooterColumn.propTypes = {
 };
 
 function HomePage() {
+  const handleSearch = () => {
+    // Scroll to the search section on the same page
+    const searchSection = document.getElementById("search");
+    if (searchSection) {
+      searchSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div>
       <Navbar
@@ -367,6 +375,16 @@ function HomePage() {
                 href="#search"
                 className="text-white px-3"
                 style={{ fontWeight: 500, whiteSpace: "nowrap" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const searchSection = document.getElementById("search");
+                  if (searchSection) {
+                    searchSection.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }
+                }}
               >
                 Search
               </Nav.Link>
@@ -487,6 +505,7 @@ function HomePage() {
         </p>
 
         <section
+          id="search"
           className="search-card"
           role="search"
           aria-label="Partner search form"
@@ -538,6 +557,7 @@ function HomePage() {
             className="search-btn"
             type="button"
             aria-label="Search for matches"
+            onClick={handleSearch}
           >
             Search Matches
           </button>

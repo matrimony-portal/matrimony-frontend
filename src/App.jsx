@@ -13,6 +13,7 @@ import UpgradePage from "./components/upgrade/UpgradePage.jsx";
 import PaymentPage from "./components/common/Subscription.jsx";
 import FeedbackPage from "./components/common/Feedback.jsx";
 import ContactPage from "./components/common/Contact.jsx";
+import PublicLayout from "./components/common/Layout/PublicLayout.jsx";
 
 // Layout
 import Layout from "./components/common/Layout/Layout.jsx";
@@ -85,14 +86,23 @@ function App() {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/upgrade" element={<UpgradePage />} />
-      <Route path="/subscription" element={<PaymentPage />} />
-      <Route path="/payment" element={<PaymentPage />} />
+
+      {/* Public Routes with Navbar Layout */}
+      <Route element={<PublicLayout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/subscription"
+          element={<PaymentPage inLayout={false} />}
+        />
+        <Route path="/payment" element={<PaymentPage inLayout={false} />} />
+        <Route path="/contact" element={<ContactPage inLayout={false} />} />
+      </Route>
+
+      {/* Feedback can be standalone or in layout */}
       <Route path="/feedback" element={<FeedbackPage />} />
-      <Route path="/contact" element={<ContactPage />} />
 
       {/* Protected Dashboard Routes with Layout */}
       <Route
