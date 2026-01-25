@@ -1,3 +1,6 @@
+// Re-export services
+export { userService } from "./userService.js";
+
 // Mock auth service for development
 const mockUsers = [
   {
