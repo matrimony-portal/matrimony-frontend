@@ -29,7 +29,7 @@ import { useUserCapabilities } from "../../hooks/useUserCapabilities.jsx";
 // Payment/Subscription Component
 const PaymentPage = ({ inLayout = false }) => {
   const navigate = useNavigate();
-  const { isFree } = useUserCapabilities();
+  const { isFree, isPremium } = useUserCapabilities();
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [showCheckout, setShowCheckout] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("card");
@@ -138,12 +138,25 @@ const PaymentPage = ({ inLayout = false }) => {
         <Row className="g-4 mb-4">
           <Col md={6}>
             <Card
-              className="h-100 shadow-sm"
+              className="h-100 shadow-sm position-relative"
               style={{
-                border: "1px solid #e0e0e0",
+                border: isFree ? "2px solid #6c757d" : "1px solid #e0e0e0",
                 backgroundColor: "#ffffff",
               }}
             >
+              {isFree && (
+                <Badge
+                  bg="secondary"
+                  className="position-absolute top-0 end-0 m-2 px-3 py-2"
+                  style={{
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    fontWeight: "600",
+                  }}
+                >
+                  ✓ Current Plan
+                </Badge>
+              )}
               <Card.Body className="d-flex flex-column p-4">
                 <Card.Title
                   className="h3 mb-3"
@@ -179,21 +192,27 @@ const PaymentPage = ({ inLayout = false }) => {
                   ))}
                 </ul>
                 {isFree ? (
-                  <Badge
-                    bg="secondary"
-                    className="mt-auto text-center d-block py-3"
-                    style={{ fontSize: "1.1rem", fontWeight: "500" }}
+                  <div
+                    className="mt-auto text-center py-3 text-muted"
+                    style={{ fontSize: "0.9rem" }}
                   >
-                    Current Plan
-                  </Badge>
+                    You are on this plan
+                  </div>
+                ) : isPremium ? (
+                  <div
+                    className="mt-auto text-center py-3 text-muted"
+                    style={{ fontSize: "0.9rem" }}
+                  >
+                    Basic features included
+                  </div>
                 ) : (
                   <Button
-                    variant="danger"
+                    variant="outline-danger"
                     size="lg"
                     onClick={() => navigate("/register")}
                     className="mt-auto"
                   >
-                    Choose Free
+                    Start Free
                   </Button>
                 )}
               </Card.Body>
@@ -204,21 +223,36 @@ const PaymentPage = ({ inLayout = false }) => {
             <Card
               className="h-100 shadow position-relative"
               style={{
-                border: "1px solid #e0e0e0",
+                border: isPremium ? "2px solid #ffc107" : "1px solid #e0e0e0",
                 backgroundColor: "#ffffff",
               }}
             >
-              <Badge
-                bg="danger"
-                className="position-absolute top-0 end-0 m-2 px-3 py-2"
-                style={{
-                  borderRadius: "6px",
-                  fontSize: "0.875rem",
-                  fontWeight: "600",
-                }}
-              >
-                ⭐ Most Popular
-              </Badge>
+              {isPremium ? (
+                <Badge
+                  bg="warning"
+                  text="dark"
+                  className="position-absolute top-0 end-0 m-2 px-3 py-2"
+                  style={{
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    fontWeight: "600",
+                  }}
+                >
+                  <StarFill className="me-1" /> Current Plan
+                </Badge>
+              ) : (
+                <Badge
+                  bg="danger"
+                  className="position-absolute top-0 end-0 m-2 px-3 py-2"
+                  style={{
+                    borderRadius: "6px",
+                    fontSize: "0.875rem",
+                    fontWeight: "600",
+                  }}
+                >
+                  ⭐ Most Popular
+                </Badge>
+              )}
               <Card.Body className="d-flex flex-column p-4 pt-5">
                 <Card.Title
                   className="h3 mb-3"
@@ -253,14 +287,23 @@ const PaymentPage = ({ inLayout = false }) => {
                     </li>
                   ))}
                 </ul>
-                <Button
-                  variant="danger"
-                  size="lg"
-                  onClick={() => handlePlanSelect("gold")}
-                  className="mt-auto"
-                >
-                  Choose Gold
-                </Button>
+                {isPremium ? (
+                  <div
+                    className="mt-auto text-center py-3 text-muted"
+                    style={{ fontSize: "0.9rem" }}
+                  >
+                    You are on this plan
+                  </div>
+                ) : (
+                  <Button
+                    variant="danger"
+                    size="lg"
+                    onClick={() => handlePlanSelect("gold")}
+                    className="mt-auto"
+                  >
+                    Choose Gold
+                  </Button>
+                )}
               </Card.Body>
             </Card>
           </Col>

@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
 import PropTypes from "prop-types";
-import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
 import { Pagination } from "../../ui";
 import {
@@ -286,9 +285,8 @@ EventCard.propTypes = {
  * Shared Events component used across free and premium dashboards.
  * Displays a list of events with filtering and pagination.
  */
-const Events = ({ eventService = null }) => {
+const Events = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const basePath = useDashboardBasePath();
 
   const [showFilters, setShowFilters] = useState(false);
@@ -301,64 +299,85 @@ const Events = ({ eventService = null }) => {
   const loadEvents = useCallback(async () => {
     try {
       setLoading(true);
-      if (eventService?.getEvents) {
-        const events = await eventService.getEvents();
-        setAllEvents(events);
-      } else {
-        // Fallback mock data
-        setAllEvents([
-          {
-            id: 1,
-            title: "Speed Dating Evening",
-            organizerId: 1,
-            location: "The Coffee House, Mumbai",
-            date: new Date().toISOString(),
-            time: "18:00",
-            price: 500,
-            ageGroup: "25-35 years",
-            currentParticipants: 45,
-            maxParticipants: 50,
-            badge: "Hot",
-            image:
-              "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
-          },
-          {
-            id: 2,
-            title: "Sunday Coffee Meetup",
-            organizerId: 2,
-            location: "Cafe Mocha, Bangalore",
-            date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-            time: "11:00",
-            price: 300,
-            ageGroup: "23-30 years",
-            currentParticipants: 28,
-            maxParticipants: 40,
-            image:
-              "/assets/images/event-images/nathan-dumlao-I_394sxx0ec-unsplash.jpg",
-          },
-          {
-            id: 3,
-            title: "Cultural Evening",
-            organizerId: 3,
-            location: "India Habitat Centre, Delhi",
-            date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-            time: "19:00",
-            price: 800,
-            ageGroup: "26-38 years",
-            currentParticipants: 38,
-            maxParticipants: 60,
-            badge: "New",
-            image:
-              "/assets/images/event-images/al-elmes-ULHxWq8reao-unsplash.jpg",
-          },
-        ]);
-      }
+      // Use real eventService from services
+      const { eventService: realEventService } =
+        await import("../../../services/eventService.js");
+      const events = await realEventService.getEvents();
+
+      // Transform backend response to frontend format
+      const transformedEvents = events.map((event) => ({
+        id: event.id,
+        title: event.title,
+        organizerId: event.organizerId,
+        location: `${event.venue}, ${event.city}`,
+        venue: event.venue,
+        date: event.eventDate,
+        time: new Date(event.eventDate).toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        price:
+          typeof event.registrationFee === "number"
+            ? event.registrationFee
+            : parseFloat(event.registrationFee) || 0,
+        currentParticipants: event.currentParticipants || 0,
+        maxParticipants: event.maxParticipants,
+        image: "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
+      }));
+
+      setAllEvents(transformedEvents);
     } catch (error) {
       console.error("Error loading events:", error);
+      // Fallback mock data on error
+      setAllEvents([
+        {
+          id: 1,
+          title: "Speed Dating Evening",
+          organizerId: 1,
+          location: "The Coffee House, Mumbai",
+          date: new Date().toISOString(),
+          time: "18:00",
+          price: 500,
+          ageGroup: "25-35 years",
+          currentParticipants: 45,
+          maxParticipants: 50,
+          badge: "Hot",
+          image: "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
+        },
+        {
+          id: 2,
+          title: "Sunday Coffee Meetup",
+          organizerId: 2,
+          location: "Cafe Mocha, Bangalore",
+          date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+          time: "11:00",
+          price: 300,
+          ageGroup: "23-30 years",
+          currentParticipants: 28,
+          maxParticipants: 40,
+          image:
+            "/assets/images/event-images/nathan-dumlao-I_394sxx0ec-unsplash.jpg",
+        },
+        {
+          id: 3,
+          title: "Cultural Evening",
+          organizerId: 3,
+          location: "India Habitat Centre, Delhi",
+          date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+          time: "19:00",
+          price: 800,
+          ageGroup: "26-38 years",
+          currentParticipants: 38,
+          maxParticipants: 60,
+          badge: "New",
+          image:
+            "/assets/images/event-images/al-elmes-ULHxWq8reao-unsplash.jpg",
+        },
+      ]);
     } finally {
       setLoading(false);
     }
-  }, [eventService]);
+  }, []);
 
   // Load events on mount
   useEffect(() => {
@@ -416,26 +435,30 @@ const Events = ({ eventService = null }) => {
       ) {
         try {
           setRegisteringEventId(eventId);
-          if (eventService?.registerForEvent) {
-            await eventService.registerForEvent(user?.id, eventId);
-          }
+          const { eventService: realEventService } =
+            await import("../../../services/eventService.js");
+          await realEventService.registerForEvent(eventId);
           alert(
             "Registration initiated!\n\nPlease complete the payment to confirm your spot.",
           );
           loadEvents();
         } catch (error) {
           console.error("Error registering for event:", error);
-          if (error.message?.includes("Already registered")) {
+          const errorMsg = error.response?.data?.message || error.message;
+          if (
+            errorMsg?.includes("already registered") ||
+            errorMsg?.includes("Already registered")
+          ) {
             alert("You are already registered for this event.");
           } else {
-            alert("Failed to register. Please try again.");
+            alert(errorMsg || "Failed to register. Please try again.");
           }
         } finally {
           setRegisteringEventId(null);
         }
       }
     },
-    [user?.id, eventService, loadEvents],
+    [loadEvents],
   );
 
   const handleViewOrganizer = useCallback(
@@ -537,10 +560,6 @@ const Events = ({ eventService = null }) => {
 
 Events.propTypes = {
   userType: PropTypes.oneOf(["free", "premium"]),
-  eventService: PropTypes.shape({
-    getEvents: PropTypes.func,
-    registerForEvent: PropTypes.func,
-  }),
 };
 
 export default Events;

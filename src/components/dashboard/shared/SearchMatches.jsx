@@ -1,15 +1,15 @@
-// src/components/dashboard/free/SearchMatches.jsx
+// src/components/dashboard/shared/SearchMatches.jsx
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";
+import { toast } from "../../../utils/toast.js";
 import {
   freeUserService,
   jsonDataService,
 } from "../../../services/jsonDataService.js";
 import { userService } from "../../../services/userService.js";
-import { toast } from "../../../utils/toast.js";
 
 const SearchMatches = () => {
   const navigate = useNavigate();

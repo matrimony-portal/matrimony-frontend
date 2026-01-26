@@ -204,6 +204,50 @@ const Navbar = ({ toggleSidebar }) => {
                   </NavLink>
                 </div>
 
+                {/* Subscription Info - for premium users */}
+                {isPremium && !isOrganizer && !isAdmin && (
+                  <div className="profile-section">
+                    <div
+                      className="px-3 py-2"
+                      style={{
+                        borderTop: "1px solid #f0f0f0",
+                        borderBottom: "1px solid #f0f0f0",
+                        backgroundColor: "#fffbf0",
+                      }}
+                    >
+                      <div className="d-flex align-items-center justify-content-between mb-1">
+                        <span className="small text-muted">Current Plan</span>
+                        <span className="badge bg-warning text-dark small">
+                          {user?.subscriptionTier === "premium"
+                            ? "Gold"
+                            : user?.subscriptionTier || "Premium"}
+                        </span>
+                      </div>
+                      {user?.subscriptionExpiry && (
+                        <div className="small text-muted">
+                          Expires:{" "}
+                          {new Date(user.subscriptionExpiry).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            },
+                          )}
+                        </div>
+                      )}
+                      <NavLink
+                        to={`${base}/subscription`}
+                        onClick={closeDropdown}
+                        className="small text-primary text-decoration-none mt-1 d-block"
+                        style={{ fontSize: "0.8rem" }}
+                      >
+                        Manage Subscription →
+                      </NavLink>
+                    </div>
+                  </div>
+                )}
+
                 {/* Upgrade - only for free users */}
                 {isFree && !isOrganizer && !isAdmin && (
                   <div className="profile-section">
@@ -353,11 +397,10 @@ const Navbar = ({ toggleSidebar }) => {
           min-width: 220px;
           z-index: 1050;
           overflow: hidden;
-          animation: dropdownFadeIn 0.2s ease;
+          animation: dropdown-fade-in 0.2s ease;
         }
 
-
-        @keyframes dropdownFadeIn {
+        @keyframes dropdown-fade-in {
           from {
             opacity: 0;
             transform: translateY(-10px);

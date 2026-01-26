@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { useAuth } from "../../hooks/useAuth.jsx";
 import { validateEmail } from "../../utils/validation.js";
+import { toast } from "react-toastify";
 import "../../styles/Login.css";
 
 const Login = () => {
@@ -51,12 +52,17 @@ const Login = () => {
     try {
       const result = await login(formData.email, formData.password);
       if (result.success) {
-        alert("Login successful! Redirecting to dashboard...");
-        // Redirect to dashboard router which will determine correct dashboard
+        toast.success("Login successful! Redirecting to dashboard...");
+        // Redirect to dashboard - DashboardRouter will handle routing based on userType
+        // Admin users will be automatically redirected to /dashboard/admin
         const redirectPath = location.state?.from?.pathname || "/dashboard";
         navigate(redirectPath, { replace: true });
       }
-    } catch {
+    } catch (error) {
+      const errorMessage = error.message || "Invalid credentials!";
+      toast.error(errorMessage, {
+        autoClose: 5000,
+      });
       setLoginError(
         "Invalid credentials!\n\nTest Credentials:\nuser@test.com / User@123\npaid-user@test.com / User@123\norganizer@test.com / Org@123\nadmin@test.com / Admin@123",
       );

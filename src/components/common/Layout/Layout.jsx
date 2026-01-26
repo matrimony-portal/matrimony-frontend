@@ -61,8 +61,8 @@ const Layout = () => {
           }
 
           .main-content.sidebar-open {
-            margin-left: 225px;
-            width: calc(100% - 225px);
+            margin-left: 250px;
+            width: calc(100% - 250px);
           }
 
           .main-content.sidebar-collapsed {

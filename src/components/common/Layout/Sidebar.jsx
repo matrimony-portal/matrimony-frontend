@@ -125,7 +125,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         className="btn btn-link text-white d-none d-md-flex sidebar-toggle-btn"
         style={{
           position: "fixed",
-          left: isOpen ? "210px" : "55px",
+          left: isOpen ? "235px" : "55px",
           top: "calc(var(--navbar-height, 60px) + 20px)",
           width: "30px",
           height: "30px",
@@ -160,7 +160,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           marginTop: 0,
           background: "linear-gradient(135deg, #5a0d14 0%, #ae1700 100%)",
           transition: "width 0.3s ease-in-out, transform 0.3s ease-in-out",
-          width: isOpen ? "225px" : "70px",
+          width: isOpen ? "250px" : "70px",
           height: "calc(100vh - var(--navbar-height, 60px))",
           overflowY: "auto",
           overflowX: "hidden",

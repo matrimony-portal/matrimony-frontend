@@ -1,240 +1,119 @@
-import api from "./api.js";
-import { mockAdminServices } from "./mockAdminServices.js";
+import { adminApi } from "./api.js";
 
-// Default to mock in development mode unless explicitly disabled
-const USE_MOCK =
-  import.meta.env.VITE_USE_MOCK === "true" ||
-  (import.meta.env.DEV && import.meta.env.VITE_USE_MOCK !== "false");
-
+/**
+ * Admin Service
+ * Uses separate adminApi instance
+ * All admin endpoints should use this service
+ */
 export const adminService = {
-  // Dashboard & Analytics
-  getDashboardStats: async () => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getDashboardStats();
-    }
-    const response = await api.get("/admin/dashboard/stats");
-    return response.data;
-  },
-
-  getAnalytics: async (period = "30d") => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getAnalytics(period);
-    }
-    const response = await api.get("/admin/analytics", { params: { period } });
-    return response.data;
-  },
-
-  getRecentActivities: async (limit = 10) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getRecentActivities(limit);
-    }
-    const response = await api.get("/admin/activities/recent", {
-      params: { limit },
-    });
-    return response.data;
-  },
-
   // User Management
   getAllUsers: async (filters = {}) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getAllUsers(filters);
-    }
-    const response = await api.get("/admin/users", { params: filters });
+    const response = await adminApi.get("/admin/users", { params: filters });
     return response.data;
   },
 
   getUserById: async (userId) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getUserById(userId);
-    }
-    const response = await api.get(`/admin/users/${userId}`);
+    const response = await adminApi.get(`/admin/users/${userId}`);
     return response.data;
   },
 
-  updateUserStatus: async (userId, status) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.updateUserStatus(userId, status);
-    }
-    const response = await api.put(`/admin/users/${userId}/status`, { status });
+  updateUser: async (userId, userData) => {
+    const response = await adminApi.put(`/admin/users/${userId}`, userData);
     return response.data;
   },
 
   deleteUser: async (userId) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.deleteUser(userId);
-    }
-    const response = await api.delete(`/admin/users/${userId}`);
+    const response = await adminApi.delete(`/admin/users/${userId}`);
     return response.data;
   },
 
-  // Organizer Management
-  getAllOrganizers: async (filters = {}) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getAllOrganizers(filters);
-    }
-    const response = await api.get("/admin/organizers", { params: filters });
-    return response.data;
-  },
-
-  getOrganizerById: async (organizerId) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getOrganizerById(organizerId);
-    }
-    const response = await api.get(`/admin/organizers/${organizerId}`);
-    return response.data;
-  },
-
-  createOrganizer: async (organizerData) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.createOrganizer(organizerData);
-    }
-    const response = await api.post("/admin/organizers", organizerData);
-    return response.data;
-  },
-
-  updateOrganizer: async (organizerId, organizerData) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.updateOrganizer(
-        organizerId,
-        organizerData,
-      );
-    }
-    const response = await api.put(
-      `/admin/organizers/${organizerId}`,
-      organizerData,
-    );
-    return response.data;
-  },
-
-  deleteOrganizer: async (organizerId) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.deleteOrganizer(organizerId);
-    }
-    const response = await api.delete(`/admin/organizers/${organizerId}`);
-    return response.data;
-  },
-
-  // Success Stories Management
-  getAllSuccessStories: async (filters = {}) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getAllSuccessStories(filters);
-    }
-    const response = await api.get("/admin/success-stories", {
-      params: filters,
+  blockUser: async (userId, reason) => {
+    const response = await adminApi.post(`/admin/users/${userId}/block`, {
+      reason,
     });
     return response.data;
   },
 
-  getSuccessStoryById: async (storyId) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getSuccessStoryById(storyId);
-    }
-    const response = await api.get(`/admin/success-stories/${storyId}`);
+  unblockUser: async (userId) => {
+    const response = await adminApi.post(`/admin/users/${userId}/unblock`);
     return response.data;
   },
 
-  createSuccessStory: async (storyData) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.createSuccessStory(storyData);
-    }
-    const response = await api.post("/admin/success-stories", storyData);
+  verifyProfile: async (userId) => {
+    const response = await adminApi.post(`/admin/users/${userId}/verify`);
     return response.data;
   },
 
-  updateSuccessStory: async (storyId, storyData) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.updateSuccessStory(storyId, storyData);
-    }
-    const response = await api.put(
-      `/admin/success-stories/${storyId}`,
-      storyData,
+  // Event Organizer Management
+  getAllOrganizers: async () => {
+    const response = await adminApi.get("/admin/organizers");
+    return response.data;
+  },
+
+  approveOrganizer: async (organizerId) => {
+    const response = await adminApi.post(
+      `/admin/organizers/${organizerId}/approve`,
     );
     return response.data;
   },
 
-  deleteSuccessStory: async (storyId) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.deleteSuccessStory(storyId);
-    }
-    const response = await api.delete(`/admin/success-stories/${storyId}`);
+  rejectOrganizer: async (organizerId, reason) => {
+    const response = await adminApi.post(
+      `/admin/organizers/${organizerId}/reject`,
+      { reason },
+    );
     return response.data;
   },
 
   // Reports Management
   getAllReports: async (filters = {}) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getAllReports(filters);
-    }
-    const response = await api.get("/admin/reports", { params: filters });
+    const response = await adminApi.get("/admin/reports", { params: filters });
     return response.data;
   },
 
   getReportById: async (reportId) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getReportById(reportId);
-    }
-    const response = await api.get(`/admin/reports/${reportId}`);
+    const response = await adminApi.get(`/admin/reports/${reportId}`);
     return response.data;
   },
 
-  updateReportStatus: async (
-    reportId,
-    status,
-    adminNotes = "",
-    actionTaken = null,
-  ) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.updateReportStatus(
-        reportId,
-        status,
-        adminNotes,
-        actionTaken,
-      );
-    }
-    const response = await api.put(`/admin/reports/${reportId}`, {
-      status,
-      adminNotes,
-      actionTaken,
-    });
-    return response.data;
-  },
-
-  // Complaints Management
-  getAllComplaints: async (filters = {}) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getAllComplaints(filters);
-    }
-    const response = await api.get("/admin/complaints", { params: filters });
-    return response.data;
-  },
-
-  getComplaintById: async (complaintId) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.getComplaintById(complaintId);
-    }
-    const response = await api.get(`/admin/complaints/${complaintId}`);
-    return response.data;
-  },
-
-  updateComplaintStatus: async (
-    complaintId,
-    status,
-    resolution = "",
-    adminNotes = "",
-  ) => {
-    if (USE_MOCK) {
-      return await mockAdminServices.updateComplaintStatus(
-        complaintId,
-        status,
-        resolution,
-        adminNotes,
-      );
-    }
-    const response = await api.put(`/admin/complaints/${complaintId}`, {
-      status,
+  resolveReport: async (reportId, resolution) => {
+    const response = await adminApi.put(`/admin/reports/${reportId}/resolve`, {
       resolution,
-      adminNotes,
     });
+    return response.data;
+  },
+
+  // Success Stories
+  getAllSuccessStories: async (filters = {}) => {
+    const response = await adminApi.get("/admin/success-stories", {
+      params: filters,
+    });
+    return response.data;
+  },
+
+  approveSuccessStory: async (storyId) => {
+    const response = await adminApi.post(
+      `/admin/success-stories/${storyId}/approve`,
+    );
+    return response.data;
+  },
+
+  rejectSuccessStory: async (storyId, reason) => {
+    const response = await adminApi.post(
+      `/admin/success-stories/${storyId}/reject`,
+      { reason },
+    );
+    return response.data;
+  },
+
+  // Analytics/Dashboard
+  getDashboardStats: async () => {
+    const response = await adminApi.get("/admin/dashboard/stats");
+    return response.data;
+  },
+
+  getRecentActivity: async () => {
+    const response = await adminApi.get("/admin/dashboard/activity");
     return response.data;
   },
 };

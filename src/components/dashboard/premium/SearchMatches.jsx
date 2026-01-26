@@ -1,12 +1,16 @@
 // src/components/dashboard/premium/SearchMatches.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";
+import { userService } from "../../../services/userService.js";
+import { toast } from "../../../utils/toast.js";
 
 const SearchMatches = () => {
   const navigate = useNavigate();
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState({
+
+  // Default filter values
+  const defaultFilters = {
     lookingFor: "bride",
     ageFrom: "25",
     ageTo: "30",
@@ -21,7 +25,75 @@ const SearchMatches = () => {
     education: "",
     occupation: "",
     income: "",
-  });
+  };
+
+  const [filters, setFilters] = useState(defaultFilters);
+
+  // Convert cm to feet (for height conversion)
+  const cmToFeet = (cm) => {
+    if (!cm) return "";
+    const feet = cm / 30.48;
+    const wholeFeet = Math.floor(feet);
+    const inches = Math.round((feet - wholeFeet) * 12);
+    return `${wholeFeet}.${inches}`;
+  };
+
+  // Load partner preferences and map to search filters
+  useEffect(() => {
+    const loadPreferencesAsFilters = async () => {
+      try {
+        const profile = await userService.getProfile();
+        if (profile?.preferences) {
+          const savedPrefs =
+            typeof profile.preferences === "string"
+              ? JSON.parse(profile.preferences)
+              : profile.preferences;
+
+          // Map preferences to search filter format
+          const mappedFilters = {
+            lookingFor: defaultFilters.lookingFor,
+            ageFrom: savedPrefs.ageMin?.toString() || defaultFilters.ageFrom,
+            ageTo: savedPrefs.ageMax?.toString() || defaultFilters.ageTo,
+            heightFrom: savedPrefs.heightMin
+              ? cmToFeet(savedPrefs.heightMin)
+              : defaultFilters.heightFrom,
+            heightTo: savedPrefs.heightMax
+              ? cmToFeet(savedPrefs.heightMax)
+              : defaultFilters.heightTo,
+            maritalStatus: Array.isArray(savedPrefs.maritalStatus)
+              ? savedPrefs.maritalStatus[0] || defaultFilters.maritalStatus
+              : savedPrefs.maritalStatus || defaultFilters.maritalStatus,
+            religion: Array.isArray(savedPrefs.religion)
+              ? savedPrefs.religion[0]?.toLowerCase() || defaultFilters.religion
+              : savedPrefs.religion?.toLowerCase() || defaultFilters.religion,
+            motherTongue: Array.isArray(savedPrefs.motherTongue)
+              ? savedPrefs.motherTongue[0]?.toLowerCase() ||
+                defaultFilters.motherTongue
+              : savedPrefs.motherTongue?.toLowerCase() ||
+                defaultFilters.motherTongue,
+            country: Array.isArray(savedPrefs.country)
+              ? savedPrefs.country[0]?.toLowerCase() || defaultFilters.country
+              : savedPrefs.country?.toLowerCase() || defaultFilters.country,
+            state: savedPrefs.state?.toLowerCase() || defaultFilters.state,
+            city: savedPrefs.city?.toLowerCase() || defaultFilters.city,
+            education: savedPrefs.educationMin || defaultFilters.education,
+            occupation: Array.isArray(savedPrefs.occupation)
+              ? savedPrefs.occupation[0]?.toLowerCase() ||
+                defaultFilters.occupation
+              : savedPrefs.occupation?.toLowerCase() ||
+                defaultFilters.occupation,
+            income: savedPrefs.incomeMin || defaultFilters.income,
+          };
+          setFilters(mappedFilters);
+        }
+      } catch (error) {
+        console.error("Error loading preferences:", error);
+      }
+    };
+
+    loadPreferencesAsFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const profiles = [
     {
@@ -110,7 +182,7 @@ const SearchMatches = () => {
   };
 
   const applyFilters = () => {
-    alert(
+    toast.info(
       "Applying search filters... Results will be filtered based on your criteria.",
     );
     setShowFilters(false);
@@ -138,7 +210,7 @@ const SearchMatches = () => {
   };
 
   const handleSendProposal = (profileName) => {
-    alert(
+    toast.success(
       `Sending interest to ${profileName}! You will be notified when they respond.`,
     );
   };

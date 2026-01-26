@@ -3,6 +3,8 @@ import { useState, useCallback } from "react";
 import { useNavigate } from "react-router";
 import PropTypes from "prop-types";
 import { useTheme } from "../../../hooks/useTheme.jsx";
+import { useAuth } from "../../../hooks/useAuth.jsx";
+import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
 import { SettingItem, ToggleSwitch } from "../../ui";
 
 /**
@@ -12,6 +14,8 @@ import { SettingItem, ToggleSwitch } from "../../ui";
 const Settings = ({ userType = "free" }) => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { user } = useAuth();
+  const { isPremium } = useUserCapabilities();
 
   const [settings, setSettings] = useState({
     profileVisibility: "everyone",
@@ -262,6 +266,81 @@ const Settings = ({ userType = "free" }) => {
           </SettingItem>
         </div>
       </div>
+
+      {/* Subscription Details - Premium Users */}
+      {isPremium && userType === "premium" && (
+        <div className="card mb-4 border-warning">
+          <div className="card-body">
+            <h5 className="border-bottom pb-2 mb-3">
+              <i className="bi bi-star-fill text-warning me-2"></i>
+              Subscription Details
+            </h5>
+            <div className="row g-3">
+              <div className="col-md-6">
+                <div className="p-3 bg-light rounded">
+                  <div className="small text-muted mb-1">Current Plan</div>
+                  <div className="h5 mb-0">
+                    <span className="badge bg-warning text-dark fs-6">
+                      {user?.subscriptionTier === "premium"
+                        ? "Gold Plan"
+                        : user?.subscriptionTier?.toUpperCase() || "Premium"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="p-3 bg-light rounded">
+                  <div className="small text-muted mb-1">
+                    Subscription Status
+                  </div>
+                  <div className="h6 mb-0">
+                    <span className="badge bg-success">
+                      {user?.subscriptionStatus === "active"
+                        ? "Active"
+                        : "Inactive"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {user?.subscriptionExpiry && (
+                <div className="col-12">
+                  <div className="p-3 bg-light rounded">
+                    <div className="small text-muted mb-1">Expiry Date</div>
+                    <div className="h6 mb-0">
+                      {new Date(user.subscriptionExpiry).toLocaleDateString(
+                        "en-US",
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )}
+                    </div>
+                    <div className="small text-muted mt-2">
+                      {new Date(user.subscriptionExpiry) > new Date()
+                        ? `${Math.ceil(
+                            (new Date(user.subscriptionExpiry) - new Date()) /
+                              (1000 * 60 * 60 * 24),
+                          )} days remaining`
+                        : "Expired"}
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="col-12">
+                <button
+                  className="btn btn-warning"
+                  onClick={() => navigate("/dashboard/premium/subscription")}
+                >
+                  <i className="bi bi-credit-card me-2"></i>
+                  Manage Subscription
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Danger Zone */}
       <div className="card border-danger">

@@ -12,6 +12,122 @@
   --navbar-height: 60px;
 }
 
+/* ============================================
+   Skeleton Loading Styles
+   ============================================ */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.skeleton-text {
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-rect {
+  border-radius: 4px;
+}
+
+.skeleton-card {
+  border-radius: 8px;
+  padding: 16px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Dark theme skeleton */
+[data-theme="dark"] .skeleton {
+  background: linear-gradient(90deg, #2d2d2d 25%, #3d3d3d 50%, #2d2d2d 75%);
+  background-size: 200% 100%;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: #f0f0f0;
+  }
+
+  [data-theme="dark"] .skeleton {
+    background: #2d2d2d;
+  }
+}
+
+/* ============================================
+   Empty State Styles
+   ============================================ */
+.empty-state {
+  padding: 3rem 1rem;
+}
+
+.empty-state-icon {
+  opacity: 0.5;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .empty-state-icon {
+    animation: none;
+  }
+}
+
+/* ============================================
+   Focus Improvements (Accessibility)
+   ============================================ */
+:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.btn:focus-visible {
+  box-shadow: 0 0 0 3px rgb(174 23 0 / 30%);
+}
+
+/* Skip Link for Accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary-color);
+  color: white;
+  padding: 8px 16px;
+  z-index: 9999;
+  transition: top 0.3s;
+  text-decoration: none;
+  border-radius: 0 0 4px;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
 html {
   overflow-x: hidden;
   width: 100%;

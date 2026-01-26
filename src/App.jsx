@@ -135,6 +135,7 @@ function App() {
           <Route path="feedback" element={<FreeFeedback />} />
           <Route path="profile/:id" element={<FreeProfileView />} />
           <Route path="partner-preferences" element={<PartnerPreferences />} />
+          <Route path="my-profile" element={<MyProfile />} />
           <Route
             path="organizer-profile/:organizerId"
             element={<ViewEventOrganizerProfile />}
