@@ -1,12 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  Spinner,
+  Alert,
+} from "react-bootstrap";
+import { eventService } from "../../../services/eventService.js";
+import { toast } from "react-toastify";
 
 export const EventForm = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const [eventType, setEventType] = useState("speed-dating");
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    eventDate: "",
+    eventTime: "",
+    duration: "3",
+    venue: "",
+    city: "",
+    state: "",
+    maxParticipants: "",
+    registrationFee: "",
+  });
   const isEdit = Boolean(eventId);
+
+  useEffect(() => {
+    if (isEdit && eventId) {
+      const fetchEvent = async () => {
+        try {
+          setFetching(true);
+          const event = await eventService.getEventById(eventId);
+          const eventDate = event.eventDate
+            ? new Date(event.eventDate).toISOString().split("T")[0]
+            : "";
+          const eventTime = event.eventDate
+            ? new Date(event.eventDate).toTimeString().slice(0, 5)
+            : "";
+          setFormData({
+            title: event.title || "",
+            description: event.description || "",
+            eventDate: eventDate,
+            eventTime: eventTime,
+            duration: "3",
+            venue: event.venue || "",
+            city: event.city || "",
+            state: event.state || "",
+            maxParticipants: event.maxParticipants?.toString() || "",
+            registrationFee: event.registrationFee?.toString() || "",
+          });
+        } catch (err) {
+          console.error("Error fetching event:", err);
+          setError("Failed to load event details");
+          toast.error("Failed to load event");
+        } finally {
+          setFetching(false);
+        }
+      };
+      fetchEvent();
+    }
+  }, [eventId, isEdit]);
 
   const eventTypes = [
     { value: "speed-dating", icon: "⚡", label: "Speed Dating" },
@@ -15,19 +77,86 @@ export const EventForm = () => {
     { value: "cultural", icon: "🎭", label: "Cultural Evening" },
   ];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const message = isEdit
-      ? "Save changes to this event?"
-      : "Publish this event? It will be visible to all Perfect Match members.";
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-    if (window.confirm(message)) {
-      alert(
-        isEdit ? "Event updated successfully!" : "Event created successfully!",
-      );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    // Combine date and time into eventDate
+    const eventDateTime =
+      formData.eventDate && formData.eventTime
+        ? new Date(`${formData.eventDate}T${formData.eventTime}`).toISOString()
+        : null;
+
+    const eventPayload = {
+      title: formData.title,
+      description: formData.description,
+      eventDate: eventDateTime,
+      venue: formData.venue,
+      city: formData.city,
+      state: formData.state,
+      maxParticipants: formData.maxParticipants
+        ? parseInt(formData.maxParticipants)
+        : null,
+      registrationFee: formData.registrationFee
+        ? parseFloat(formData.registrationFee)
+        : 0,
+    };
+
+    try {
+      setLoading(true);
+      if (isEdit) {
+        await eventService.updateEvent(eventId, eventPayload);
+        toast.success("Event updated successfully!");
+      } else {
+        await eventService.createEvent(eventPayload);
+        toast.success("Event created successfully!");
+      }
       navigate("/dashboard/organizer/my-events");
+    } catch (err) {
+      console.error("Error saving event:", err);
+      const errorMessage =
+        err.response?.data?.message || err.message || "Failed to save event";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleDelete = async () => {
+    if (!window.confirm("Delete this event? This action cannot be undone.")) {
+      return;
+    }
+    try {
+      setLoading(true);
+      await eventService.deleteEvent(eventId);
+      toast.success("Event deleted successfully!");
+      navigate("/dashboard/organizer/my-events");
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      toast.error("Failed to delete event");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (fetching) {
+    return (
+      <Container fluid>
+        <Card className="shadow-sm">
+          <Card.Body className="text-center py-5">
+            <Spinner animation="border" variant="danger" />
+            <p className="mt-3 text-muted">Loading event details...</p>
+          </Card.Body>
+        </Card>
+      </Container>
+    );
+  }
 
   return (
     <Container fluid>
@@ -39,6 +168,12 @@ export const EventForm = () => {
               Set up a meetup event for Perfect Match members
             </p>
           </div>
+
+          {error && (
+            <Alert variant="danger" className="mb-4">
+              {error}
+            </Alert>
+          )}
 
           <Form onSubmit={handleSubmit}>
             {/* Event Type Selection */}
@@ -80,9 +215,11 @@ export const EventForm = () => {
                   </Form.Label>
                   <Form.Control
                     type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
                     required
                     placeholder="e.g., Speed Dating Evening in Mumbai"
-                    defaultValue={isEdit ? "Speed Dating Evening" : ""}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -92,13 +229,11 @@ export const EventForm = () => {
                   <Form.Control
                     as="textarea"
                     rows={4}
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
                     required
                     placeholder="Describe what participants can expect..."
-                    defaultValue={
-                      isEdit
-                        ? "An exciting speed dating event where singles can meet potential matches in a fun, relaxed environment."
-                        : ""
-                    }
                   />
                   <Form.Text className="text-muted">
                     Minimum 100 characters
@@ -121,8 +256,10 @@ export const EventForm = () => {
                       </Form.Label>
                       <Form.Control
                         type="date"
+                        name="eventDate"
+                        value={formData.eventDate}
+                        onChange={handleInputChange}
                         required
-                        defaultValue={isEdit ? "2025-10-25" : ""}
                       />
                     </Form.Group>
                   </Col>
@@ -133,8 +270,10 @@ export const EventForm = () => {
                       </Form.Label>
                       <Form.Control
                         type="time"
+                        name="eventTime"
+                        value={formData.eventTime}
+                        onChange={handleInputChange}
                         required
-                        defaultValue={isEdit ? "18:00" : ""}
                       />
                     </Form.Group>
                   </Col>
@@ -143,7 +282,12 @@ export const EventForm = () => {
                       <Form.Label>
                         Duration (hours) <span className="text-danger">*</span>
                       </Form.Label>
-                      <Form.Select required defaultValue={isEdit ? "3" : ""}>
+                      <Form.Select
+                        name="duration"
+                        value={formData.duration}
+                        onChange={handleInputChange}
+                        required
+                      >
                         <option value="">Select Duration</option>
                         <option value="1">1 hour</option>
                         <option value="2">2 hours</option>
@@ -168,9 +312,11 @@ export const EventForm = () => {
                   </Form.Label>
                   <Form.Control
                     type="text"
+                    name="venue"
+                    value={formData.venue}
+                    onChange={handleInputChange}
                     required
                     placeholder="e.g., The Coffee House"
-                    defaultValue={isEdit ? "The Lounge, Bandra" : ""}
                   />
                 </Form.Group>
                 <Row>
@@ -181,8 +327,10 @@ export const EventForm = () => {
                       </Form.Label>
                       <Form.Control
                         type="text"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
                         required
-                        defaultValue={isEdit ? "Mumbai" : ""}
                       />
                     </Form.Group>
                   </Col>
@@ -193,8 +341,48 @@ export const EventForm = () => {
                       </Form.Label>
                       <Form.Control
                         type="text"
+                        name="state"
+                        value={formData.state}
+                        onChange={handleInputChange}
                         required
-                        defaultValue={isEdit ? "Maharashtra" : ""}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+
+            {/* Additional Details */}
+            <Card className="mb-4 border-0 bg-light">
+              <Card.Body>
+                <h5 className="mb-3 pb-2 border-bottom border-danger border-2">
+                  Additional Details
+                </h5>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Max Participants</Form.Label>
+                      <Form.Control
+                        type="number"
+                        name="maxParticipants"
+                        value={formData.maxParticipants}
+                        onChange={handleInputChange}
+                        placeholder="Leave empty for unlimited"
+                        min="1"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Registration Fee (₹)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        name="registrationFee"
+                        value={formData.registrationFee}
+                        onChange={handleInputChange}
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
                       />
                     </Form.Group>
                   </Col>
@@ -207,6 +395,7 @@ export const EventForm = () => {
               <Button
                 variant="secondary"
                 onClick={() => navigate("/dashboard/organizer/my-events")}
+                disabled={loading}
               >
                 Cancel
               </Button>
@@ -214,22 +403,23 @@ export const EventForm = () => {
                 <Button
                   variant="danger"
                   className="ms-auto me-2"
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Delete this event? This action cannot be undone.",
-                      )
-                    ) {
-                      alert("Event deleted!");
-                      navigate("/dashboard/organizer/my-events");
-                    }
-                  }}
+                  onClick={handleDelete}
+                  disabled={loading}
                 >
                   <i className="bi bi-trash me-2"></i>Delete Event
                 </Button>
               )}
-              <Button variant="danger" type="submit">
-                {isEdit ? "Save Changes" : "Publish Event"}
+              <Button variant="danger" type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Spinner size="sm" className="me-2" />
+                    {isEdit ? "Saving..." : "Publishing..."}
+                  </>
+                ) : isEdit ? (
+                  "Save Changes"
+                ) : (
+                  "Publish Event"
+                )}
               </Button>
             </div>
           </Form>

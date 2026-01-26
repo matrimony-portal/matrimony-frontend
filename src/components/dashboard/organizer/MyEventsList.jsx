@@ -1,103 +1,121 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Container, Row, Col, Card, Button, Badge } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Badge,
+  Spinner,
+  Alert,
+} from "react-bootstrap";
 import { useAuth } from "../../../hooks/useAuth.jsx";
+import { eventService } from "../../../services/eventService.js";
+import { toast } from "react-toastify";
 
 export const MyEventsList = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const currentOrganizerId = user?.id || 1; // Current organizer ID
+  const currentOrganizerId = user?.id;
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock data - All events from all organizers
-  const allEvents = [
-    {
-      id: 1,
-      title: "Speed Dating Evening",
-      status: "Upcoming",
-      location: "Mumbai, Maharashtra",
-      date: "25th October 2025",
-      time: "6:00 PM - 9:00 PM",
-      participants: "45/50",
-      image: "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
-      organizerId: 1,
-      organizerName: "Meera Reddy",
-    },
-    {
-      id: 2,
-      title: "Coffee Meetup",
-      status: "Ongoing",
-      location: "Bangalore, Karnataka",
-      date: "21st October 2025",
-      time: "11:00 AM - 2:00 PM",
-      participants: "30/30",
-      image:
-        "/assets/images/event-images/nathan-dumlao-I_394sxx0ec-unsplash.jpg",
-      organizerId: 2,
-      organizerName: "Rajesh Kumar",
-    },
-    {
-      id: 3,
-      title: "Cultural Evening",
-      status: "Upcoming",
-      location: "Delhi, India",
-      date: "30th October 2025",
-      time: "7:00 PM - 10:00 PM",
-      participants: "38/60",
-      image: "/assets/images/event-images/al-elmes-ULHxWq8reao-unsplash.jpg",
-      organizerId: 1,
-      organizerName: "Meera Reddy",
-    },
-    {
-      id: 4,
-      title: "Sunday Brunch Meetup",
-      status: "Upcoming",
-      location: "Pune, Maharashtra",
-      date: "27th October 2025",
-      time: "10:00 AM - 1:00 PM",
-      participants: "25/40",
-      image: "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
-      organizerId: 3,
-      organizerName: "Priya Sharma",
-    },
-    {
-      id: 5,
-      title: "Professional Networking",
-      status: "Completed",
-      location: "Hyderabad, Telangana",
-      date: "15th October 2025",
-      time: "6:00 PM - 9:00 PM",
-      participants: "50/50",
-      image:
-        "/assets/images/event-images/nathan-dumlao-I_394sxx0ec-unsplash.jpg",
-      organizerId: 2,
-      organizerName: "Rajesh Kumar",
-    },
-    {
-      id: 6,
-      title: "Dinner & Dance",
-      status: "Upcoming",
-      location: "Chennai, Tamil Nadu",
-      date: "2nd November 2025",
-      time: "7:00 PM - 11:00 PM",
-      participants: "42/60",
-      image: "/assets/images/event-images/al-elmes-ULHxWq8reao-unsplash.jpg",
-      organizerId: 3,
-      organizerName: "Priya Sharma",
-    },
-  ];
+  useEffect(() => {
+    const fetchMyEvents = async () => {
+      if (!currentOrganizerId) {
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        const data = await eventService.getMyEvents();
+        setEvents(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error fetching my events:", err);
+        setError("Failed to load your events. Please try again later.");
+        toast.error("Failed to load events");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Filter events to show only current organizer's events
-  const events = allEvents.filter(
-    (event) => event.organizerId === currentOrganizerId,
-  );
+    fetchMyEvents();
+  }, [currentOrganizerId]);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "TBD";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  const formatTime = (dateString) => {
+    if (!dateString) return "TBD";
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
 
   const getStatusVariant = (status) => {
     const variants = {
       upcoming: "primary",
       ongoing: "success",
       completed: "secondary",
+      cancelled: "danger",
     };
-    return variants[status.toLowerCase()] || "secondary";
+    return variants[status?.toLowerCase()] || "secondary";
   };
+
+  const handleDelete = async (eventId) => {
+    if (
+      !window.confirm("Cancel this event? All participants will be notified.")
+    ) {
+      return;
+    }
+    try {
+      await eventService.deleteEvent(eventId);
+      toast.success("Event cancelled successfully");
+      // Refresh events list
+      const data = await eventService.getMyEvents();
+      setEvents(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      toast.error("Failed to cancel event");
+    }
+  };
+
+  if (loading) {
+    return (
+      <Container fluid>
+        <Card className="shadow-sm">
+          <Card.Body className="text-center py-5">
+            <Spinner animation="border" variant="danger" />
+            <p className="mt-3 text-muted">Loading your events...</p>
+          </Card.Body>
+        </Card>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container fluid>
+        <Card className="shadow-sm">
+          <Card.Body>
+            <Alert variant="danger">{error}</Alert>
+          </Card.Body>
+        </Card>
+      </Container>
+    );
+  }
 
   return (
     <Container fluid>
@@ -145,26 +163,46 @@ export const MyEventsList = () => {
                     <div
                       style={{
                         height: "180px",
-                        backgroundImage: `url(${event.image})`,
+                        backgroundImage: event.image
+                          ? `url(${event.image})`
+                          : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         borderTopLeftRadius: "calc(0.375rem - 1px)",
                         borderTopRightRadius: "calc(0.375rem - 1px)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "white",
+                        fontSize: "1.5rem",
+                        fontWeight: "bold",
                       }}
-                    />
+                    >
+                      {!event.image && event.title?.charAt(0)}
+                    </div>
                     <Card.Body>
                       <Card.Title>{event.title}</Card.Title>
                       <Badge
                         bg={getStatusVariant(event.status)}
                         className="mb-3"
                       >
-                        {event.status}
+                        {event.status || "UPCOMING"}
                       </Badge>
                       <div className="text-muted small mb-3">
-                        <div>📍 {event.location}</div>
-                        <div>📅 {event.date}</div>
-                        <div>⏰ {event.time}</div>
-                        <div>👥 {event.participants} Participants</div>
+                        <div>
+                          📍 {event.city}, {event.state}
+                        </div>
+                        <div>📅 {formatDate(event.eventDate)}</div>
+                        <div>⏰ {formatTime(event.eventDate)}</div>
+                        <div>
+                          👥{" "}
+                          {event.maxParticipants
+                            ? `Max ${event.maxParticipants} participants`
+                            : "Unlimited"}
+                        </div>
+                        {event.registrationFee && (
+                          <div>💰 ₹{event.registrationFee}</div>
+                        )}
                       </div>
                       <div className="d-flex gap-2 flex-wrap">
                         <Button
@@ -195,15 +233,7 @@ export const MyEventsList = () => {
                           variant="outline-danger"
                           size="sm"
                           className="flex-fill"
-                          onClick={() => {
-                            if (
-                              window.confirm(
-                                "Cancel this event? All participants will be notified.",
-                              )
-                            ) {
-                              alert("Event cancelled!");
-                            }
-                          }}
+                          onClick={() => handleDelete(event.id)}
                         >
                           Cancel
                         </Button>
