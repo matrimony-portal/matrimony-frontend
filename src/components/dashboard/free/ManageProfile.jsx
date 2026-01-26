@@ -54,7 +54,7 @@ const ManageProfile = () => {
       completed: false,
       percentage: 0,
       icon: "bi-heart-fill",
-      action: () => navigate("/dashboard/partner-preferences"),
+      action: () => navigate("/dashboard/edit-profile"),
     },
   ];
 
@@ -116,7 +116,7 @@ const ManageProfile = () => {
       title: "Partner Preferences",
       description: "Set your ideal match criteria",
       icon: "bi-filter-circle",
-      action: () => navigate("/dashboard/partner-preferences"),
+      action: () => navigate("/dashboard/edit-profile"),
       color: "success",
     },
   ];

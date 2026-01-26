@@ -1,5 +1,5 @@
 // src/components/dashboard/premium/ManagePhotos.jsx
-import { useState } from "react";
+import React, { useState } from "react";
 
 const ManagePhotos = () => {
   const [photos, setPhotos] = useState([

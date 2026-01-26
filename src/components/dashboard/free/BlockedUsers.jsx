@@ -1,5 +1,5 @@
 // src/components/dashboard/premium/BlockedUsers.jsx
-import { useState } from "react";
+import React, { useState } from "react";
 
 const BlockedUsers = () => {
   const [activeTab, setActiveTab] = useState("blocked");

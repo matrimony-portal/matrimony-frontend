@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router";
+import { Navigate } from "react-router";
 import { useDashboardBasePath } from "../../hooks/useDashboardBasePath.jsx";
 
 /**
@@ -10,13 +10,6 @@ import { useDashboardBasePath } from "../../hooks/useDashboardBasePath.jsx";
  */
 export default function DashboardPathRouter({ subPath = "" }) {
   const base = useDashboardBasePath();
-  const params = useParams();
-
-  // Replace any :param occurrences in subPath with actual params
-  const resolvedSubPath = subPath.replace(/:([A-Za-z0-9_]+)/g, (_, key) =>
-    params[key] !== undefined ? params[key] : `:${key}`,
-  );
-
-  const to = resolvedSubPath ? `${base}/${resolvedSubPath}` : base;
+  const to = subPath ? `${base}/${subPath}` : base;
   return <Navigate to={to} replace />;
 }

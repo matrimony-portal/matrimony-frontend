@@ -1,32 +1,17 @@
-// src/components/dashboard/free/SearchMatches.jsx
-import { useState, useEffect, useCallback } from "react";
+// src/components/dashboard/premium/SearchMatches.jsx
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { useAuth } from "../../../hooks/useAuth.jsx";
-import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";
-import {
-  freeUserService,
-  jsonDataService,
-} from "../../../services/jsonDataService.js";
-import { userService } from "../../../services/userService.js";
-import { toast } from "../../../utils/toast.js";
 
 const SearchMatches = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { profileViewLimit } = useUserCapabilities();
   const [showFilters, setShowFilters] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [allProfiles, setAllProfiles] = useState([]);
-  const [filteredProfiles, setFilteredProfiles] = useState([]);
-  const [profilesViewed, setProfilesViewed] = useState(0);
-  // Default filter values
-  const defaultFilters = {
+  const [filters, setFilters] = useState({
     lookingFor: "bride",
     ageFrom: "25",
     ageTo: "30",
-    heightFrom: "",
-    heightTo: "",
+    heightFrom: "5.0",
+    heightTo: "5.6",
     maritalStatus: "",
     religion: "",
     motherTongue: "",
@@ -36,376 +21,130 @@ const SearchMatches = () => {
     education: "",
     occupation: "",
     income: "",
-  };
+  });
 
-  const [filters, setFilters] = useState(defaultFilters);
-
-  const loadTodayViews = useCallback(async () => {
-    try {
-      const today = new Date();
-      const todayViews = await freeUserService.getProfileViews(user?.id, today);
-      setProfilesViewed(todayViews.length);
-    } catch (error) {
-      console.error("Error loading profile views:", error);
-    }
-  }, [user?.id]);
-
-  // Convert cm to feet (for height conversion)
-  const cmToFeet = (cm) => {
-    if (!cm) return "";
-    const feet = cm / 30.48;
-    const wholeFeet = Math.floor(feet);
-    const inches = Math.round((feet - wholeFeet) * 12);
-    return `${wholeFeet}.${inches}`;
-  };
-
-  // Load partner preferences and map to search filters
-  const loadPreferencesAsFilters = useCallback(async () => {
-    try {
-      const profile = await userService.getProfile();
-      if (profile?.preferences) {
-        const savedPrefs =
-          typeof profile.preferences === "string"
-            ? JSON.parse(profile.preferences)
-            : profile.preferences;
-
-        // Map preferences to search filter format
-        const mappedFilters = {
-          lookingFor: defaultFilters.lookingFor, // Keep default
-          ageFrom: savedPrefs.ageMin?.toString() || defaultFilters.ageFrom,
-          ageTo: savedPrefs.ageMax?.toString() || defaultFilters.ageTo,
-          heightFrom: savedPrefs.heightMin
-            ? cmToFeet(savedPrefs.heightMin)
-            : defaultFilters.heightFrom,
-          heightTo: savedPrefs.heightMax
-            ? cmToFeet(savedPrefs.heightMax)
-            : defaultFilters.heightTo,
-          maritalStatus: Array.isArray(savedPrefs.maritalStatus)
-            ? savedPrefs.maritalStatus[0] || defaultFilters.maritalStatus
-            : savedPrefs.maritalStatus || defaultFilters.maritalStatus,
-          religion: Array.isArray(savedPrefs.religion)
-            ? savedPrefs.religion[0]?.toLowerCase() || defaultFilters.religion
-            : savedPrefs.religion?.toLowerCase() || defaultFilters.religion,
-          motherTongue: Array.isArray(savedPrefs.motherTongue)
-            ? savedPrefs.motherTongue[0]?.toLowerCase() ||
-              defaultFilters.motherTongue
-            : savedPrefs.motherTongue?.toLowerCase() ||
-              defaultFilters.motherTongue,
-          country: Array.isArray(savedPrefs.country)
-            ? savedPrefs.country[0]?.toLowerCase() || defaultFilters.country
-            : savedPrefs.country?.toLowerCase() || defaultFilters.country,
-          state: savedPrefs.state?.toLowerCase() || defaultFilters.state,
-          city: savedPrefs.city?.toLowerCase() || defaultFilters.city,
-          education: savedPrefs.educationMin || defaultFilters.education,
-          occupation: Array.isArray(savedPrefs.occupation)
-            ? savedPrefs.occupation[0]?.toLowerCase() ||
-              defaultFilters.occupation
-            : savedPrefs.occupation?.toLowerCase() || defaultFilters.occupation,
-          income: savedPrefs.incomeMin || defaultFilters.income,
-        };
-        setFilters(mappedFilters);
-      }
-    } catch (error) {
-      console.error("Error loading preferences:", error);
-      // Keep default filters on error
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const loadProfiles = useCallback(async () => {
-    try {
-      setLoading(true);
-      const profiles = await freeUserService.getProfiles();
-      setAllProfiles(profiles);
-    } catch (error) {
-      console.error("Error loading profiles:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Load profiles and preferences on mount
-  useEffect(() => {
-    loadPreferencesAsFilters();
-    loadProfiles();
-    loadTodayViews();
-  }, [loadPreferencesAsFilters, loadProfiles, loadTodayViews]);
-
-  // Convert height from "5'4\"" format to numeric (inches)
-  const parseHeight = (heightStr) => {
-    if (!heightStr) return 0;
-    const match = heightStr.match(/(\d+)'(\d+)"/);
-    if (match) {
-      return parseInt(match[1]) * 12 + parseInt(match[2]);
-    }
-    // Try numeric format like "5.4" (feet)
-    const numeric = parseFloat(heightStr);
-    if (!isNaN(numeric)) {
-      return Math.round(numeric * 12);
-    }
-    return 0;
-  };
-
-  // Check if income matches range
-  const matchesIncomeRange = (profileIncome, incomeFilter) => {
-    if (!incomeFilter) return true;
-    const income = profileIncome || 0;
-    const incomeInLakhs = income / 100000;
-
-    switch (incomeFilter) {
-      case "0-3":
-        return incomeInLakhs < 3;
-      case "3-5":
-        return incomeInLakhs >= 3 && incomeInLakhs < 5;
-      case "5-10":
-        return incomeInLakhs >= 5 && incomeInLakhs < 10;
-      case "10-20":
-        return incomeInLakhs >= 10 && incomeInLakhs < 20;
-      case "20+":
-        return incomeInLakhs >= 20;
-      default:
-        return true;
-    }
-  };
-
-  // Normalize marital status
-  const normalizeMaritalStatus = (status) => {
-    if (!status) return "";
-    return status.toLowerCase().replace(/\s+/g, "-");
-  };
-
-  // Normalize education
-  const normalizeEducation = (edu) => {
-    if (!edu) return "";
-    const lower = edu.toLowerCase();
-    if (
-      lower.includes("bachelor") ||
-      lower.includes("b.tech") ||
-      lower.includes("btech")
-    ) {
-      return "bachelors";
-    }
-    if (
-      lower.includes("master") ||
-      lower.includes("mba") ||
-      lower.includes("m.tech")
-    ) {
-      return "masters";
-    }
-    if (
-      lower.includes("doctorate") ||
-      lower.includes("phd") ||
-      lower.includes("ph.d")
-    ) {
-      return "doctorate";
-    }
-    return "";
-  };
-
-  // Normalize occupation
-  const normalizeOccupation = (occ) => {
-    if (!occ) return "";
-    const lower = occ.toLowerCase();
-    if (
-      lower.includes("engineer") ||
-      lower.includes("software") ||
-      lower.includes("developer")
-    ) {
-      return "engineer";
-    }
-    if (
-      lower.includes("doctor") ||
-      lower.includes("physician") ||
-      lower.includes("mbbs")
-    ) {
-      return "doctor";
-    }
-    if (
-      lower.includes("business") ||
-      lower.includes("entrepreneur") ||
-      lower.includes("manager")
-    ) {
-      return "business";
-    }
-    if (
-      lower.includes("teacher") ||
-      lower.includes("professor") ||
-      lower.includes("educator")
-    ) {
-      return "teacher";
-    }
-    return "";
-  };
-
-  const applyFilters = useCallback(async () => {
-    try {
-      // Get blocked users
-      const blockedUsers = await freeUserService.getBlockedUsers(user?.id);
-      const blockedProfileIds = blockedUsers.map((b) => b.blockedUserId);
-
-      // Get users data to filter by gender
-      const users = await jsonDataService.getAll("users");
-      const userMap = new Map(users.map((u) => [u.id, u]));
-
-      // Determine target gender
-      const targetGender = filters.lookingFor === "bride" ? "female" : "male";
-
-      let filtered = allProfiles.filter((profile) => {
-        // Exclude blocked users
-        if (blockedProfileIds.includes(profile.userId)) return false;
-
-        // Filter by gender
-        const profileUser = userMap.get(profile.userId);
-        if (profileUser?.gender !== targetGender) return false;
-
-        // Age filter
-        if (filters.ageFrom && profile.age < parseInt(filters.ageFrom))
-          return false;
-        if (filters.ageTo && profile.age > parseInt(filters.ageTo))
-          return false;
-
-        // Height filter
-        if (filters.heightFrom || filters.heightTo) {
-          const profileHeightInches = parseHeight(profile.height);
-          if (filters.heightFrom) {
-            const minHeight = parseFloat(filters.heightFrom) * 12;
-            if (profileHeightInches < minHeight) return false;
-          }
-          if (filters.heightTo) {
-            const maxHeight = parseFloat(filters.heightTo) * 12;
-            if (profileHeightInches > maxHeight) return false;
-          }
-        }
-
-        // Marital status filter
-        if (filters.maritalStatus) {
-          const normalizedStatus = normalizeMaritalStatus(
-            profile.maritalStatus,
-          );
-          if (normalizedStatus !== filters.maritalStatus) return false;
-        }
-
-        // Religion filter
-        if (filters.religion) {
-          if (
-            profile.religion?.toLowerCase() !== filters.religion.toLowerCase()
-          ) {
-            return false;
-          }
-        }
-
-        // State filter
-        if (filters.state) {
-          if (
-            !profile.state?.toLowerCase().includes(filters.state.toLowerCase())
-          ) {
-            return false;
-          }
-        }
-
-        // City filter
-        if (filters.city) {
-          if (
-            !profile.city?.toLowerCase().includes(filters.city.toLowerCase())
-          ) {
-            return false;
-          }
-        }
-
-        // Education filter
-        if (filters.education) {
-          const normalizedEdu = normalizeEducation(profile.education);
-          if (normalizedEdu !== filters.education) return false;
-        }
-
-        // Occupation filter
-        if (filters.occupation) {
-          const normalizedOcc = normalizeOccupation(profile.occupation);
-          if (normalizedOcc !== filters.occupation) return false;
-        }
-
-        // Income filter
-        if (filters.income) {
-          if (!matchesIncomeRange(profile.income, filters.income)) {
-            return false;
-          }
-        }
-
-        return true;
-      });
-
-      setFilteredProfiles(filtered);
-    } catch (error) {
-      console.error("Error applying filters:", error);
-    }
-  }, [allProfiles, filters, user?.id]);
-
-  // Apply filters when filters or profiles change
-  useEffect(() => {
-    if (allProfiles.length > 0) {
-      applyFilters();
-    }
-  }, [allProfiles, applyFilters]);
+  const profiles = [
+    {
+      id: 1,
+      name: "Priya Agarwal",
+      age: 28,
+      height: "5'4\"",
+      education: "MBA",
+      occupation: "Software Engineer",
+      location: "Mumbai, Maharashtra",
+      religion: "Hindu",
+      maritalStatus: "Never Married",
+      image: "../../assets/images/female-profile/priyanka.png",
+      isOnline: true,
+    },
+    {
+      id: 2,
+      name: "Sneha Kapoor",
+      age: 26,
+      height: "5'3\"",
+      education: "MBBS",
+      occupation: "Doctor",
+      location: "Delhi, India",
+      religion: "Hindu",
+      maritalStatus: "Never Married",
+      image: "../../assets/images/female-profile/sneha.png",
+      isOnline: false,
+    },
+    {
+      id: 3,
+      name: "Ananya Mehta",
+      age: 27,
+      height: "5'5\"",
+      education: "Masters",
+      occupation: "Business Analyst",
+      location: "Bangalore, Karnataka",
+      religion: "Hindu",
+      maritalStatus: "Never Married",
+      image: "../../assets/images/female-profile/ananya.png",
+      isOnline: true,
+    },
+    {
+      id: 4,
+      name: "Neha Reddy",
+      age: 29,
+      height: "5'6\"",
+      education: "MBA",
+      occupation: "Marketing Manager",
+      location: "Hyderabad, Telangana",
+      religion: "Hindu",
+      maritalStatus: "Never Married",
+      image: "../../assets/images/female-profile/neha.png",
+      isOnline: false,
+    },
+    {
+      id: 5,
+      name: "Divya Patel",
+      age: 25,
+      height: "5'2\"",
+      education: "B.Tech",
+      occupation: "Teacher",
+      location: "Ahmedabad, Gujarat",
+      religion: "Hindu",
+      maritalStatus: "Never Married",
+      image: "../../assets/images/female-profile/divya.png",
+      isOnline: false,
+    },
+    {
+      id: 6,
+      name: "Riya Gupta",
+      age: 30,
+      height: "5'4\"",
+      education: "Masters",
+      occupation: "Architect",
+      location: "Pune, Maharashtra",
+      religion: "Hindu",
+      maritalStatus: "Never Married",
+      image: "../../assets/images/female-profile/riya.png",
+      isOnline: true,
+    },
+  ];
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleApplyFilters = () => {
-    applyFilters();
+  const applyFilters = () => {
+    alert(
+      "Applying search filters... Results will be filtered based on your criteria.",
+    );
     setShowFilters(false);
   };
 
   const resetFilters = () => {
     if (window.confirm("Reset all filters to default?")) {
-      // Reset to saved preferences or default values
-      loadPreferencesAsFilters().catch(() => {
-        // If loading preferences fails, use default filters
-        setFilters(defaultFilters);
+      setFilters({
+        lookingFor: "bride",
+        ageFrom: "25",
+        ageTo: "30",
+        heightFrom: "5.0",
+        heightTo: "5.6",
+        maritalStatus: "",
+        religion: "",
+        motherTongue: "",
+        country: "india",
+        state: "",
+        city: "",
+        education: "",
+        occupation: "",
+        income: "",
       });
     }
   };
 
-  const handleSendProposal = async (profileName) => {
-    const profile = filteredProfiles.find((p) => p.name === profileName);
-    if (!profile) return;
-
-    try {
-      await freeUserService.sendProposal(user?.id, profile.id);
-      await freeUserService.trackActivity(user?.id, "proposal_sent", {
-        profileId: profile.id,
-        profileName,
-      });
-      toast.success(
-        `Proposal sent to ${profileName}! You will be notified when they respond.`,
-      );
-    } catch (error) {
-      console.error("Error sending proposal:", error);
-      toast.error("Failed to send proposal. Please try again.");
-    }
+  const handleSendProposal = (profileName) => {
+    alert(
+      `Sending interest to ${profileName}! You will be notified when they respond.`,
+    );
   };
 
-  const handleViewProfile = async (profileId) => {
-    if (profilesViewed >= profileViewLimit) {
-      toast.warning(
-        "You've reached your daily profile view limit. Upgrade to Premium for unlimited views.",
-        { autoClose: 5000 },
-      );
-      return;
-    }
-
-    try {
-      await freeUserService.trackProfileView(user?.id, profileId);
-      await freeUserService.trackActivity(user?.id, "profile_viewed", {
-        profileId,
-      });
-      setProfilesViewed((count) => count + 1);
-      navigate(`/dashboard/free/profile/${profileId}`);
-    } catch (error) {
-      console.error("Error tracking profile view:", error);
-      navigate(`/dashboard/free/profile/${profileId}`);
-    }
+  const handleViewProfile = (profileId) => {
+    navigate(`/dashboard/profile/${profileId}`);
   };
 
   return (
@@ -414,9 +153,7 @@ const SearchMatches = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h1 className="h3 mb-1">Search Matches</h1>
-          <p className="text-muted small mb-0">
-            Showing {filteredProfiles.length} of {allProfiles.length} profiles
-          </p>
+          <p className="text-muted small mb-0">Showing 6 of 156 profiles</p>
         </div>
         <button
           className="btn btn-danger d-md-none"
@@ -655,7 +392,7 @@ const SearchMatches = () => {
 
               <button
                 className="btn btn-danger w-100 mb-2"
-                onClick={handleApplyFilters}
+                onClick={applyFilters}
               >
                 Apply Filters
               </button>
@@ -677,8 +414,7 @@ const SearchMatches = () => {
                 <div>
                   <h5 className="mb-0">Search Results</h5>
                   <p className="text-muted small mb-0">
-                    Showing {filteredProfiles.length} of {allProfiles.length}{" "}
-                    profiles
+                    Showing 6 of 156 profiles
                   </p>
                 </div>
                 <select
@@ -694,39 +430,17 @@ const SearchMatches = () => {
             </div>
           </div>
 
-          {loading ? (
-            <div className="text-center py-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
+          <div className="row g-3">
+            {profiles.map((profile) => (
+              <div key={profile.id} className="col-12 col-lg-6">
+                <ProfileCard
+                  profile={profile}
+                  onSendProposal={handleSendProposal}
+                  onViewProfile={handleViewProfile}
+                />
               </div>
-            </div>
-          ) : filteredProfiles.length === 0 ? (
-            <div className="text-center py-5">
-              <p className="text-muted">
-                No profiles found matching your criteria. Try adjusting your
-                filters.
-              </p>
-            </div>
-          ) : (
-            <div className="row g-3">
-              {filteredProfiles.map((profile) => (
-                <div key={profile.id} className="col-12 col-lg-6">
-                  <ProfileCard
-                    profile={{
-                      ...profile,
-                      image:
-                        profile.photos?.[0] ||
-                        "/assets/images/default-profile.png",
-                      location:
-                        profile.location || `${profile.city}, ${profile.state}`,
-                    }}
-                    onSendProposal={handleSendProposal}
-                    onViewProfile={() => handleViewProfile(profile.id)}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+            ))}
+          </div>
 
           {/* Pagination */}
           <nav className="mt-4">

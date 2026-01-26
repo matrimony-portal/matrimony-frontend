@@ -1,5 +1,5 @@
 // src/components/dashboard/premium/PremiumUserDashboard.jsx
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import StatCard from "../../common/shared/StatCard.jsx";

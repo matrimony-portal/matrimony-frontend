@@ -1,6 +1,5 @@
 // src/components/dashboard/premium/MyProfile.jsx
-import { useState } from "react";
-//import { useAuth } from "../../../hooks/useAuth.jsx";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
 // Images (CORRECT way in React)

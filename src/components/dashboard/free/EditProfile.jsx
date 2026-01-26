@@ -1,5 +1,5 @@
 // src/components/dashboard/premium/EditProfile.jsx
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
 const EditProfile = () => {
