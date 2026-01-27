@@ -1,12 +1,29 @@
 import api from "./api.js";
-import { mockEventService } from "./mockService.js";
+import { mockEventService } from "./mockServices.js";
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
+
+function getOrganizerId() {
+  const userStr = localStorage.getItem("matrimony_user");
+  const user = userStr ? JSON.parse(userStr) : null;
+  const id = user?.id ?? user?.userId;
+  if (!id) throw new Error("User not authenticated");
+  return id;
+}
+
+function getUserId() {
+  const userStr = localStorage.getItem("matrimony_user");
+  const user = userStr ? JSON.parse(userStr) : null;
+  const id = user?.id ?? user?.userId;
+  if (!id) throw new Error("User not authenticated");
+  return id;
+}
 
 /**
  * Event Service
  * Handles all event-related API calls
  * Uses regular api instance (not adminApi)
+ * Backend returns raw JSON (no ApiResponse wrapper) for event endpoints.
  */
 export const eventService = {
   // Get all events (with optional filters)
@@ -32,14 +49,7 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.createEvent(eventData);
     }
-    const userStr = localStorage.getItem("matrimony_user");
-    const user = userStr ? JSON.parse(userStr) : null;
-    const organizerId = user?.id || user?.userId;
-
-    if (!organizerId) {
-      throw new Error("User not authenticated");
-    }
-
+    const organizerId = getOrganizerId();
     const response = await api.post("/events", eventData, {
       params: { organizerId },
     });
@@ -51,14 +61,7 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.updateEvent(eventId, eventData);
     }
-    const userStr = localStorage.getItem("matrimony_user");
-    const user = userStr ? JSON.parse(userStr) : null;
-    const organizerId = user?.id || user?.userId;
-
-    if (!organizerId) {
-      throw new Error("User not authenticated");
-    }
-
+    const organizerId = getOrganizerId();
     const response = await api.put(`/events/${eventId}`, eventData, {
       params: { organizerId },
     });
@@ -70,14 +73,7 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.deleteEvent(eventId);
     }
-    const userStr = localStorage.getItem("matrimony_user");
-    const user = userStr ? JSON.parse(userStr) : null;
-    const organizerId = user?.id || user?.userId;
-
-    if (!organizerId) {
-      throw new Error("User not authenticated");
-    }
-
+    const organizerId = getOrganizerId();
     const response = await api.delete(`/events/${eventId}`, {
       params: { organizerId },
     });
@@ -89,14 +85,7 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.updateEventStatus?.(eventId, status);
     }
-    const userStr = localStorage.getItem("matrimony_user");
-    const user = userStr ? JSON.parse(userStr) : null;
-    const organizerId = user?.id || user?.userId;
-
-    if (!organizerId) {
-      throw new Error("User not authenticated");
-    }
-
+    const organizerId = getOrganizerId();
     const response = await api.put(`/events/${eventId}/status`, null, {
       params: { status, organizerId },
     });
@@ -108,18 +97,9 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.registerForEvent(eventId);
     }
-    // Get userId from localStorage or token
-    const userStr = localStorage.getItem("matrimony_user");
-    const user = userStr ? JSON.parse(userStr) : null;
-    const userId = user?.id || user?.userId;
-
-    if (!userId) {
-      throw new Error("User not authenticated");
-    }
-
+    const userId = getUserId();
     const params = { userId };
     if (notes) params.notes = notes;
-
     const response = await api.post(`/events/${eventId}/register`, null, {
       params,
     });
@@ -131,7 +111,19 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.unregisterFromEvent(eventId);
     }
-    const response = await api.delete(`/events/${eventId}/register`);
+    const userId = getUserId();
+    const response = await api.delete(`/events/${eventId}/register`, {
+      params: { userId },
+    });
+    return response.data;
+  },
+
+  // Get events by organizer (for viewing another organizer's profile + events)
+  getEventsByOrganizer: async (organizerId) => {
+    if (USE_MOCK) {
+      return (await mockEventService.getEventsByOrganizer?.(organizerId)) ?? [];
+    }
+    const response = await api.get(`/events/organizer/${organizerId}`);
     return response.data;
   },
 
@@ -140,14 +132,7 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.getMyEvents();
     }
-    const userStr = localStorage.getItem("matrimony_user");
-    const user = userStr ? JSON.parse(userStr) : null;
-    const organizerId = user?.id || user?.userId;
-
-    if (!organizerId) {
-      throw new Error("User not authenticated");
-    }
-
+    const organizerId = getOrganizerId();
     const response = await api.get("/events/my-events", {
       params: { organizerId },
     });
@@ -159,7 +144,10 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.getEventRegistrations(eventId);
     }
-    const response = await api.get(`/events/${eventId}/registrations`);
+    const organizerId = getOrganizerId();
+    const response = await api.get(`/events/${eventId}/registrations`, {
+      params: { organizerId },
+    });
     return response.data;
   },
 
@@ -168,7 +156,10 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.getMyEventRegistrations();
     }
-    const response = await api.get("/events/registrations/my-events");
+    const organizerId = getOrganizerId();
+    const response = await api.get("/events/registrations/my-events", {
+      params: { organizerId },
+    });
     return response.data;
   },
 
@@ -180,11 +171,32 @@ export const eventService = {
         paymentStatus,
       );
     }
+    const organizerId = getOrganizerId();
     const response = await api.put(
       `/events/registrations/${registrationId}/payment-status`,
       null,
       {
-        params: { paymentStatus },
+        params: { paymentStatus, organizerId },
+      },
+    );
+    return response.data;
+  },
+
+  // Get participant profile (organizer only - for viewing users who sent requests)
+  getParticipantProfile: async (registrationId) => {
+    if (USE_MOCK) {
+      return {
+        userName: "Sample User",
+        userEmail: "user@example.com",
+        age: 28,
+        city: "Mumbai",
+      };
+    }
+    const organizerId = getOrganizerId();
+    const response = await api.get(
+      `/events/registrations/${registrationId}/participant-profile`,
+      {
+        params: { organizerId },
       },
     );
     return response.data;
@@ -198,11 +210,12 @@ export const eventService = {
         attended,
       );
     }
+    const organizerId = getOrganizerId();
     const response = await api.put(
       `/events/registrations/${registrationId}/attendance`,
       null,
       {
-        params: { attended },
+        params: { attended, organizerId },
       },
     );
     return response.data;
@@ -213,14 +226,7 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.getEventStatistics();
     }
-    const userStr = localStorage.getItem("matrimony_user");
-    const user = userStr ? JSON.parse(userStr) : null;
-    const organizerId = user?.id || user?.userId;
-
-    if (!organizerId) {
-      throw new Error("User not authenticated");
-    }
-
+    const organizerId = getOrganizerId();
     const response = await api.get("/events/statistics", {
       params: { organizerId },
     });

@@ -2,6 +2,8 @@
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { useTheme } from "../../../hooks/useTheme.jsx";
+import { toast } from "../../../utils/toast.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 
 export const OrganizerSettings = () => {
   const { theme, toggleTheme } = useTheme();
@@ -12,20 +14,34 @@ export const OrganizerSettings = () => {
     details: "",
   });
 
+  // Modal state
+  const [modal, setModal] = useState({
+    show: false,
+    title: "",
+    message: "",
+    onConfirm: null,
+    variant: "primary",
+  });
+
   const blockedUsers = [
     { id: 1, name: "Sanjay Kumar", initials: "SK", date: "Oct 15, 2025" },
     { id: 2, name: "Ajay Mehta", initials: "AM", date: "Oct 10, 2025" },
     { id: 3, name: "Rohan Verma", initials: "RV", date: "Oct 5, 2025" },
   ];
 
+  const closeModal = () => setModal({ ...modal, show: false });
+
   const handleUnblock = (name) => {
-    if (
-      window.confirm(
-        `Unblock ${name}? They will be able to view your profile and contact you again.`,
-      )
-    ) {
-      alert(`${name} has been unblocked successfully.`);
-    }
+    setModal({
+      show: true,
+      title: "Unblock User",
+      message: `Unblock ${name}? They will be able to view your profile and contact you again.`,
+      variant: "warning",
+      onConfirm: () => {
+        toast.success(`${name} has been unblocked successfully.`);
+        closeModal();
+      },
+    });
   };
 
   const handleReportChange = (e) => {
@@ -36,18 +52,24 @@ export const OrganizerSettings = () => {
   const handleReportSubmit = (e) => {
     e.preventDefault();
     if (!reportForm.profileId || !reportForm.reason) {
-      alert("Please fill in all required fields.");
+      toast.error("Please fill in all required fields.");
       return;
     }
-    if (
-      window.confirm(
+    setModal({
+      show: true,
+      title: "Submit Report",
+      message:
         "Submit this report? Our team will review it and take appropriate action.",
-      )
-    ) {
-      alert("Thank you for reporting. Our team will review this profile.");
-      setReportForm({ profileId: "", reason: "", details: "" });
-      setShowReportForm(false);
-    }
+      variant: "danger",
+      onConfirm: () => {
+        toast.success(
+          "Thank you for reporting. Our team will review this profile.",
+        );
+        setReportForm({ profileId: "", reason: "", details: "" });
+        setShowReportForm(false);
+        closeModal();
+      },
+    });
   };
 
   const handleToggleReportForm = () => {
@@ -60,6 +82,16 @@ export const OrganizerSettings = () => {
 
   return (
     <Container fluid>
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        show={modal.show}
+        title={modal.title}
+        message={modal.message}
+        variant={modal.variant}
+        onConfirm={modal.onConfirm}
+        onCancel={closeModal}
+      />
+
       <Card className="mb-4 shadow-sm">
         <Card.Body>
           <h5 className="mb-3 pb-2 border-bottom border-danger border-2">
@@ -306,5 +338,3 @@ export const OrganizerSettings = () => {
     </Container>
   );
 };
-
-// BlockedUsers.jsx

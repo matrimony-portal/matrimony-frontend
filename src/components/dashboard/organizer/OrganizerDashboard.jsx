@@ -144,3 +144,5 @@ export const EventOrganizerDashboard = () => {
     </Container>
   );
 };
+
+export default EventOrganizerDashboard;

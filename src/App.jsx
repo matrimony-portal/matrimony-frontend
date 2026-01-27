@@ -1,52 +1,73 @@
 // src/App.jsx
-import { Navigate, Outlet, Route, Routes } from "react-router";
+import { Routes, Route, Navigate, Outlet } from "react-router";
 import { AuthProvider } from "./providers/AuthProvider.jsx";
-import DashboardPathRouter from "./components/auth/DashboardPathRouter.jsx";
-import DashboardRouter from "./components/auth/DashboardRouter.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
+import DashboardRouter from "./components/auth/DashboardRouter.jsx";
+import DashboardPathRouter from "./components/auth/DashboardPathRouter.jsx";
 
 // Public Pages
+import HomePage from "./components/HomePage";
 import Login from "./components/auth/Login.jsx";
 import Register from "./components/auth/Register.jsx";
 import ForgotPassword from "./components/ForgotPassword";
-import HomePage from "./components/HomePage";
 import UpgradePage from "./components/upgrade/UpgradePage.jsx";
+import PaymentPage from "./components/common/Subscription.jsx";
+import ContactPage from "./components/common/Contact.jsx";
+import PublicLayout from "./components/common/Layout/PublicLayout.jsx";
 
 // Layout
 import Layout from "./components/common/Layout/Layout.jsx";
 
 // Dashboard Pages (Free)
-import FreeBlockedUsers from "./components/dashboard/free/BlockedUsers.jsx";
-import FreeEditProfile from "./components/dashboard/free/EditProfile.jsx";
-import FreeEvents from "./components/dashboard/free/Events.jsx";
-import FreeFeedback from "./components/dashboard/free/Feedback.jsx";
 import FreeUserDashboard from "./components/dashboard/free/FreeUserDashboard.jsx";
+import FreeEditProfile from "./components/dashboard/free/EditProfile.jsx";
 import FreeManagePhotos from "./components/dashboard/free/ManagePhotos.jsx";
 import FreeManageProfile from "./components/dashboard/free/ManageProfile.jsx";
-import FreeMessages from "./components/dashboard/free/Messages.jsx";
-import FreeProfileView from "./components/dashboard/free/ProfileView.jsx";
-import FreeProposals from "./components/dashboard/free/Proposals.jsx";
 import FreeSearchMatches from "./components/dashboard/free/SearchMatches.jsx";
-import FreeSettings from "./components/dashboard/free/Settings.jsx";
+import FreeProposals from "./components/dashboard/free/Proposals.jsx";
+import FreeMessages from "./components/dashboard/free/Messages.jsx";
 import FreeShortlist from "./components/dashboard/free/Shortlist.jsx";
+import FreeBlockedUsers from "./components/dashboard/free/BlockedUsers.jsx";
+import FreeEvents from "./components/dashboard/free/Events.jsx";
+import FreeSettings from "./components/dashboard/free/Settings.jsx";
+import FreeFeedback from "./components/dashboard/free/Feedback.jsx";
+import FreeProfileView from "./components/dashboard/free/ProfileView.jsx";
 
 // Dashboard Pages (Premium)
-import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
-import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
-import PremiumBlockedUsers from "./components/dashboard/premium/BlockedUsers.jsx";
+import PremiumUserDashboard from "./components/dashboard/premium/PremiumUserDashboard.jsx";
+import MyProfile from "./components/dashboard/premium/MyProfile.jsx";
 import PremiumEditProfile from "./components/dashboard/premium/EditProfile.jsx";
-import PremiumEvents from "./components/dashboard/premium/Events.jsx";
-import PremiumFeedback from "./components/dashboard/premium/Feedback.jsx";
 import PremiumManagePhotos from "./components/dashboard/premium/ManagePhotos.jsx";
 import PremiumManageProfile from "./components/dashboard/premium/ManageProfile.jsx";
-import PremiumMessages from "./components/dashboard/premium/Messages.jsx";
-import MyProfile from "./components/dashboard/premium/MyProfile.jsx";
-import PremiumUserDashboard from "./components/dashboard/premium/PremiumUserDashboard.jsx";
-import PremiumProfileView from "./components/dashboard/premium/ProfileView.jsx";
-import PremiumProposals from "./components/dashboard/premium/Proposals.jsx";
 import PremiumSearchMatches from "./components/dashboard/premium/SearchMatches.jsx";
-import PremiumSettings from "./components/dashboard/premium/Settings.jsx";
+import PremiumProposals from "./components/dashboard/premium/Proposals.jsx";
+import PremiumMessages from "./components/dashboard/premium/Messages.jsx";
 import PremiumShortlist from "./components/dashboard/premium/Shortlist.jsx";
+import PremiumBlockedUsers from "./components/dashboard/premium/BlockedUsers.jsx";
+import PremiumEvents from "./components/dashboard/premium/Events.jsx";
+import PremiumSettings from "./components/dashboard/premium/Settings.jsx";
+import PremiumFeedback from "./components/dashboard/premium/Feedback.jsx";
+import PremiumProfileView from "./components/dashboard/premium/ProfileView.jsx";
+
+// Dashboard Pages - Admin
+import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
+
+// Dashboard Pages - Organizer
+import { EventOrganizerDashboard } from "./components/dashboard/organizer/OrganizerDashboard.jsx";
+import { OrganizerProfile } from "./components/dashboard/organizer/OrganizerProfile.jsx";
+import { EditOrganizerProfile } from "./components/dashboard/organizer/EditOrganizer.jsx";
+import { OrganizerSettings } from "./components/dashboard/organizer/OrganizerSettings.jsx";
+import { EventForm } from "./components/dashboard/organizer/EventForm.jsx";
+import { EventDetails } from "./components/dashboard/organizer/EventDetails.jsx";
+import { EventRequests } from "./components/dashboard/organizer/EventRequests.jsx";
+import { MyEventsList } from "./components/dashboard/organizer/MyEventsList.jsx";
+import { ViewEventParticipantProfile } from "./components/dashboard/organizer/ViewEventParticipantProfile.jsx";
+import { OverallEventsList } from "./components/dashboard/organizer/EventList.jsx";
+import { BlockedUsers as OrganizerBlockedUsers } from "./components/dashboard/organizer/BlockedUsers.jsx";
+
+// Shared Components
+import PartnerPreferences from "./components/dashboard/shared/PartnerPreferences.jsx";
+import { ViewEventOrganizerProfile } from "./components/common/ViewEventOrganizerProfile.jsx";
 
 import "./styles/custom.css";
 
@@ -56,10 +77,16 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/upgrade" element={<UpgradePage />} />
+
+        {/* Public Routes with Navbar Layout */}
+        <Route element={<PublicLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/subscription" element={<PaymentPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Route>
 
         {/* Protected Dashboard Routes with Layout */}
         <Route
@@ -76,6 +103,7 @@ function App() {
           {/* Free User Routes */}
           <Route path="free" element={<Outlet />}>
             <Route index element={<FreeUserDashboard />} />
+            <Route path="my-profile" element={<MyProfile />} />
             <Route path="manage-profile" element={<FreeManageProfile />} />
             <Route path="edit-profile" element={<FreeEditProfile />} />
             <Route path="manage-photos" element={<FreeManagePhotos />} />
@@ -88,6 +116,16 @@ function App() {
             <Route path="settings" element={<FreeSettings />} />
             <Route path="feedback" element={<FreeFeedback />} />
             <Route path="profile/:id" element={<FreeProfileView />} />
+            <Route
+              path="partner-preferences"
+              element={<PartnerPreferences />}
+            />
+            <Route
+              path="organizer-profile/:organizerId"
+              element={<ViewEventOrganizerProfile />}
+            />
+            <Route path="subscription" element={<PaymentPage />} />
+            <Route path="contact" element={<ContactPage />} />
           </Route>
 
           {/* Premium User Routes */}
@@ -106,10 +144,47 @@ function App() {
             <Route path="settings" element={<PremiumSettings />} />
             <Route path="feedback" element={<PremiumFeedback />} />
             <Route path="profile/:id" element={<PremiumProfileView />} />
+            <Route
+              path="partner-preferences"
+              element={<PartnerPreferences />}
+            />
+            <Route
+              path="organizer-profile/:organizerId"
+              element={<ViewEventOrganizerProfile />}
+            />
+            <Route path="subscription" element={<PaymentPage />} />
+            <Route path="contact" element={<ContactPage />} />
           </Route>
 
-          {/* Organizer & Admin Routes */}
-          <Route path="organizer" element={<OrganizerDashboard />} />
+          {/* Event Organizer Routes */}
+          <Route path="organizer" element={<Outlet />}>
+            <Route index element={<EventOrganizerDashboard />} />
+            <Route path="my-profile" element={<OrganizerProfile />} />
+            <Route path="edit-profile" element={<EditOrganizerProfile />} />
+            <Route path="my-events" element={<MyEventsList />} />
+            <Route path="events" element={<OverallEventsList />} />
+            <Route path="create-event" element={<EventForm />} />
+            <Route path="event-requests" element={<EventRequests />} />
+            <Route
+              path="event-view/:eventId"
+              element={<EventDetails mode="view" />}
+            />
+            <Route path="event-edit/:eventId" element={<EventForm />} />
+            <Route
+              path="organizer-profile/:organizerId"
+              element={<ViewEventOrganizerProfile />}
+            />
+            <Route
+              path="participant-profile/:registrationId"
+              element={<ViewEventParticipantProfile />}
+            />
+            <Route path="settings" element={<OrganizerSettings />} />
+            <Route path="blocked-users" element={<OrganizerBlockedUsers />} />
+            <Route path="messages" element={<PremiumMessages />} />
+            <Route path="contact" element={<ContactPage />} />
+          </Route>
+
+          {/* Admin Routes */}
           <Route path="admin" element={<AdminDashboard />} />
 
           {/* Legacy routes (keep old links working, but route under correct base) */}
@@ -164,6 +239,18 @@ function App() {
           <Route
             path="my-profile"
             element={<DashboardPathRouter subPath="my-profile" />}
+          />
+          <Route
+            path="partner-preferences"
+            element={<DashboardPathRouter subPath="partner-preferences" />}
+          />
+          <Route
+            path="subscription"
+            element={<DashboardPathRouter subPath="subscription" />}
+          />
+          <Route
+            path="contact"
+            element={<DashboardPathRouter subPath="contact" />}
           />
         </Route>
 

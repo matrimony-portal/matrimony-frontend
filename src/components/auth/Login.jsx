@@ -64,7 +64,7 @@ const Login = () => {
         autoClose: 5000,
       });
       setLoginError(
-        "Invalid credentials!\n\nTest Credentials:\nuser@test.com / User@123\npaid-user@test.com / User@123\norganizer@test.com / Org@123\nadmin@test.com / Admin@123",
+        "Invalid credentials!\n\nTest Credentials (password: password123):\njohn.doe@example.com ← free user\njane.smith@example.com ← paid user\npriya.verma@example.com ← event-organizer\nrahul.sharma@example.com ← admin",
       );
     } finally {
       setLoading(false);

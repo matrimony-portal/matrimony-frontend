@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { eventService } from "../../../services/eventService.js";
-import { toast } from "react-toastify";
+import { toast } from "../../../utils/toast.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 
 const OrganizerEvents = () => {
   const navigate = useNavigate();
@@ -9,6 +10,11 @@ const OrganizerEvents = () => {
   const [events, setEvents] = useState([]);
   const [statistics, setStatistics] = useState(null);
   const [deletingEventId, setDeletingEventId] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({
+    show: false,
+    eventId: null,
+    eventTitle: "",
+  });
 
   const loadEvents = useCallback(async () => {
     try {
@@ -21,7 +27,7 @@ const OrganizerEvents = () => {
       setStatistics(statsData);
     } catch (error) {
       console.error("Error loading events:", error);
-      toast.error("Failed to load events");
+      // Error results in empty list; no toast to avoid random popups
     } finally {
       setLoading(false);
     }
@@ -31,23 +37,22 @@ const OrganizerEvents = () => {
     loadEvents();
   }, [loadEvents]);
 
-  const handleDelete = async (eventId, eventTitle) => {
-    if (
-      !window.confirm(
-        `Are you sure you want to delete "${eventTitle}"? This action cannot be undone.`,
-      )
-    ) {
-      return;
-    }
+  const handleDeleteClick = (eventId, eventTitle) => {
+    setDeleteModal({ show: true, eventId, eventTitle });
+  };
+
+  const handleDeleteConfirm = async () => {
+    const { eventId } = deleteModal;
+    setDeleteModal({ show: false, eventId: null, eventTitle: "" });
 
     try {
       setDeletingEventId(eventId);
       await eventService.deleteEvent(eventId);
-      toast.success("Event deleted successfully");
-      loadEvents();
+      toast.success("Event cancelled successfully");
+      await loadEvents();
     } catch (error) {
-      console.error("Error deleting event:", error);
-      toast.error(error.response?.data?.message || "Failed to delete event");
+      console.error("Error cancelling event:", error);
+      toast.error(error.response?.data?.message || "Failed to cancel event");
     } finally {
       setDeletingEventId(null);
     }
@@ -94,6 +99,18 @@ const OrganizerEvents = () => {
 
   return (
     <div className="container-fluid py-3 py-md-4">
+      <ConfirmationModal
+        show={deleteModal.show}
+        title="Cancel Event"
+        message={`Cancel "${deleteModal.eventTitle}"? All participants will be notified.`}
+        variant="danger"
+        confirmText="Cancel Event"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() =>
+          setDeleteModal({ show: false, eventId: null, eventTitle: "" })
+        }
+      />
+
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="mb-0">My Events</h2>
         <button
@@ -217,15 +234,15 @@ const OrganizerEvents = () => {
                       </button>
                       <button
                         className="btn btn-sm btn-outline-danger"
-                        onClick={() => handleDelete(event.id, event.title)}
+                        onClick={() => handleDeleteClick(event.id, event.title)}
                         disabled={deletingEventId === event.id}
                       >
                         {deletingEventId === event.id ? (
                           <span className="spinner-border spinner-border-sm" />
                         ) : (
                           <>
-                            <i className="bi bi-trash me-1"></i>
-                            Delete
+                            <i className="bi bi-x-circle me-1"></i>
+                            Cancel
                           </>
                         )}
                       </button>

@@ -1,23 +1,47 @@
+import { useState } from "react";
 import { Container, Card, Button } from "react-bootstrap";
+import { toast } from "../../../utils/toast.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
+
 export const BlockedUsers = () => {
+  const [modal, setModal] = useState({
+    show: false,
+    title: "",
+    message: "",
+    onConfirm: null,
+  });
+
   const blockedUsers = [
     { id: 1, name: "Sanjay Kumar", initials: "SK", date: "Oct 15, 2025" },
     { id: 2, name: "Ajay Mehta", initials: "AM", date: "Oct 10, 2025" },
     { id: 3, name: "Rohan Verma", initials: "RV", date: "Oct 5, 2025" },
   ];
 
+  const closeModal = () => setModal({ ...modal, show: false });
+
   const handleUnblock = (name) => {
-    if (
-      window.confirm(
-        `Unblock ${name}? They will be able to view your profile and contact you again.`,
-      )
-    ) {
-      alert(`${name} has been unblocked successfully.`);
-    }
+    setModal({
+      show: true,
+      title: "Unblock User",
+      message: `Unblock ${name}? They will be able to view your profile and contact you again.`,
+      onConfirm: () => {
+        toast.success(`${name} has been unblocked successfully.`);
+        closeModal();
+      },
+    });
   };
 
   return (
     <Container fluid>
+      <ConfirmationModal
+        show={modal.show}
+        title={modal.title}
+        message={modal.message}
+        variant="warning"
+        onConfirm={modal.onConfirm}
+        onCancel={closeModal}
+      />
+
       <Card className="shadow-sm">
         <Card.Body>
           <h2 className="mb-2">Blocked Users</h2>

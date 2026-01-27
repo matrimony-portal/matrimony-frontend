@@ -66,15 +66,12 @@ Use conventional commits:
 npm run commit
 ```
 
-<<<<<<< HEAD
 Examples:
 
 - `feat: add user registration`
 - `fix: resolve login validation`
 - `docs: update README`
 
-=======
->>>>>>> 7a8c82918da573d91155c58409be142900963289
 ## Pull Requests
 
 **Branch Flow:**

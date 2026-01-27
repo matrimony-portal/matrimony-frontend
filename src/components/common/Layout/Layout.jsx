@@ -1,21 +1,36 @@
-// src/components/common/Layout/Layout.jsx
-import React, { useState } from "react";
-import { Outlet } from "react-router";
+import { useState, useEffect, useRef } from "react";
+import { Outlet, useLocation } from "react-router";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true); // Default: open on desktop
+  const location = useLocation();
+  const mainRef = useRef(null);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
+  // Reset scroll position for the dashboard content container on navigation
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
+
   return (
-    <div className="d-flex flex-column vh-100">
+    <div
+      className="d-flex flex-column vh-100"
+      style={{ overflow: "hidden", width: "100%", maxWidth: "100vw" }}
+    >
       <Navbar toggleSidebar={toggleSidebar} />
-      <div className="container-fluid flex-grow-1 overflow-hidden p-0 m-1">
-        <div className="row h-100 g-0">
+      <div
+        className="container-fluid flex-grow-1 p-0 m-0"
+        style={{ overflow: "visible", width: "100%", maxWidth: "100vw" }}
+      >
+        <div className="row h-100 g-0 m-0" style={{ margin: 0, width: "100%" }}>
           <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
           <main
+            ref={mainRef}
             className={`main-content px-md-4 ${sidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}
             style={{
               transition:
@@ -32,8 +47,11 @@ const Layout = () => {
         .main-content {
           padding-top: 1rem;
           overflow-y: auto;
+          overflow-x: hidden;
           height: calc(100vh - var(--navbar-height, 60px));
           width: 100%;
+          max-width: 100%;
+          margin-top: 0;
         }
 
         /* Desktop: Adjust based on sidebar state */
@@ -43,8 +61,8 @@ const Layout = () => {
           }
 
           .main-content.sidebar-open {
-            margin-left: 225px;
-            width: calc(100% - 225px);
+            margin-left: 250px;
+            width: calc(100% - 250px);
           }
 
           .main-content.sidebar-collapsed {

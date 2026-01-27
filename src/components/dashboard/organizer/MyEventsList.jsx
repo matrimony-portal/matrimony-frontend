@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 import {
   Container,
@@ -9,10 +9,15 @@ import {
   Badge,
   Spinner,
   Alert,
+  Form,
 } from "react-bootstrap";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { eventService } from "../../../services/eventService.js";
-import { toast } from "react-toastify";
+import { toast } from "../../../utils/toast.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
+
+const FILTER_CURRENT_UPCOMING = "current-upcoming";
+const FILTER_ALL = "all";
 
 export const MyEventsList = () => {
   const navigate = useNavigate();
@@ -21,6 +26,11 @@ export const MyEventsList = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({
+    show: false,
+    eventId: null,
+  });
+  const [filter, setFilter] = useState(FILTER_CURRENT_UPCOMING);
 
   useEffect(() => {
     const fetchMyEvents = async () => {
@@ -35,7 +45,7 @@ export const MyEventsList = () => {
       } catch (err) {
         console.error("Error fetching my events:", err);
         setError("Failed to load your events. Please try again later.");
-        toast.error("Failed to load events");
+        // Inline error is shown; no toast to avoid duplicate feedback
       } finally {
         setLoading(false);
       }
@@ -64,6 +74,9 @@ export const MyEventsList = () => {
     });
   };
 
+  const DEFAULT_IMAGE =
+    "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg";
+
   const getStatusVariant = (status) => {
     const variants = {
       upcoming: "primary",
@@ -74,12 +87,20 @@ export const MyEventsList = () => {
     return variants[status?.toLowerCase()] || "secondary";
   };
 
-  const handleDelete = async (eventId) => {
-    if (
-      !window.confirm("Cancel this event? All participants will be notified.")
-    ) {
-      return;
-    }
+  const filteredEvents = useMemo(() => {
+    if (filter === FILTER_ALL) return events;
+    return events.filter(
+      (e) => e.status === "UPCOMING" || e.status === "ONGOING",
+    );
+  }, [events, filter]);
+
+  const handleDeleteClick = (eventId) => {
+    setDeleteModal({ show: true, eventId });
+  };
+
+  const handleDeleteConfirm = async () => {
+    const eventId = deleteModal.eventId;
+    setDeleteModal({ show: false, eventId: null });
     try {
       await eventService.deleteEvent(eventId);
       toast.success("Event cancelled successfully");
@@ -119,33 +140,59 @@ export const MyEventsList = () => {
 
   return (
     <Container fluid>
+      <ConfirmationModal
+        show={deleteModal.show}
+        title="Cancel Event"
+        message="Cancel this event? All participants will be notified."
+        variant="danger"
+        confirmText="Cancel Event"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteModal({ show: false, eventId: null })}
+      />
+
       <Card className="shadow-sm">
         <Card.Body>
           <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
             <h2 className="mb-0">My Events</h2>
-            <Button
-              variant="danger"
-              onClick={() => navigate("/dashboard/organizer/create-event")}
-            >
-              Create New Event
-            </Button>
-          </div>
-
-          {events.length === 0 ? (
-            <div className="text-center py-5">
-              <p className="text-muted mb-3">
-                You haven't created any events yet.
-              </p>
+            <div className="d-flex align-items-center gap-2 flex-wrap">
+              <Form.Select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                style={{ width: "auto" }}
+              >
+                <option value={FILTER_CURRENT_UPCOMING}>
+                  Current &amp; Upcoming
+                </option>
+                <option value={FILTER_ALL}>All</option>
+              </Form.Select>
               <Button
                 variant="danger"
                 onClick={() => navigate("/dashboard/organizer/create-event")}
               >
-                Create Your First Event
+                Create New Event
               </Button>
+            </div>
+          </div>
+
+          {filteredEvents.length === 0 ? (
+            <div className="text-center py-5">
+              <p className="text-muted mb-3">
+                {events.length === 0
+                  ? "You haven't created any events yet."
+                  : 'No current or upcoming events. Use "All" to see completed/cancelled.'}
+              </p>
+              {events.length === 0 && (
+                <Button
+                  variant="danger"
+                  onClick={() => navigate("/dashboard/organizer/create-event")}
+                >
+                  Create Your First Event
+                </Button>
+              )}
             </div>
           ) : (
             <Row className="g-4">
-              {events.map((event) => (
+              {filteredEvents.map((event) => (
                 <Col key={event.id} xs={12} md={6} lg={4}>
                   <Card
                     className="h-100 shadow-sm"
@@ -162,47 +209,44 @@ export const MyEventsList = () => {
                   >
                     <div
                       style={{
-                        height: "180px",
-                        backgroundImage: event.image
-                          ? `url(${event.image})`
-                          : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        height: "160px",
+                        backgroundImage: `url(${event.imageUrl || event.image || DEFAULT_IMAGE})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         borderTopLeftRadius: "calc(0.375rem - 1px)",
                         borderTopRightRadius: "calc(0.375rem - 1px)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "white",
-                        fontSize: "1.5rem",
-                        fontWeight: "bold",
                       }}
-                    >
-                      {!event.image && event.title?.charAt(0)}
-                    </div>
+                    />
                     <Card.Body>
-                      <Card.Title>{event.title}</Card.Title>
-                      <Badge
-                        bg={getStatusVariant(event.status)}
-                        className="mb-3"
-                      >
-                        {event.status || "UPCOMING"}
-                      </Badge>
-                      <div className="text-muted small mb-3">
-                        <div>
-                          📍 {event.city}, {event.state}
-                        </div>
-                        <div>📅 {formatDate(event.eventDate)}</div>
-                        <div>⏰ {formatTime(event.eventDate)}</div>
-                        <div>
-                          👥{" "}
-                          {event.maxParticipants
-                            ? `Max ${event.maxParticipants} participants`
-                            : "Unlimited"}
-                        </div>
-                        {event.registrationFee && (
-                          <div>💰 ₹{event.registrationFee}</div>
+                      <Card.Title className="small">{event.title}</Card.Title>
+                      <div className="d-flex flex-wrap gap-1 mb-2">
+                        <Badge bg={getStatusVariant(event.status)}>
+                          {event.status || "UPCOMING"}
+                        </Badge>
+                        {event.eventType && (
+                          <Badge bg="secondary">{event.eventType}</Badge>
                         )}
+                      </div>
+                      <div className="text-muted small mb-3">
+                        {event.venue && <div>📍 {event.venue}</div>}
+                        <div>
+                          🏙️ {event.city}
+                          {event.state ? `, ${event.state}` : ""}
+                        </div>
+                        <div>
+                          📅 {formatDate(event.eventDate)} · ⏰{" "}
+                          {formatTime(event.eventDate)}
+                        </div>
+                        <div>
+                          👥 {event.currentParticipants ?? 0}/
+                          {event.maxParticipants ?? "—"}
+                        </div>
+                        <div>
+                          💰{" "}
+                          {event.registrationFee != null
+                            ? `₹${event.registrationFee}`
+                            : "Free"}
+                        </div>
                       </div>
                       <div className="d-flex gap-2 flex-wrap">
                         <Button
@@ -233,7 +277,7 @@ export const MyEventsList = () => {
                           variant="outline-danger"
                           size="sm"
                           className="flex-fill"
-                          onClick={() => handleDelete(event.id)}
+                          onClick={() => handleDeleteClick(event.id)}
                         >
                           Cancel
                         </Button>

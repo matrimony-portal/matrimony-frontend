@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import {
   Container,
@@ -7,105 +7,102 @@ import {
   Card,
   Button,
   Badge,
-  Modal,
-  Image,
+  Spinner,
 } from "react-bootstrap";
 import { ArrowLeft } from "react-bootstrap-icons";
+import { organizerService } from "../../services/organizerService.js";
+import { eventService } from "../../services/eventService.js";
 
-// ============ View Event Organizer Profile (Public) ============
+function formatDate(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 export const ViewEventOrganizerProfile = () => {
   const navigate = useNavigate();
   const { organizerId } = useParams();
-  const [showLightbox, setShowLightbox] = useState(false);
-  const [currentImage, setCurrentImage] = useState(0);
+  const [profile, setProfile] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock data - replace with API call using organizerId
-  const organizer = {
-    id: organizerId || 1,
-    name: "Meera Reddy",
-    company: "Mumbai Events Co.",
-    email: "meera@mumbaiEvents.com",
-    phone: "+91 9876543210",
-    location: "Mumbai, Maharashtra",
-    experience: "6-10 years",
-    specialization: "Speed Dating",
-    description:
-      "Experienced event organizer specializing in matrimonial events and speed dating sessions. We have successfully organized over 50 events with high satisfaction rates.",
-    stats: {
-      eventsCount: 15,
-      rating: 4.8,
-      totalParticipants: 450,
-      successfulMatches: 23,
-    },
-    recentEvents: [
-      {
-        id: 1,
-        title: "Speed Dating Mumbai",
-        date: "2024-01-20",
-        participants: 30,
-        status: "Completed",
-      },
-      {
-        id: 2,
-        title: "Cultural Evening",
-        date: "2024-01-15",
-        participants: 25,
-        status: "Completed",
-      },
-      {
-        id: 3,
-        title: "Professional Meetup",
-        date: "2024-02-05",
-        participants: 40,
-        status: "Upcoming",
-      },
-    ],
-    reviews: [
-      {
-        id: 1,
-        user: "Priya S.",
-        rating: 5,
-        comment: "Excellent organization and great atmosphere!",
-        date: "2024-01-21",
-      },
-      {
-        id: 2,
-        user: "Rahul K.",
-        rating: 4,
-        comment: "Well managed event, met some interesting people.",
-        date: "2024-01-16",
-      },
-    ],
-  };
+  useEffect(() => {
+    const load = async () => {
+      if (!organizerId) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      setError(null);
+      try {
+        const [profileData, eventsData] = await Promise.all([
+          organizerService.getProfile(organizerId),
+          eventService.getEventsByOrganizer(organizerId).catch(() => []),
+        ]);
+        setProfile(profileData);
+        setEvents(Array.isArray(eventsData) ? eventsData : []);
+      } catch (e) {
+        console.error("Error loading organizer profile:", e);
+        setError(
+          e.response?.data?.message || e.message || "Failed to load profile",
+        );
+        // Inline error is shown in Card; no toast to avoid duplicate feedback
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [organizerId]);
 
-  const images = [
-    "coffee.jpg",
-    "dinner-dance-2.jpg",
-    "dinner-dance.jpg",
-    "dinner.jpg",
-    "music-night-2.jpg",
-    "music-night.jpg",
-    "picnic-2.jpg",
-    "picnic.jpg",
-    "speed-dating.jpg",
-  ];
+  if (loading) {
+    return (
+      <Container
+        fluid
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "400px" }}
+      >
+        <Spinner animation="border" />
+        <span className="ms-2">Loading profile…</span>
+      </Container>
+    );
+  }
 
-  const openLightbox = (index) => {
-    setCurrentImage(index);
-    setShowLightbox(true);
-  };
+  if (error || !profile) {
+    return (
+      <Container fluid>
+        <Button
+          variant="link"
+          onClick={() => navigate(-1)}
+          className="mb-3 p-0"
+          style={{ color: "#ae1700" }}
+        >
+          <ArrowLeft size={20} className="me-2" />
+          Back
+        </Button>
+        <Card>
+          <Card.Body>
+            <p className="text-danger mb-0">
+              {error || "Organizer not found."}
+            </p>
+          </Card.Body>
+        </Card>
+      </Container>
+    );
+  }
 
-  const nextImage = () => {
-    setCurrentImage((prev) => (prev + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
-  };
+  const location =
+    [profile.city, profile.state].filter(Boolean).join(", ") || "Not specified";
+  const name =
+    profile.fullName ||
+    [profile.firstName, profile.lastName].filter(Boolean).join(" ") ||
+    "Organizer";
 
   return (
     <Container fluid className="py-3 py-md-4">
-      {/* Back Button */}
       <Button
         variant="link"
         onClick={() => navigate(-1)}
@@ -120,68 +117,64 @@ export const ViewEventOrganizerProfile = () => {
         <Card.Body>
           <Row>
             <Col md={3} className="text-center">
-              <Image
+              <img
                 src="/assets/images/event-organizer/profile-pic.jpg"
-                alt={organizer.name}
-                rounded
-                style={{ width: "250px", height: "250px", objectFit: "cover" }}
-                className="mb-3"
+                alt={name}
+                style={{
+                  width: "200px",
+                  height: "200px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+                className="mb-2"
               />
-              <Badge bg="success" className="mb-2">
-                ✅ Verified Organizer
-              </Badge>
+              <Badge bg="success">Verified Organizer</Badge>
             </Col>
             <Col md={9}>
-              <div className="d-flex align-items-center gap-2 mb-2">
-                <h1 className="mb-0">{organizer.name}</h1>
-                <i className="bi bi-patch-check-fill text-primary fs-4"></i>
-              </div>
-              <p className="text-muted mb-2">{organizer.company}</p>
-
+              <h1 className="mb-2">{name}</h1>
+              <p className="text-muted mb-3">
+                {profile.occupation || "Event Organizer"}
+              </p>
               <Row className="g-3 mb-3">
                 <Col md={6}>
                   <span>
-                    📍 <strong>{organizer.location}</strong>
+                    📍 <strong>{location}</strong>
                   </span>
                 </Col>
-                <Col md={6}>
-                  <span>
-                    ⭐ <strong>Rating: {organizer.stats.rating}/5.0</strong>
-                  </span>
+                {profile.totalEvents != null && (
+                  <Col md={6}>
+                    <span>
+                      📅 <strong>{profile.totalEvents} events</strong>
+                    </span>
+                  </Col>
+                )}
+              </Row>
+              <Row className="g-2">
+                <Col xs={6} md={3}>
+                  <div className="text-center p-2 bg-light rounded">
+                    <div className="h5 text-danger mb-0">
+                      {profile.totalEvents ?? 0}
+                    </div>
+                    <small className="text-muted">Total Events</small>
+                  </div>
                 </Col>
-                <Col md={6}>
-                  <span>
-                    📅 <strong>Experience: {organizer.experience}</strong>
-                  </span>
+                <Col xs={6} md={3}>
+                  <div className="text-center p-2 bg-light rounded">
+                    <div className="h5 text-success mb-0">
+                      {profile.upcomingEvents ?? 0}
+                    </div>
+                    <small className="text-muted">Upcoming</small>
+                  </div>
                 </Col>
-                <Col md={6}>
-                  <span>
-                    🎯{" "}
-                    <strong>Specialization: {organizer.specialization}</strong>
-                  </span>
+                <Col xs={6} md={3}>
+                  <div className="text-center p-2 bg-light rounded">
+                    <div className="h5 text-secondary mb-0">
+                      {profile.completedEvents ?? 0}
+                    </div>
+                    <small className="text-muted">Completed</small>
+                  </div>
                 </Col>
               </Row>
-
-              <div className="d-flex gap-3 flex-wrap">
-                <div className="text-center">
-                  <div className="h4 text-danger mb-0">
-                    {organizer.stats.eventsCount}
-                  </div>
-                  <div className="small text-muted">Events Organized</div>
-                </div>
-                <div className="text-center">
-                  <div className="h4 text-danger mb-0">
-                    {organizer.stats.totalParticipants}
-                  </div>
-                  <div className="small text-muted">Total Participants</div>
-                </div>
-                <div className="text-center">
-                  <div className="h4 text-danger mb-0">
-                    {organizer.stats.successfulMatches}
-                  </div>
-                  <div className="small text-muted">Successful Matches</div>
-                </div>
-              </div>
             </Col>
           </Row>
         </Card.Body>
@@ -189,162 +182,88 @@ export const ViewEventOrganizerProfile = () => {
 
       <Row>
         <Col lg={8}>
-          <Card className="mb-4 shadow-sm">
-            <Card.Body>
-              <h3 className="mb-3 pb-2 border-bottom border-danger border-2">
-                About
-              </h3>
-              <p className="text-muted" style={{ textAlign: "justify" }}>
-                {organizer.description}
-              </p>
-            </Card.Body>
-          </Card>
+          {profile.aboutMe && (
+            <Card className="mb-4 shadow-sm">
+              <Card.Body>
+                <h4 className="mb-3 pb-2 border-bottom border-danger border-2">
+                  About
+                </h4>
+                <p className="text-muted mb-0" style={{ textAlign: "justify" }}>
+                  {profile.aboutMe}
+                </p>
+              </Card.Body>
+            </Card>
+          )}
 
           <Card className="mb-4 shadow-sm">
             <Card.Body>
-              <h3 className="mb-3 pb-2 border-bottom border-danger border-2">
-                Recent Events
-              </h3>
-              <div className="list-group">
-                {organizer.recentEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    <div>
-                      <h6 className="mb-1">{event.title}</h6>
-                      <small className="text-muted">
-                        {event.date} • {event.participants} participants
-                      </small>
-                    </div>
-                    <Badge
-                      bg={
-                        event.status === "Completed"
-                          ? "secondary"
-                          : event.status === "Upcoming"
-                            ? "primary"
-                            : "success"
+              <h4 className="mb-3 pb-2 border-bottom border-danger border-2">
+                Events
+              </h4>
+              {events.length === 0 ? (
+                <p className="text-muted mb-0">No events yet.</p>
+              ) : (
+                <div className="list-group">
+                  {events.slice(0, 10).map((ev) => (
+                    <div
+                      key={ev.id}
+                      className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        navigate(`/dashboard/organizer/event-view/${ev.id}`)
                       }
                     >
-                      {event.status}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </Card.Body>
-          </Card>
-
-          <Card className="mb-4 shadow-sm">
-            <Card.Body>
-              <h3 className="mb-3 pb-2 border-bottom border-danger border-2">
-                Reviews
-              </h3>
-              {organizer.reviews.map((review) => (
-                <div key={review.id} className="mb-3 pb-3 border-bottom">
-                  <div className="d-flex justify-content-between align-items-start mb-2">
-                    <div>
-                      <strong>{review.user}</strong>
-                      <div className="small text-muted">{review.date}</div>
+                      <div>
+                        <h6 className="mb-1">{ev.title}</h6>
+                        <small className="text-muted">
+                          {formatDate(ev.eventDate)} · {ev.city}
+                          {ev.maxParticipants != null &&
+                            ` · ${ev.currentParticipants ?? 0}/${ev.maxParticipants} participants`}
+                        </small>
+                      </div>
+                      <Badge
+                        bg={
+                          ev.status === "UPCOMING"
+                            ? "primary"
+                            : ev.status === "ONGOING"
+                              ? "success"
+                              : "secondary"
+                        }
+                      >
+                        {ev.status}
+                      </Badge>
                     </div>
-                    <div>
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <span
-                          key={i}
-                          className={
-                            i < review.rating ? "text-warning" : "text-muted"
-                          }
-                        >
-                          ★
-                        </span>
-                      ))}
+                  ))}
+                  {events.length > 10 && (
+                    <div className="list-group-item text-muted small">
+                      + {events.length - 10} more
                     </div>
-                  </div>
-                  <p className="mb-0">{review.comment}</p>
+                  )}
                 </div>
-              ))}
-            </Card.Body>
-          </Card>
-
-          <Card className="mb-4 shadow-sm">
-            <Card.Body>
-              <h3 className="mb-3 pb-2 border-bottom border-danger border-2">
-                Photo Gallery
-              </h3>
-              <Row className="g-2">
-                {images.map((img, idx) => (
-                  <Col xs={4} md={3} key={idx}>
-                    <Image
-                      src={`/assets/images/event-organizer/${img}`}
-                      alt={`Photo ${idx + 1}`}
-                      rounded
-                      style={{
-                        width: "100%",
-                        height: "120px",
-                        objectFit: "cover",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => openLightbox(idx)}
-                    />
-                  </Col>
-                ))}
-              </Row>
+              )}
             </Card.Body>
           </Card>
         </Col>
-
         <Col lg={4}>
           <Card className="shadow-sm mb-4">
             <Card.Body>
-              <h4 className="mb-3">Contact Information</h4>
-              <div className="d-flex align-items-center gap-3 p-3 bg-light rounded mb-2">
-                <span style={{ fontSize: "1.5rem" }}>📞</span>
-                <div>
-                  <div className="small text-muted">Phone</div>
-                  <div className="fw-semibold">{organizer.phone}</div>
+              <h5 className="mb-3">Contact</h5>
+              {profile.phone && (
+                <div className="d-flex align-items-center gap-3 p-2 bg-light rounded mb-2">
+                  <span>📞</span>
+                  <div className="fw-semibold">{profile.phone}</div>
                 </div>
-              </div>
-              <div className="d-flex align-items-center gap-3 p-3 bg-light rounded mb-2">
-                <span style={{ fontSize: "1.5rem" }}>📧</span>
-                <div>
-                  <div className="small text-muted">Email</div>
-                  <div className="fw-semibold">{organizer.email}</div>
+              )}
+              {profile.email && (
+                <div className="d-flex align-items-center gap-3 p-2 bg-light rounded mb-2">
+                  <span>📧</span>
+                  <div className="fw-semibold">{profile.email}</div>
                 </div>
-              </div>
+              )}
             </Card.Body>
           </Card>
         </Col>
       </Row>
-
-      {/* Lightbox Modal */}
-      <Modal
-        show={showLightbox}
-        onHide={() => setShowLightbox(false)}
-        size="xl"
-        centered
-      >
-        <Modal.Body className="bg-dark text-center p-0">
-          <Button
-            variant="light"
-            className="position-absolute top-0 end-0 m-3"
-            onClick={() => setShowLightbox(false)}
-            style={{ zIndex: 1 }}
-          >
-            <i className="bi bi-x-lg"></i>
-          </Button>
-          <Image
-            src={`/assets/images/event-organizer/${images[currentImage]}`}
-            style={{ maxHeight: "90vh", maxWidth: "100%" }}
-          />
-          <div className="d-flex justify-content-between p-3">
-            <Button variant="light" onClick={prevImage}>
-              ‹ Previous
-            </Button>
-            <Button variant="light" onClick={nextImage}>
-              Next ›
-            </Button>
-          </div>
-        </Modal.Body>
-      </Modal>
     </Container>
   );
 };

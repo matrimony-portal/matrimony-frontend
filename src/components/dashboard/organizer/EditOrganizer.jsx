@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import {
   Container,
@@ -7,42 +7,168 @@ import {
   Card,
   Button,
   Form,
-  Badge,
-  Modal,
   Image,
+  Spinner,
+  Alert,
 } from "react-bootstrap";
+import { useAuth } from "../../../hooks/useAuth.jsx";
+import { organizerService } from "../../../services/organizerService.js";
+import { toast } from "../../../utils/toast.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
+import { organizerProfileSchema } from "../../../schemas/organizerProfileSchema.js";
 
 export const EditOrganizerProfile = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
   const [photoPreview, setPhotoPreview] = useState(
     "/assets/images/event-organizer/profile-pic.jpg",
   );
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    city: "",
+    state: "",
+    aboutMe: "",
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!user?.id) {
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        setError(null);
+        const profile = await organizerService.getProfile(user.id);
+        setFormData({
+          firstName: profile.firstName ?? "",
+          lastName: profile.lastName ?? "",
+          phone: profile.phone ?? "",
+          city: profile.city ?? "",
+          state: profile.state ?? "",
+          aboutMe: profile.aboutMe ?? "",
+        });
+      } catch (e) {
+        console.error("Error fetching organizer profile:", e);
+        setError("Failed to load profile.");
+        // Inline error is shown; no toast to avoid duplicate feedback
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, [user?.id]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (validationErrors[name])
+      setValidationErrors((prev) => ({ ...prev, [name]: null }));
+  };
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => setPhotoPreview(e.target.result);
+      reader.onload = (ev) => setPhotoPreview(ev.target.result);
       reader.readAsDataURL(file);
     }
   };
 
+  const validate = () => {
+    const payload = {
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
+      phone: formData.phone?.trim() || "",
+      city: formData.city?.trim() || "",
+      state: formData.state?.trim() || "",
+      aboutMe: formData.aboutMe?.trim() || "",
+    };
+    const result = organizerProfileSchema.safeParse(payload);
+    if (!result.success) {
+      const err = {};
+      result.error.errors.forEach((e) => {
+        const p = e.path[0];
+        if (p) err[p] = e.message;
+      });
+      setValidationErrors(err);
+      return false;
+    }
+    setValidationErrors({});
+    return true;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (window.confirm("Save all changes to your profile?")) {
-      alert("Profile updated successfully!");
-      navigate("/dashboard/organizer/profile");
+    if (!validate()) {
+      toast.error("Please fix the errors before saving.");
+      return;
+    }
+    setShowConfirm(true);
+  };
+
+  const handleConfirmSave = async () => {
+    setShowConfirm(false);
+    if (!user?.id) return;
+    try {
+      setSaving(true);
+      await organizerService.updateProfile(user.id, {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        phone: formData.phone.trim() || null,
+        city: formData.city.trim() || null,
+        state: formData.state.trim() || null,
+        aboutMe: formData.aboutMe.trim() || null,
+      });
+      toast.success("Profile updated successfully!");
+      navigate("/dashboard/organizer/my-profile");
+    } catch (e) {
+      const msg =
+        e.response?.data?.message || e.message || "Failed to update profile";
+      toast.error(msg);
+    } finally {
+      setSaving(false);
     }
   };
 
+  if (loading) {
+    return (
+      <Container
+        fluid
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "400px" }}
+      >
+        <Spinner animation="border" variant="danger" />
+      </Container>
+    );
+  }
+
   return (
     <Container fluid>
+      <ConfirmationModal
+        show={showConfirm}
+        title="Save Changes"
+        message="Save all changes to your profile?"
+        variant="primary"
+        confirmText="Save"
+        onConfirm={handleConfirmSave}
+        onCancel={() => setShowConfirm(false)}
+      />
+
       <Card className="shadow-sm">
         <Card.Body>
           <h1 className="mb-4">Edit Profile</h1>
+          {error && <Alert variant="danger">{error}</Alert>}
 
           <Form onSubmit={handleSubmit}>
-            {/* Profile Photo Section */}
+            {/* Profile Photo */}
             <Card className="mb-4 border-0 bg-light">
               <Card.Body>
                 <Row className="align-items-center">
@@ -75,17 +201,10 @@ export const EditOrganizerProfile = () => {
                     </Button>
                   </Col>
                   <Col md={9}>
-                    <h4>Profile Completion: 75%</h4>
-                    <div className="progress" style={{ height: "8px" }}>
-                      <div
-                        className="progress-bar bg-success"
-                        role="progressbar"
-                        style={{ width: "75%" }}
-                      ></div>
-                    </div>
-                    <small className="text-muted">
-                      Add more details to get better visibility!
-                    </small>
+                    <p className="text-muted mb-0">
+                      Photo upload is not yet saved to profile. Other fields
+                      below are updated via API.
+                    </p>
                   </Col>
                 </Row>
               </Card.Body>
@@ -103,7 +222,16 @@ export const EditOrganizerProfile = () => {
                       <Form.Label>
                         First Name <span className="text-danger">*</span>
                       </Form.Label>
-                      <Form.Control type="text" defaultValue="Rahul" required />
+                      <Form.Control
+                        type="text"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        isInvalid={!!validationErrors.firstName}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {validationErrors.firstName}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col md={6}>
@@ -113,83 +241,14 @@ export const EditOrganizerProfile = () => {
                       </Form.Label>
                       <Form.Control
                         type="text"
-                        defaultValue="Agarwal"
-                        required
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        isInvalid={!!validationErrors.lastName}
                       />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>
-                        Date of Birth <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Control
-                        type="date"
-                        defaultValue="1994-05-15"
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>
-                        Gender <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Select defaultValue="male" required>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-
-            {/* Professional Information */}
-            <Card className="mb-4 border-0 bg-light">
-              <Card.Body>
-                <h5 className="mb-3 pb-2 border-bottom border-danger border-2">
-                  Professional Information
-                </h5>
-                <Row>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>
-                        Organization <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        defaultValue="Cupid Knot"
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>
-                        Designation <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        defaultValue="Event Manager"
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Years of Experience</Form.Label>
-                      <Form.Control type="number" defaultValue="8" min="0" />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Education</Form.Label>
-                      <Form.Control
-                        type="text"
-                        defaultValue="BBA from ISB Hyderabad"
-                      />
+                      <Form.Control.Feedback type="invalid">
+                        {validationErrors.lastName}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -205,45 +264,37 @@ export const EditOrganizerProfile = () => {
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>
-                        Email <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Control
-                        type="email"
-                        defaultValue="rahul.agarwal@email.com"
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>
-                        Phone <span className="text-danger">*</span>
-                      </Form.Label>
+                      <Form.Label>Phone</Form.Label>
                       <Form.Control
                         type="tel"
-                        defaultValue="+91 98765-98765"
-                        required
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="+91 98765 43210"
                       />
                     </Form.Group>
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>
-                        City <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Control type="text" defaultValue="Pune" required />
+                      <Form.Label>City</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        placeholder="e.g. Pune"
+                      />
                     </Form.Group>
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>
-                        State <span className="text-danger">*</span>
-                      </Form.Label>
+                      <Form.Label>State</Form.Label>
                       <Form.Control
                         type="text"
-                        defaultValue="Maharashtra"
-                        required
+                        name="state"
+                        value={formData.state}
+                        onChange={handleChange}
+                        placeholder="e.g. Maharashtra"
                       />
                     </Form.Group>
                   </Col>
@@ -262,26 +313,36 @@ export const EditOrganizerProfile = () => {
                   <Form.Control
                     as="textarea"
                     rows={4}
+                    name="aboutMe"
+                    value={formData.aboutMe}
+                    onChange={handleChange}
                     placeholder="Tell members about yourself and your experience..."
-                    defaultValue="I'm a 31-year-old Event Manager based in Pune, working with a leading event managing firm, Cupid Knot."
+                    isInvalid={!!validationErrors.aboutMe}
                   />
-                  <Form.Text className="text-muted">
-                    Minimum 50 characters
-                  </Form.Text>
+                  <Form.Control.Feedback type="invalid">
+                    {validationErrors.aboutMe}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Card.Body>
             </Card>
 
-            {/* Action Buttons */}
             <div className="d-flex gap-2 justify-content-end pt-3 border-top">
               <Button
                 variant="secondary"
-                onClick={() => navigate("/dashboard/organizer/profile")}
+                onClick={() => navigate("/dashboard/organizer/my-profile")}
+                disabled={saving}
               >
                 Cancel
               </Button>
-              <Button variant="danger" type="submit">
-                Save Changes
+              <Button variant="danger" type="submit" disabled={saving}>
+                {saving ? (
+                  <>
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
               </Button>
             </div>
           </Form>

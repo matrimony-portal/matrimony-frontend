@@ -321,7 +321,6 @@ function HomePage() {
             <Button
               as={Link}
               to="/subscription"
-              state={{ fromHomepage: true }}
               size="sm"
               className="px-0 px-sm-1 px-md-2 d-flex align-items-center subscribe-btn-nav"
               style={{
@@ -368,6 +367,10 @@ function HomePage() {
                 href="#home"
                 className="text-white px-3"
                 style={{ fontWeight: 500, whiteSpace: "nowrap" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
               >
                 Home
               </Nav.Link>
@@ -377,9 +380,9 @@ function HomePage() {
                 style={{ fontWeight: 500, whiteSpace: "nowrap" }}
                 onClick={(e) => {
                   e.preventDefault();
-                  const searchSection = document.getElementById("search");
-                  if (searchSection) {
-                    searchSection.scrollIntoView({
+                  const section = document.getElementById("search");
+                  if (section) {
+                    section.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
                     });
@@ -392,6 +395,16 @@ function HomePage() {
                 href="#whyUs"
                 className="text-white px-3"
                 style={{ fontWeight: 500, whiteSpace: "nowrap" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const section = document.getElementById("whyUs");
+                  if (section) {
+                    section.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }
+                }}
               >
                 Why us?
               </Nav.Link>
@@ -399,16 +412,19 @@ function HomePage() {
                 href="#successStories"
                 className="text-white px-3"
                 style={{ fontWeight: 500, whiteSpace: "nowrap" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const section = document.getElementById("successStories");
+                  if (section) {
+                    section.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }
+                }}
               >
                 Success Stories
               </Nav.Link>
-              {/* <Nav.Link
-                href="#events"
-                className="text-white px-3"
-                style={{ fontWeight: 500, whiteSpace: "nowrap" }}
-              >
-                Events
-              </Nav.Link> */}
               <Nav.Link
                 as={Link}
                 to="/contact"

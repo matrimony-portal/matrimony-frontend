@@ -8,3 +8,6 @@ export { default as Badge } from "./Badge";
 export { default as Input } from "./Input";
 export { default as Select } from "./Select";
 export { default as Tooltip } from "./Tooltip";
+export { default as Pagination } from "./Pagination";
+export { default as SettingItem } from "./SettingItem";
+export { default as ToggleSwitch } from "./ToggleSwitch";

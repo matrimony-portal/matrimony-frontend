@@ -11,15 +11,17 @@ import {
   Alert,
 } from "react-bootstrap";
 import { eventService } from "../../../services/eventService.js";
-import { toast } from "react-toastify";
+import { toast } from "../../../utils/toast.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 
 export const EventForm = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
-  const [eventType, setEventType] = useState("speed-dating");
+  const [eventType, setEventType] = useState("SPEED_DATING");
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -27,8 +29,11 @@ export const EventForm = () => {
     eventTime: "",
     duration: "3",
     venue: "",
+    address: "",
     city: "",
     state: "",
+    eventType: "SPEED_DATING",
+    imageUrl: "",
     maxParticipants: "",
     registrationFee: "",
   });
@@ -46,6 +51,8 @@ export const EventForm = () => {
           const eventTime = event.eventDate
             ? new Date(event.eventDate).toTimeString().slice(0, 5)
             : "";
+          const et = event.eventType || "SPEED_DATING";
+          setEventType(et);
           setFormData({
             title: event.title || "",
             description: event.description || "",
@@ -53,15 +60,18 @@ export const EventForm = () => {
             eventTime: eventTime,
             duration: "3",
             venue: event.venue || "",
+            address: event.venue || "",
             city: event.city || "",
             state: event.state || "",
+            eventType: et,
+            imageUrl: event.imageUrl || "",
             maxParticipants: event.maxParticipants?.toString() || "",
             registrationFee: event.registrationFee?.toString() || "",
           });
         } catch (err) {
           console.error("Error fetching event:", err);
           setError("Failed to load event details");
-          toast.error("Failed to load event");
+          // Inline error is shown; no toast to avoid duplicate feedback
         } finally {
           setFetching(false);
         }
@@ -71,10 +81,10 @@ export const EventForm = () => {
   }, [eventId, isEdit]);
 
   const eventTypes = [
-    { value: "speed-dating", icon: "⚡", label: "Speed Dating" },
-    { value: "coffee-meetup", icon: "☕", label: "Coffee Meetup" },
-    { value: "dinner", icon: "🍽️", label: "Dinner Event" },
-    { value: "cultural", icon: "🎭", label: "Cultural Evening" },
+    { value: "SPEED_DATING", icon: "⚡", label: "Speed Dating" },
+    { value: "COFFEE_MEETUP", icon: "☕", label: "Coffee Meetup" },
+    { value: "DINNER", icon: "🍽️", label: "Dinner Event" },
+    { value: "CULTURAL", icon: "🎭", label: "Cultural Evening" },
   ];
 
   const handleInputChange = (e) => {
@@ -92,18 +102,21 @@ export const EventForm = () => {
         ? new Date(`${formData.eventDate}T${formData.eventTime}`).toISOString()
         : null;
 
+    const venueOrAddress = formData.venue || formData.address;
     const eventPayload = {
       title: formData.title,
       description: formData.description,
       eventDate: eventDateTime,
-      venue: formData.venue,
+      venue: venueOrAddress,
       city: formData.city,
       state: formData.state,
+      eventType: formData.eventType || eventType,
+      imageUrl: formData.imageUrl?.trim() || null,
       maxParticipants: formData.maxParticipants
-        ? parseInt(formData.maxParticipants)
+        ? parseInt(formData.maxParticipants, 10)
         : null,
       registrationFee: formData.registrationFee
-        ? parseFloat(formData.registrationFee)
+        ? parseFloat(formData.registrationFee, 10)
         : 0,
     };
 
@@ -128,10 +141,12 @@ export const EventForm = () => {
     }
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm("Delete this event? This action cannot be undone.")) {
-      return;
-    }
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setShowDeleteModal(false);
     try {
       setLoading(true);
       await eventService.deleteEvent(eventId);
@@ -160,6 +175,16 @@ export const EventForm = () => {
 
   return (
     <Container fluid>
+      <ConfirmationModal
+        show={showDeleteModal}
+        title="Delete Event"
+        message="Delete this event? This action cannot be undone."
+        variant="danger"
+        confirmText="Delete"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setShowDeleteModal(false)}
+      />
+
       <Card className="shadow-sm">
         <Card.Body>
           <div className="mb-4">
@@ -186,9 +211,15 @@ export const EventForm = () => {
                   {eventTypes.map((type) => (
                     <Col key={type.value} xs={6} md={3}>
                       <Card
-                        className={`text-center h-100 ${eventType === type.value ? "border-danger bg-white" : ""}`}
+                        className={`text-center h-100 ${(formData.eventType || eventType) === type.value ? "border-danger bg-white" : ""}`}
                         style={{ cursor: "pointer", transition: "all 0.3s" }}
-                        onClick={() => setEventType(type.value)}
+                        onClick={() => {
+                          setEventType(type.value);
+                          setFormData((prev) => ({
+                            ...prev,
+                            eventType: type.value,
+                          }));
+                        }}
                       >
                         <Card.Body className="py-4">
                           <div style={{ fontSize: "2.5rem" }} className="mb-2">
@@ -308,7 +339,7 @@ export const EventForm = () => {
                 </h5>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Venue Name <span className="text-danger">*</span>
+                    Address / Venue <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
@@ -316,7 +347,17 @@ export const EventForm = () => {
                     value={formData.venue}
                     onChange={handleInputChange}
                     required
-                    placeholder="e.g., The Coffee House"
+                    placeholder="e.g., Grand Ballroom, Taj Hotel"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Image URL</Form.Label>
+                  <Form.Control
+                    type="url"
+                    name="imageUrl"
+                    value={formData.imageUrl}
+                    onChange={handleInputChange}
+                    placeholder="https://..."
                   />
                 </Form.Group>
                 <Row>
@@ -403,7 +444,7 @@ export const EventForm = () => {
                 <Button
                   variant="danger"
                   className="ms-auto me-2"
-                  onClick={handleDelete}
+                  onClick={handleDeleteClick}
                   disabled={loading}
                 >
                   <i className="bi bi-trash me-2"></i>Delete Event

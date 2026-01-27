@@ -97,7 +97,6 @@ const PublicLayout = () => {
             <Button
               as={Link}
               to="/subscription"
-              state={{ fromHomepage: true }}
               size="sm"
               className="px-0 px-sm-1 px-md-2 d-flex align-items-center subscribe-btn-nav"
               style={{
@@ -149,35 +148,26 @@ const PublicLayout = () => {
                 Home
               </Nav.Link>
               <Nav.Link
-                href="#search"
+                as={Link}
+                to="/#search"
                 className="text-white px-3"
                 style={{ fontWeight: 500, whiteSpace: "nowrap" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href = "/#search";
-                }}
               >
                 Search
               </Nav.Link>
               <Nav.Link
-                href="#whyUs"
+                as={Link}
+                to="/#whyUs"
                 className="text-white px-3"
                 style={{ fontWeight: 500, whiteSpace: "nowrap" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href = "/#whyUs";
-                }}
               >
                 Why us?
               </Nav.Link>
               <Nav.Link
-                href="#successStories"
+                as={Link}
+                to="/#successStories"
                 className="text-white px-3"
                 style={{ fontWeight: 500, whiteSpace: "nowrap" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href = "/#successStories";
-                }}
               >
                 Success Stories
               </Nav.Link>
