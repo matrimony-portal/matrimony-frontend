@@ -1,9 +1,9 @@
 // src/App.jsx
 import { Navigate, Outlet, Route, Routes } from "react-router";
-import { AuthProvider } from "./providers/AuthProvider.jsx";
 import DashboardPathRouter from "./components/auth/DashboardPathRouter.jsx";
 import DashboardRouter from "./components/auth/DashboardRouter.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
+import { AuthProvider } from "./providers/AuthProvider.jsx";
 
 // Public Pages
 import Login from "./components/auth/Login.jsx";
@@ -48,6 +48,7 @@ import PremiumSearchMatches from "./components/dashboard/premium/SearchMatches.j
 import PremiumSettings from "./components/dashboard/premium/Settings.jsx";
 import PremiumShortlist from "./components/dashboard/premium/Shortlist.jsx";
 
+import "react-toastify/dist/ReactToastify.css";
 import "./styles/custom.css";
 
 function App() {
