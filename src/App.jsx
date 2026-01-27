@@ -30,6 +30,7 @@ import Feedback from "./components/dashboard/premium/Feedback.jsx";
 import ProfileView from "./components/dashboard/premium/ProfileView.jsx";
 import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
 import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
+import AdminProfile from "./components/dashboard/admin/AdminProfile.jsx";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -50,6 +51,11 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/profile" element={<AdminProfile />} />
+        <Route path="/admin/broadcast" element={<BroadcastMessage />} />
+        <Route path="/admin/add-event" element={<AddEvent />} />
+        <Route path="/admin/announcement" element={<GlobalAnnouncement />} />
+        <Route path="/admin/reports" element={<ReportsCounter />} />
 
         {/* Protected Dashboard Routes with Layout */}
         <Route
@@ -87,6 +93,7 @@ function App() {
           {/*Admin Routes */}
 
           <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin/profile" element={<AdminProfile />} />
           <Route path="admin/broadcast" element={<BroadcastMessage />} />
           <Route path="admin/add-event" element={<AddEvent />} />
           <Route path="admin/announcement" element={<GlobalAnnouncement />} />

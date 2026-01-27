@@ -1,10 +1,21 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
-
+import { fetchAdminProfile } from "../../../services/admin/API_BASE_URL";
 import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
+  const [adminData, setAdminData] = useState({
+    name: "Loading...",
+    avatar: "https://i.pravatar.cc/40",
+  });
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const data = await fetchAdminProfile();
+      setAdminData(data);
+    };
+    loadProfile();
+  }, []);
   return (
     <div className="admin-layout">
       {/* Left Sidebar */}
@@ -42,8 +53,10 @@ export default function AdminDashboard() {
         <header className="topbar">
           <h2>Admin Dashboard</h2>
           <div className="admin-profile">
-            <span>Admin</span>
-            <img src="https://i.pravatar.cc/40" alt="admin" />
+            <Link to="profile" className="profile-link">
+              <span>{adminData.name}</span>
+              <img src={adminData.avatar} alt="admin" />
+            </Link>
           </div>
         </header>
 
@@ -341,16 +354,16 @@ export default function AdminDashboard() {
 
           <div className="quick-actions">
             <h3>Quick Actions</h3>
-            <Link to="/dashboard/admin/broadcast" className="quick-btn">
+            <Link to="broadcast" className="quick-btn">
               📢 Broadcast Message
             </Link>
-            <Link to="/dashboard/admin/add-event" className="quick-btn">
+            <Link to="add-event" className="quick-btn">
               📅 Add New Event
             </Link>
-            <Link to="/dashboard/admin/announcement" className="quick-btn">
+            <Link to="announcement" className="quick-btn">
               🌍 Global Announcement
             </Link>
-            <Link to="/dashboard/admin/reports" className="quick-btn">
+            <Link to="reports" className="quick-btn">
               🚨 Reports Counter (15)
             </Link>
           </div>
