@@ -505,6 +505,73 @@ td {
 }
 
 /* Quick Actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  padding: 20px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 15%);
+  border-color: #6e0000;
+  color: #6e0000;
+}
+
+.action-btn.broadcast {
+  border-color: #ff6b35;
+}
+
+.action-btn.broadcast:hover {
+  border-color: #ff6b35;
+  color: #ff6b35;
+}
+
+.action-btn.event {
+  border-color: #f39c12;
+}
+
+.action-btn.event:hover {
+  border-color: #f39c12;
+  color: #f39c12;
+}
+
+.action-btn.announcement {
+  border-color: #e74c3c;
+}
+
+.action-btn.announcement:hover {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+.action-btn.reports {
+  border-color: #3498db;
+}
+
+.action-btn.reports:hover {
+  border-color: #3498db;
+  color: #3498db;
+}
+
 .quick-actions button,
 .quick-actions .quick-btn {
   width: 100%;

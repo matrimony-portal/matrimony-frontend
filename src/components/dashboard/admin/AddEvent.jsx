@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { toast } from "react-toastify";
 import "./QuickActionsPages.css";
 
@@ -65,7 +66,12 @@ export default function AddEvent() {
 
   return (
     <div className="page">
-      <h2>📅 Add New Event</h2>
+      <div className="page-header">
+        <Link to="/dashboard/admin" className="back-btn">
+          ← Back to Dashboard
+        </Link>
+        <h2>📅 Add New Event</h2>
+      </div>
       <div className="event-form">
         <input placeholder="Event Title" />
         <input type="date" />

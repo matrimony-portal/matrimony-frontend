@@ -32,6 +32,11 @@ import FreeShortlist from "./components/dashboard/free/Shortlist.jsx";
 
 // Dashboard Pages (Premium)
 import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
+import AdminProfile from "./components/dashboard/admin/AdminProfile.jsx";
+import BroadcastMessage from "./components/dashboard/admin/BroadcastMessage.jsx";
+import AddEvent from "./components/dashboard/admin/AddEvent.jsx";
+import GlobalAnnouncement from "./components/dashboard/admin/GlobalAnnouncement.jsx";
+import ReportsCounter from "./components/dashboard/admin/ReportsCounter.jsx";
 import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
 import PremiumBlockedUsers from "./components/dashboard/premium/BlockedUsers.jsx";
 import PremiumEditProfile from "./components/dashboard/premium/EditProfile.jsx";
@@ -111,7 +116,14 @@ function App() {
 
           {/* Organizer & Admin Routes */}
           <Route path="organizer" element={<OrganizerDashboard />} />
-          <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin" element={<Outlet />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="profile" element={<AdminProfile />} />
+            <Route path="broadcast" element={<BroadcastMessage />} />
+            <Route path="add-event" element={<AddEvent />} />
+            <Route path="announcement" element={<GlobalAnnouncement />} />
+            <Route path="reports" element={<ReportsCounter />} />
+          </Route>
 
           {/* Legacy routes (keep old links working, but route under correct base) */}
           <Route

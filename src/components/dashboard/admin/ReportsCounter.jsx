@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import "./QuickActionsPages.css";
 
 const reportsData = [
@@ -66,7 +67,12 @@ const reportsData = [
 export default function ReportsCounter() {
   return (
     <div className="page reports-box">
-      <h2>🚨 Reports Counter</h2>
+      <div className="page-header">
+        <Link to="/dashboard/admin" className="back-btn">
+          ← Back to Dashboard
+        </Link>
+        <h2>🚨 Reports Counter</h2>
+      </div>
 
       <div className="reports-summary">
         <div className="summary-item">

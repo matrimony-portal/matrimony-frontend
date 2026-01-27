@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { toast } from "react-toastify";
 import "./QuickActionsPages.css";
 
@@ -43,7 +44,12 @@ export default function GlobalAnnouncement() {
 
   return (
     <div className="page announcement-box">
-      <h2>🌍 Global Announcement</h2>
+      <div className="page-header">
+        <Link to="/dashboard/admin" className="back-btn">
+          ← Back to Dashboard
+        </Link>
+        <h2>🌍 Global Announcement</h2>
+      </div>
       <textarea placeholder="Write announcement..." />
       <button onClick={handlePublishAnnouncement}>Publish Announcement</button>
 

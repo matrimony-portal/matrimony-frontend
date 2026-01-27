@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { toast } from "react-toastify";
 import "./QuickActionsPages.css";
 
@@ -35,7 +36,12 @@ export default function BroadcastMessage() {
 
   return (
     <div className="page broadcast-box">
-      <h2>📢 Broadcast Message</h2>
+      <div className="page-header">
+        <Link to="/dashboard/admin" className="back-btn">
+          ← Back to Dashboard
+        </Link>
+        <h2>📢 Broadcast Message</h2>
+      </div>
       <textarea placeholder="Write message for all users..." />
       <button onClick={handleSendMessage}>Send to All Users</button>
 

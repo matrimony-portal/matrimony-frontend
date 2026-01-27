@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import "./AdminProfile.css";
 
@@ -40,7 +40,7 @@ export default function AdminProfile() {
           status: "ACTIVE",
           created_at: "2023-01-15T10:30:00Z",
           updated_at: "2024-01-20T15:45:00Z",
-          avatar: "https://i.pravatar.cc/150",
+          // avatar: "https://i.pravatar.cc/150",
         });
       }
     };
