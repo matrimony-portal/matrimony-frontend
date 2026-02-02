@@ -16,9 +16,10 @@ export const validateName = (name) => {
 };
 
 export const validatePassword = (password) => {
-  // Minimum 8 characters, at least one uppercase, one lowercase, one number, and one special character
+  // Minimum 8 characters, at least one uppercase, one lowercase, one number, and one special character (any non-alphanumeric).
+  // Matches the checkmarks: allows #, etc., not only @$!%*?&
   const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9\s]).{8,}$/;
   return passwordRegex.test(password);
 };
 
@@ -53,13 +54,21 @@ export const validateAge = (dobValue, minAge = 18) => {
   return dob <= minAgeDate && dob >= maxAgeDate;
 };
 
-export const validateAgeAgainstGender = (dobValue) => {
+/**
+ * Minimum age by gender: Female 18+, Male 22+ (others 18+).
+ * @param {string} dobValue - DD/MM/YYYY
+ * @param {string} [gender] - "male" | "female" | "other" | ""
+ * @returns {boolean}
+ */
+export const validateAgeAgainstGender = (dobValue, gender) => {
   if (!dobValue) return true; // Skip if empty (handled elsewhere)
 
-  let minAge = 18; // Default
-  // This function will be called with gender parameter in the component
+  const minAge = gender === "male" ? 22 : 18; // Female 18+, Male 22+
   return validateAge(dobValue, minAge);
 };
+
+/** @param {string} [gender] - @returns {number} min age for error messages */
+export const getMinAgeForGender = (gender) => (gender === "male" ? 22 : 18);
 
 export const checkPasswordStrength = (password) => {
   const checks = [

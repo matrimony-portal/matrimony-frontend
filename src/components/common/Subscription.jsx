@@ -25,6 +25,7 @@ import {
 } from "react-bootstrap-icons";
 import { useNavigate } from "react-router";
 import { useUserCapabilities } from "../../hooks/useUserCapabilities.jsx";
+import { toast } from "../../utils/toast.js";
 
 // Payment/Subscription Component
 const PaymentPage = ({ inLayout = false }) => {
@@ -65,11 +66,12 @@ const PaymentPage = ({ inLayout = false }) => {
     const validCodes = { SAVE20: 20, FIRST50: 50, PREMIUM10: 10 };
     if (validCodes[promoCode.toUpperCase()]) {
       setDiscount(validCodes[promoCode.toUpperCase()]);
-      alert(
-        `Promo code applied! You saved ₹${Math.round((selectedPlan.price * validCodes[promoCode.toUpperCase()]) / 100)}`,
+      const saved = Math.round(
+        (selectedPlan.price * validCodes[promoCode.toUpperCase()]) / 100,
       );
+      toast.success(`Promo code applied! You saved ₹${saved}`);
     } else {
-      alert("Invalid promo code!");
+      toast.error("Invalid promo code!");
     }
   };
 

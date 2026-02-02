@@ -91,6 +91,9 @@ export const AuthProvider = ({ children }) => {
       setSubscriptionTier(normalized.tier);
 
       localStorage.setItem("matrimony_token", data.token);
+      if (data.refreshToken) {
+        localStorage.setItem("matrimony_refresh_token", data.refreshToken);
+      }
       localStorage.setItem("matrimony_user", JSON.stringify(userData));
       localStorage.setItem("matrimony_userType", data.user.userType);
       localStorage.setItem("matrimony_subscriptionStatus", normalized.status);
@@ -117,6 +120,7 @@ export const AuthProvider = ({ children }) => {
       setSubscriptionStatus(null);
       setSubscriptionTier(null);
       localStorage.removeItem("matrimony_token");
+      localStorage.removeItem("matrimony_refresh_token");
       localStorage.removeItem("matrimony_user");
       localStorage.removeItem("matrimony_userType");
       localStorage.removeItem("matrimony_subscriptionStatus");

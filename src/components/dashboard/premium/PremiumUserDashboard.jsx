@@ -1,13 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import StatCard from "../../common/shared/StatCard.jsx";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";
+import ProfileCompleteBanner from "../shared/ProfileCompleteBanner.jsx";
+import { profileService } from "../../../services/profileService.js";
+import { computeProfileCompletionPercentage } from "../../../utils/profileUtils.js";
 
 const PremiumUserDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("new");
+  const [profilePercent, setProfilePercent] = useState(100);
+
+  useEffect(() => {
+    const loadProfilePercent = async () => {
+      try {
+        const p = await profileService.getProfile();
+        setProfilePercent(computeProfileCompletionPercentage(p));
+      } catch {
+        setProfilePercent(100);
+      }
+    };
+    loadProfilePercent();
+  }, []);
 
   const stats = [
     { icon: "👥", number: 52, label: "Total Matches" },
@@ -111,6 +127,7 @@ const PremiumUserDashboard = () => {
 
   return (
     <div className="dashboard-container py-3 py-md-4">
+      <ProfileCompleteBanner percent={profilePercent} />
       {/* Header */}
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 pb-2 border-bottom">
         <div>

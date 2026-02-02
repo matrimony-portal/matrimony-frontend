@@ -11,6 +11,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import { eventService } from "../../../services/eventService.js";
+import { handleApiError } from "../../../services/api.js";
 import { toast } from "../../../utils/toast.js";
 import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 
@@ -45,12 +46,16 @@ export const EventForm = () => {
         try {
           setFetching(true);
           const event = await eventService.getEventById(eventId);
-          const eventDate = event.eventDate
-            ? new Date(event.eventDate).toISOString().split("T")[0]
-            : "";
-          const eventTime = event.eventDate
-            ? new Date(event.eventDate).toTimeString().slice(0, 5)
-            : "";
+          let eventDate = "";
+          let eventTime = "";
+          if (event.eventDate) {
+            const d = new Date(event.eventDate);
+            eventDate = d.toISOString().split("T")[0];
+            eventTime =
+              ("0" + d.getHours()).slice(-2) +
+              ":" +
+              ("0" + d.getMinutes()).slice(-2);
+          }
           const et = event.eventType || "SPEED_DATING";
           setEventType(et);
           setFormData({
@@ -96,11 +101,25 @@ export const EventForm = () => {
     e.preventDefault();
     setError(null);
 
-    // Combine date and time into eventDate
-    const eventDateTime =
-      formData.eventDate && formData.eventTime
-        ? new Date(`${formData.eventDate}T${formData.eventTime}`).toISOString()
-        : null;
+    // Combine date and time into eventDate (local ISO for backend LocalDateTime, no Z)
+    const t = formData.eventTime || "00:00";
+    const timePart = t.length <= 5 ? t + ":00" : t;
+    const eventDateTime = formData.eventDate
+      ? `${formData.eventDate}T${timePart}`
+      : null;
+
+    // Validation: event date+time must be at least 24 hours in the future
+    if (eventDateTime) {
+      const eventDt = new Date(eventDateTime);
+      const minDt = new Date();
+      minDt.setTime(minDt.getTime() + 24 * 60 * 60 * 1000);
+      if (eventDt.getTime() < minDt.getTime()) {
+        setError(
+          "Event date and time must be at least 24 hours from now. Please choose a later date or time.",
+        );
+        return;
+      }
+    }
 
     const venueOrAddress = formData.venue || formData.address;
     const eventPayload = {
@@ -132,8 +151,7 @@ export const EventForm = () => {
       navigate("/dashboard/organizer/my-events");
     } catch (err) {
       console.error("Error saving event:", err);
-      const errorMessage =
-        err.response?.data?.message || err.message || "Failed to save event";
+      const errorMessage = handleApiError(err) || "Failed to save event";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -208,28 +226,50 @@ export const EventForm = () => {
                   Event Type
                 </h5>
                 <Row className="g-3">
-                  {eventTypes.map((type) => (
-                    <Col key={type.value} xs={6} md={3}>
-                      <Card
-                        className={`text-center h-100 ${(formData.eventType || eventType) === type.value ? "border-danger bg-white" : ""}`}
-                        style={{ cursor: "pointer", transition: "all 0.3s" }}
-                        onClick={() => {
-                          setEventType(type.value);
-                          setFormData((prev) => ({
-                            ...prev,
-                            eventType: type.value,
-                          }));
-                        }}
-                      >
-                        <Card.Body className="py-4">
-                          <div style={{ fontSize: "2.5rem" }} className="mb-2">
-                            {type.icon}
-                          </div>
-                          <div className="fw-semibold">{type.label}</div>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
+                  {eventTypes.map((type) => {
+                    const isSelected =
+                      (formData.eventType || eventType) === type.value;
+                    return (
+                      <Col key={type.value} xs={6} md={3}>
+                        <Card
+                          className={`text-center h-100 position-relative ${
+                            isSelected
+                              ? "border-danger border-3 bg-white shadow"
+                              : "border border-2 border-light"
+                          }`}
+                          style={{
+                            cursor: "pointer",
+                            transition: "all 0.2s ease",
+                          }}
+                          onClick={() => {
+                            setEventType(type.value);
+                            setFormData((prev) => ({
+                              ...prev,
+                              eventType: type.value,
+                            }));
+                          }}
+                        >
+                          {isSelected && (
+                            <span
+                              className="position-absolute top-0 end-0 m-2"
+                              aria-hidden="true"
+                            >
+                              <i className="bi bi-check-circle-fill text-danger fs-5" />
+                            </span>
+                          )}
+                          <Card.Body className="py-4">
+                            <div
+                              style={{ fontSize: "2.5rem" }}
+                              className="mb-2"
+                            >
+                              {type.icon}
+                            </div>
+                            <div className="fw-semibold">{type.label}</div>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    );
+                  })}
                 </Row>
               </Card.Body>
             </Card>
@@ -350,7 +390,7 @@ export const EventForm = () => {
                     placeholder="e.g., Grand Ballroom, Taj Hotel"
                   />
                 </Form.Group>
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3 d-none">
                   <Form.Label>Image URL</Form.Label>
                   <Form.Control
                     type="url"

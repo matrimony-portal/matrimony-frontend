@@ -5,7 +5,7 @@ import { apiDelay } from "../utils/apiDelay.js";
 const BASE_URL =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||
-  "http://localhost:8080/api";
+  "http://localhost:8080/bandhan";
 
 // ============================================
 // Regular API Instance (for all except admin)
@@ -38,7 +38,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      // Don't redirect when only my-registrations fails (e.g. expired token); events list can still show
+      const url = error.config?.url ?? error.config?.baseURL ?? "";
+      if (String(url).includes("my-registrations")) {
+        return Promise.reject(error);
+      }
       localStorage.removeItem("matrimony_token");
+      localStorage.removeItem("matrimony_refresh_token");
       localStorage.removeItem("matrimony_user");
       localStorage.removeItem("matrimony_userType");
       localStorage.removeItem("matrimony_subscriptionStatus");

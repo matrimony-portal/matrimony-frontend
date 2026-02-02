@@ -4,13 +4,17 @@ import { useNavigate } from "react-router";
 import PropTypes from "prop-types";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
 import { Pagination } from "../../ui";
+import { toast } from "../../../utils/toast.js";
+import useConfirmation from "../../../hooks/useConfirmation.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 import {
   formatEventDate,
   formatTime12Hour,
   formatPrice,
+  formatDateDisplay,
 } from "../../../utils/dateFormat.js";
 import {
-  EVENT_TYPES,
+  EVENT_TYPES_BACKEND,
   CITIES,
   DATE_RANGES,
   PRICE_RANGES,
@@ -18,6 +22,7 @@ import {
   DEFAULT_EVENT_FILTERS,
   DEFAULT_ITEMS_PER_PAGE,
 } from "../../../constants/eventFilters.js";
+import { getDefaultEventImage } from "../../../utils/eventUtils.js";
 
 /**
  * EventFilters - Reusable filter sidebar component
@@ -53,7 +58,7 @@ const EventFilters = ({
               value={filters.type}
               onChange={onFilterChange}
             >
-              {EVENT_TYPES.map((option) => (
+              {EVENT_TYPES_BACKEND.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -160,6 +165,7 @@ const EventCard = ({
   onRegister,
   onViewOrganizer,
   isRegistering = false,
+  isRegistered = false,
 }) => {
   const { day, month } = formatEventDate(event.date);
   const formattedTime = formatTime12Hour(event.time);
@@ -174,15 +180,22 @@ const EventCard = ({
         className="position-relative"
         style={{
           height: "200px",
-          backgroundImage: `url(${event.image || "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg"})`,
+          backgroundImage: `url(${getDefaultEventImage(event)})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        {event.badge && (
-          <span className="badge bg-white text-danger position-absolute top-0 start-0 m-2">
-            {event.badge}
+        {isRegistered ? (
+          <span className="badge bg-success position-absolute top-0 start-0 m-2">
+            <i className="bi bi-check-circle-fill me-1" aria-hidden="true" />
+            You&apos;re registered
           </span>
+        ) : (
+          event.badge && (
+            <span className="badge bg-white text-danger position-absolute top-0 start-0 m-2">
+              {event.badge}
+            </span>
+          )
         )}
         <div
           className="position-absolute top-0 end-0 m-2 bg-white rounded text-center p-2"
@@ -242,13 +255,15 @@ const EventCard = ({
         <button
           className="btn btn-danger w-100"
           onClick={() => onRegister?.(event.id, event.title)}
-          disabled={isSoldOut || isRegistering}
+          disabled={isSoldOut || isRegistering || isRegistered}
         >
           {isRegistering ? (
             <>
               <span className="spinner-border spinner-border-sm me-2" />
               Registering...
             </>
+          ) : isRegistered ? (
+            "Registered"
           ) : isSoldOut ? (
             "Fully Booked"
           ) : (
@@ -279,6 +294,7 @@ EventCard.propTypes = {
   onRegister: PropTypes.func,
   onViewOrganizer: PropTypes.func,
   isRegistering: PropTypes.bool,
+  isRegistered: PropTypes.bool,
 };
 
 /**
@@ -288,10 +304,14 @@ EventCard.propTypes = {
 const Events = () => {
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
+  const { confirm, confirmationProps } = useConfirmation();
 
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
   const [allEvents, setAllEvents] = useState([]);
+  const [myRegistrations, setMyRegistrations] = useState([]);
+  const [myRegistrationIds, setMyRegistrationIds] = useState(new Set());
+  const [showOnlyMyRegistrations, setShowOnlyMyRegistrations] = useState(false);
   const [filters, setFilters] = useState(DEFAULT_EVENT_FILTERS);
   const [currentPage, setCurrentPage] = useState(1);
   const [registeringEventId, setRegisteringEventId] = useState(null);
@@ -299,31 +319,62 @@ const Events = () => {
   const loadEvents = useCallback(async () => {
     try {
       setLoading(true);
-      // Use real eventService from services
       const { eventService: realEventService } =
         await import("../../../services/eventService.js");
-      const events = await realEventService.getEvents();
+
+      // Load events first; load my-registrations independently so a failure
+      // (e.g. 401 for free users, getUserId) does not break the events list.
+      const eventsPromise = realEventService.getEvents();
+      const myRegsPromise = (
+        realEventService.getMyRegistrations?.() ?? Promise.resolve([])
+      ).catch((err) => {
+        console.warn(
+          "Could not load my registrations (events list still shown):",
+          err?.message || err,
+        );
+        return [];
+      });
+      const [events, myRegs] = await Promise.all([
+        eventsPromise,
+        myRegsPromise,
+      ]);
+
+      const regs = Array.isArray(myRegs) ? myRegs : [];
+      setMyRegistrations(regs);
+      setMyRegistrationIds(new Set(regs.map((r) => r.eventId).filter(Boolean)));
 
       // Transform backend response to frontend format
-      const transformedEvents = events.map((event) => ({
-        id: event.id,
-        title: event.title,
-        organizerId: event.organizerId,
-        location: `${event.venue}, ${event.city}`,
-        venue: event.venue,
-        date: event.eventDate,
-        time: new Date(event.eventDate).toLocaleTimeString("en-IN", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        price:
-          typeof event.registrationFee === "number"
-            ? event.registrationFee
-            : parseFloat(event.registrationFee) || 0,
-        currentParticipants: event.currentParticipants || 0,
-        maxParticipants: event.maxParticipants,
-        image: "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
-      }));
+      const transformedEvents = (Array.isArray(events) ? events : []).map(
+        (event) => {
+          const d = event.eventDate;
+          const hasDate = d && !isNaN(new Date(d).getTime());
+          return {
+            id: event.id,
+            title: event.title || "Untitled",
+            organizerId: event.organizerId,
+            eventType: event.eventType,
+            location:
+              [event.venue, event.city].filter(Boolean).join(", ") || "—",
+            venue: event.venue,
+            date: d || null,
+            time: hasDate
+              ? new Date(d).toLocaleTimeString("en-IN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "—",
+            price:
+              typeof event.registrationFee === "number"
+                ? event.registrationFee
+                : parseFloat(event.registrationFee) || 0,
+            currentParticipants: event.currentParticipants || 0,
+            maxParticipants: event.maxParticipants,
+            image:
+              "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
+            status: event.status,
+          };
+        },
+      );
 
       setAllEvents(transformedEvents);
     } catch (error) {
@@ -384,19 +435,23 @@ const Events = () => {
     loadEvents();
   }, [loadEvents]);
 
-  // Filter events based on current filters
+  // Filter events based on current filters and "my registrations only" toggle
   const filteredEvents = useMemo(() => {
     return allEvents.filter((event) => {
-      if (filters.type && event.type !== filters.type) return false;
+      if (showOnlyMyRegistrations && !myRegistrationIds.has(event.id))
+        return false;
+      if (filters.type && (event.eventType || "") !== filters.type)
+        return false;
       if (
         filters.city &&
-        !event.location?.toLowerCase().includes(filters.city.toLowerCase())
+        !String(event.location || event.city || "")
+          .toLowerCase()
+          .includes(String(filters.city).toLowerCase())
       )
         return false;
-      // Add more filter logic as needed
       return true;
     });
-  }, [allEvents, filters]);
+  }, [allEvents, filters, showOnlyMyRegistrations, myRegistrationIds]);
 
   // Paginate events
   const paginatedEvents = useMemo(() => {
@@ -419,46 +474,51 @@ const Events = () => {
     setShowFilters(false);
   }, []);
 
-  const handleResetFilters = useCallback(() => {
-    if (window.confirm("Reset all filters to default?")) {
+  const handleResetFilters = useCallback(async () => {
+    if (
+      await confirm({
+        title: "Reset filters",
+        message: "Reset all filters to default?",
+      })
+    ) {
       setFilters(DEFAULT_EVENT_FILTERS);
+      setShowOnlyMyRegistrations(false);
       setCurrentPage(1);
     }
-  }, []);
+  }, [confirm]);
 
   const handleRegister = useCallback(
     async (eventId, eventName) => {
-      if (
-        window.confirm(
-          `Register for ${eventName}?\n\nYou will be redirected to payment page.`,
-        )
-      ) {
-        try {
-          setRegisteringEventId(eventId);
-          const { eventService: realEventService } =
-            await import("../../../services/eventService.js");
-          await realEventService.registerForEvent(eventId);
-          alert(
-            "Registration initiated!\n\nPlease complete the payment to confirm your spot.",
-          );
-          loadEvents();
-        } catch (error) {
-          console.error("Error registering for event:", error);
-          const errorMsg = error.response?.data?.message || error.message;
-          if (
-            errorMsg?.includes("already registered") ||
-            errorMsg?.includes("Already registered")
-          ) {
-            alert("You are already registered for this event.");
-          } else {
-            alert(errorMsg || "Failed to register. Please try again.");
-          }
-        } finally {
-          setRegisteringEventId(null);
+      const ok = await confirm({
+        title: "Register for event",
+        message: `Register for ${eventName}? You will be redirected to the payment page.`,
+      });
+      if (!ok) return;
+      try {
+        setRegisteringEventId(eventId);
+        const { eventService: realEventService } =
+          await import("../../../services/eventService.js");
+        await realEventService.registerForEvent(eventId);
+        toast.success(
+          "Registration initiated! Please complete the payment to confirm your spot.",
+        );
+        loadEvents();
+      } catch (error) {
+        console.error("Error registering for event:", error);
+        const errorMsg = error.response?.data?.message || error.message;
+        if (
+          errorMsg?.includes("already registered") ||
+          errorMsg?.includes("Already registered")
+        ) {
+          toast.warning("You are already registered for this event.");
+        } else {
+          toast.error(errorMsg || "Failed to register. Please try again.");
         }
+      } finally {
+        setRegisteringEventId(null);
       }
     },
-    [loadEvents],
+    [confirm, loadEvents],
   );
 
   const handleViewOrganizer = useCallback(
@@ -475,6 +535,7 @@ const Events = () => {
 
   return (
     <div className="container-fluid py-3 py-md-4">
+      <ConfirmationModal {...confirmationProps} />
       {/* Hero Section */}
       <div className="card mb-4 bg-danger text-white">
         <div className="card-body text-center py-4">
@@ -484,6 +545,57 @@ const Events = () => {
           </p>
         </div>
       </div>
+
+      {/* My Registered Events */}
+      {myRegistrations.length > 0 && (
+        <div className="card mb-4 border-success">
+          <div className="card-header bg-light d-flex align-items-center">
+            <i
+              className="bi bi-calendar-check text-success me-2"
+              aria-hidden="true"
+            />
+            <strong>My Registered Events</strong>
+            <span className="badge bg-success ms-2">
+              {myRegistrations.length}
+            </span>
+          </div>
+          <div className="card-body py-2">
+            <div className="row g-2">
+              {myRegistrations.map((r) => (
+                <div key={r.id} className="col-12 col-md-6 col-lg-4">
+                  <div className="d-flex align-items-start small border rounded p-2 bg-white">
+                    <div className="flex-grow-1 min-width-0">
+                      <div
+                        className="fw-semibold text-truncate"
+                        title={r.eventTitle}
+                      >
+                        {r.eventTitle}
+                      </div>
+                      <div className="text-muted">
+                        {r.eventDate && !isNaN(new Date(r.eventDate).getTime())
+                          ? `${formatDateDisplay(r.eventDate)} ${new Date(r.eventDate).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}`
+                          : "—"}
+                        {r.venue && ` · ${r.venue}`}
+                      </div>
+                    </div>
+                    <span
+                      className={`badge ms-2 ${
+                        (r.paymentStatus || "").toUpperCase() === "PAID"
+                          ? "bg-success"
+                          : (r.paymentStatus || "").toUpperCase() === "PENDING"
+                            ? "bg-warning text-dark"
+                            : "bg-secondary"
+                      }`}
+                    >
+                      {r.paymentStatus || "—"}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="row g-3">
         {/* Filters Sidebar */}
@@ -498,7 +610,7 @@ const Events = () => {
 
         {/* Events List */}
         <div className="col-12 col-lg-9">
-          <div className="d-flex justify-content-between align-items-center mb-3">
+          <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
             <div>
               <h5 className="mb-0">Browse Events</h5>
               <p className="text-muted small mb-0">
@@ -506,13 +618,28 @@ const Events = () => {
                 events
               </p>
             </div>
-            <button
-              className="btn btn-danger btn-sm d-lg-none"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <i className="bi bi-funnel me-1"></i>
-              Filters
-            </button>
+            <div className="d-flex align-items-center gap-2">
+              {myRegistrationIds.size > 0 && (
+                <button
+                  type="button"
+                  className={`btn btn-sm ${showOnlyMyRegistrations ? "btn-success" : "btn-outline-success"}`}
+                  onClick={() => {
+                    setShowOnlyMyRegistrations((v) => !v);
+                    setCurrentPage(1);
+                  }}
+                >
+                  <i className="bi bi-calendar-check me-1" aria-hidden="true" />
+                  My registrations only
+                </button>
+              )}
+              <button
+                className="btn btn-danger btn-sm d-lg-none"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <i className="bi bi-funnel me-1"></i>
+                Filters
+              </button>
+            </div>
           </div>
 
           {loading ? (
@@ -526,6 +653,13 @@ const Events = () => {
               <p className="text-muted">
                 No events found matching your criteria. Try adjusting your
                 filters.
+                {showOnlyMyRegistrations && (
+                  <span>
+                    {" "}
+                    Or turn off &quot;My registrations only&quot; to see all
+                    events.
+                  </span>
+                )}
               </p>
             </div>
           ) : (
@@ -537,6 +671,7 @@ const Events = () => {
                     onRegister={handleRegister}
                     onViewOrganizer={handleViewOrganizer}
                     isRegistering={registeringEventId === event.id}
+                    isRegistered={myRegistrationIds.has(event.id)}
                   />
                 </div>
               ))}

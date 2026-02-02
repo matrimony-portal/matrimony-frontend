@@ -3,21 +3,23 @@ import { mockUserService } from "./mockServices.js";
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
+const unwrapProfile = (res) => res?.data?.data ?? res?.data;
+
 export const userService = {
   getProfile: async () => {
     if (USE_MOCK) {
       return await mockUserService.getProfile();
     }
-    const response = await api.get("/users/profile");
-    return response.data;
+    const res = await api.get("/profile");
+    return unwrapProfile(res);
   },
 
   updateProfile: async (profileData) => {
     if (USE_MOCK) {
       return await mockUserService.updateProfile(profileData);
     }
-    const response = await api.put("/users/profile", profileData);
-    return response.data;
+    const res = await api.put("/profile", profileData);
+    return unwrapProfile(res);
   },
 
   searchUsers: async (filters) => {

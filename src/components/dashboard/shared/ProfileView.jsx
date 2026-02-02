@@ -3,6 +3,9 @@ import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import PropTypes from "prop-types";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
+import { toast } from "../../../utils/toast.js";
+import useConfirmation from "../../../hooks/useConfirmation.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 
 /**
  * ProfileDetailItem - Reusable component for displaying profile details
@@ -55,6 +58,7 @@ const ProfileView = ({ userType = "free" }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
+  const { confirm, confirmationProps } = useConfirmation();
   const [showLightbox, setShowLightbox] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -146,37 +150,40 @@ The ideal match should be understanding, supportive, and have a positive outlook
   ];
 
   const sendProposal = useCallback(() => {
-    // TODO: Replace with actual API call and toast notification
-    alert(
-      `Sending interest to ${profile.name}!\n\nYou will be notified when they respond.`,
+    // TODO: Replace with actual API call
+    toast.info(
+      `Sending interest to ${profile.name}! You will be notified when they respond.`,
     );
   }, [profile.name]);
 
   const startChat = useCallback(() => {
-    // TODO: Replace with actual API call and toast notification
-    alert(`Starting chat with ${profile.name}...`);
+    // TODO: Replace with actual API call
+    toast.info(`Starting chat with ${profile.name}...`);
     navigate(`${basePath}/messages`);
   }, [profile.name, navigate, basePath]);
 
   const shortlist = useCallback(() => {
-    // TODO: Replace with actual API call and toast notification
-    alert(`${profile.name} added to your shortlist!`);
+    // TODO: Replace with actual API call
+    toast.success(`${profile.name} added to your shortlist!`);
   }, [profile.name]);
 
   const share = useCallback(() => {
     // TODO: Replace with share modal
-    alert("Share this profile via:\n\n• WhatsApp\n• Email\n• Copy Link");
+    toast.info("Share this profile via: WhatsApp, Email, or Copy Link");
   }, []);
 
-  const report = useCallback(() => {
-    if (
-      window.confirm(
-        "Report this profile?\n\nPlease provide a reason for reporting.",
-      )
-    ) {
-      alert("Thank you for reporting. Our team will review this profile.");
+  const report = useCallback(async () => {
+    const ok = await confirm({
+      title: "Report profile",
+      message: "Report this profile? Please provide a reason for reporting.",
+      variant: "warning",
+    });
+    if (ok) {
+      toast.success(
+        "Thank you for reporting. Our team will review this profile.",
+      );
     }
-  }, []);
+  }, [confirm]);
 
   const nextImage = useCallback(() => {
     setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length);
@@ -195,10 +202,9 @@ The ideal match should be understanding, supportive, and have a positive outlook
     [navigate, basePath],
   );
 
-  // Define sections for clean rendering
+  // Define sections – exclude Age, Height, Religion, Location, Education, Occupation
+  // (already shown in the profile header) to avoid repetition
   const basicDetails = [
-    { label: "Age", value: `${profile.age} years` },
-    { label: "Height", value: `${profile.height} (163 cm)` },
     { label: "Marital Status", value: profile.maritalStatus },
     { label: "Mother Tongue", value: profile.motherTongue },
     { label: "Body Type", value: profile.bodyType },
@@ -206,8 +212,6 @@ The ideal match should be understanding, supportive, and have a positive outlook
   ];
 
   const religiousBackground = [
-    { label: "Religion", value: profile.religion },
-    { label: "Caste", value: profile.caste },
     { label: "Sub Caste", value: profile.subCaste },
     { label: "Manglik", value: profile.manglik },
     { label: "Gotra", value: profile.gotra },
@@ -215,9 +219,7 @@ The ideal match should be understanding, supportive, and have a positive outlook
   ];
 
   const educationCareer = [
-    { label: "Highest Education", value: profile.education },
     { label: "College/University", value: profile.college },
-    { label: "Occupation", value: profile.occupation },
     { label: "Organization", value: profile.company },
     { label: "Annual Income", value: profile.income },
     { label: "Working City", value: profile.workingCity },
@@ -247,6 +249,7 @@ The ideal match should be understanding, supportive, and have a positive outlook
 
   return (
     <div className="container-fluid py-3 py-md-4">
+      <ConfirmationModal {...confirmationProps} />
       {/* Profile Header */}
       <div className="card mb-3">
         <div className="card-body">

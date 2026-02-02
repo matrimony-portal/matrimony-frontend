@@ -1,9 +1,13 @@
 // src/components/dashboard/premium/Shortlist.jsx
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "../../../utils/toast.js";
+import useConfirmation from "../../../hooks/useConfirmation.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 
 const Shortlist = () => {
   const navigate = useNavigate();
+  const { confirm, confirmationProps } = useConfirmation();
   const [profiles, setProfiles] = useState([
     {
       id: 1,
@@ -57,16 +61,23 @@ const Shortlist = () => {
     },
   ]);
 
-  const removeFromShortlist = (id, name) => {
-    if (window.confirm(`Remove ${name} from shortlist?`)) {
-      setProfiles(profiles.filter((profile) => profile.id !== id));
-      alert(`${name} removed from shortlist.`);
-    }
-  };
+  const removeFromShortlist = useCallback(
+    async (id, name) => {
+      const ok = await confirm({
+        title: "Remove from shortlist",
+        message: `Remove ${name} from shortlist?`,
+      });
+      if (ok) {
+        setProfiles((p) => p.filter((profile) => profile.id !== id));
+        toast.success(`${name} removed from shortlist.`);
+      }
+    },
+    [confirm],
+  );
 
-  const sendInterest = (name) => {
-    alert(`Sending interest to ${name}!`);
-  };
+  const sendInterest = useCallback((name) => {
+    toast.info(`Sending interest to ${name}!`);
+  }, []);
 
   const viewProfile = (id) => {
     navigate(`/dashboard/profile/${id}`);
@@ -74,6 +85,7 @@ const Shortlist = () => {
 
   return (
     <div className="container-fluid py-3 py-md-4">
+      <ConfirmationModal {...confirmationProps} />
       {/* Header */}
       <div className="mb-4">
         <h1 className="h3 mb-2">⭐ My Shortlist</h1>

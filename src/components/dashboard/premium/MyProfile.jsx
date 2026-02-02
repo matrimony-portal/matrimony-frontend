@@ -1,53 +1,67 @@
 // src/components/dashboard/premium/MyProfile.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
-
-// Images (CORRECT way in React)
 import profileImg from "../../../assets/images/male/rahul.png";
 import g1 from "../../../assets/images/male/rahul-p1.png";
 import g2 from "../../../assets/images/male/rahul-p2.png";
 import g3 from "../../../assets/images/male/rahul-p3.png";
 import g4 from "../../../assets/images/male/rahul-p4.png";
 import g5 from "../../../assets/images/male/rahul-p5.png";
-
-// Components
 import StatCard from "../../common/shared/StatCard";
+import ProfileCompleteBanner from "../shared/ProfileCompleteBanner.jsx";
+import { profileService } from "../../../services/profileService.js";
+import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
+import {
+  computeProfileCompletionPercentage,
+  heightCmToDisplay,
+  ageFromDob,
+} from "../../../utils/profileUtils.js";
+
+const galleryImages = [g1, g2, g3, g4, g5];
 
 const MyProfile = () => {
   const navigate = useNavigate();
+  const basePath = useDashboardBasePath();
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showLightbox, setShowLightbox] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  /* ---------------- MOCK DATA (replace with API later) ---------------- */
+  const loadProfile = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await profileService.getProfile();
+      setProfile(data);
+    } catch (e) {
+      console.error("MyProfile getProfile error:", e);
+      setError(
+        e?.response?.data?.error?.message ||
+          e?.response?.data?.message ||
+          "Could not load profile.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  useEffect(() => {
+    loadProfile();
+  }, [loadProfile]);
+
+  const percent = profile ? computeProfileCompletionPercentage(profile) : 0;
   const stats = [
-    { icon: "👥", number: 26, label: "Total Matches" },
-    { icon: "💌", number: 12, label: "Sent Proposals" },
-    { icon: "📩", number: 8, label: "Received Proposals" },
-    { icon: "⭐", number: 15, label: "Shortlisted" },
-    { icon: "💬", number: 6, label: "Active Chats" },
-    { icon: "👁️", number: 145, label: "Profile Views" },
+    { icon: "👥", number: "—", label: "Total Matches" },
+    { icon: "💌", number: "—", label: "Sent Proposals" },
+    { icon: "📩", number: "—", label: "Received Proposals" },
+    { icon: "⭐", number: "—", label: "Shortlisted" },
+    { icon: "💬", number: "—", label: "Active Chats" },
+    { icon: "👁️", number: "—", label: "Profile Views" },
   ];
 
-  const galleryImages = [g1, g2, g3, g4, g5];
-
-  const profileData = {
-    name: "Rahul Agarwal",
-    id: "PM768942",
-    age: 31,
-    height: "5'10\"",
-    religion: "Hindu",
-    caste: "Baniya",
-    location: "Pune, Maharashtra",
-    education: "B.Tech, MBA",
-    occupation: "Product Manager",
-    photo: profileImg,
-  };
-
-  /* ---------------- HANDLERS ---------------- */
-
-  const openLightbox = (index) => {
-    setCurrentImageIndex(index);
+  const openLightbox = (i) => {
+    setCurrentImageIndex(i);
     setShowLightbox(true);
   };
 
@@ -61,42 +75,106 @@ const MyProfile = () => {
     );
   };
 
-  /* ---------------- RENDER ---------------- */
+  const name =
+    profile?.firstName || profile?.lastName
+      ? [profile.firstName, profile.lastName].filter(Boolean).join(" ")
+      : "—";
+  const age = ageFromDob(profile?.dateOfBirth);
+  const location =
+    [profile?.city, profile?.state, profile?.country]
+      .filter(Boolean)
+      .join(", ") || "—";
+
+  if (loading) {
+    return (
+      <div className="container-fluid py-3 py-md-4">
+        <div className="text-center py-5">
+          <div className="spinner-border text-danger" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container-fluid py-3 py-md-4">
+        <div className="alert alert-warning">
+          {error}{" "}
+          <button
+            className="btn btn-sm btn-outline-secondary ms-2"
+            onClick={loadProfile}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container-fluid py-3 py-md-4">
-      {/* ================= PROFILE HEADER ================= */}
+      <ProfileCompleteBanner percent={percent} />
+
+      {/* PROFILE HEADER */}
       <div className="card mb-4">
         <div className="card-body">
           <div className="row g-3">
             <div className="col-12 col-md-3 text-center">
               <img
-                src={profileData.photo}
-                alt={profileData.name}
+                src={profileImg}
+                alt={name}
                 className="img-fluid rounded mb-3"
                 style={{ maxWidth: "250px" }}
               />
-              <span className="badge bg-success">
-                <i className="bi bi-patch-check-fill me-1"></i>
-                Verified Profile
+              <span
+                className={
+                  profile?.isVerified
+                    ? "badge bg-success"
+                    : "badge bg-secondary"
+                }
+              >
+                <i
+                  className={
+                    profile?.isVerified
+                      ? "bi bi-patch-check-fill me-1"
+                      : "bi bi-hourglass-split me-1"
+                  }
+                />
+                {profile?.isVerified
+                  ? "Verified Profile"
+                  : "Profile not verified"}
               </span>
+              {percent < 100 && (
+                <div className="mt-2">
+                  <div className="progress" style={{ height: "6px" }}>
+                    <div
+                      className="progress-bar bg-info"
+                      style={{ width: `${percent}%` }}
+                    />
+                  </div>
+                  <small className="text-muted">{percent}% complete</small>
+                </div>
+              )}
             </div>
 
             <div className="col-12 col-md-9">
               <div className="d-flex justify-content-between flex-wrap mb-3">
                 <div>
                   <h1 className="h3 mb-1">
-                    {profileData.name}
-                    <i className="bi bi-patch-check-fill text-primary ms-2"></i>
+                    {name}
+                    {profile?.isVerified && (
+                      <i className="bi bi-patch-check-fill text-primary ms-2" />
+                    )}
                   </h1>
-                  <p className="text-muted">ID: {profileData.id}</p>
+                  <p className="text-muted">ID: #{profile?.id ?? "—"}</p>
                 </div>
-
                 <button
                   className="btn btn-outline-primary btn-sm"
-                  onClick={() => navigate("/dashboard/edit-profile")}
+                  onClick={() => navigate(`${basePath}/edit-profile`)}
                 >
-                  <i className="bi bi-pencil me-1"></i>
+                  <i className="bi bi-pencil me-1" />
                   Edit Profile
                 </button>
               </div>
@@ -104,29 +182,37 @@ const MyProfile = () => {
               <div className="row g-3 mb-3">
                 <div className="col-6 col-md-4">
                   <small className="text-muted">Age</small>
-                  <div className="fw-semibold">{profileData.age} years</div>
+                  <div className="fw-semibold">
+                    {age != null ? `${age} years` : "—"}
+                  </div>
                 </div>
                 <div className="col-6 col-md-4">
                   <small className="text-muted">Height</small>
-                  <div className="fw-semibold">{profileData.height}</div>
+                  <div className="fw-semibold">
+                    {heightCmToDisplay(profile?.heightCm)}
+                  </div>
                 </div>
                 <div className="col-6 col-md-4">
                   <small className="text-muted">Religion</small>
                   <div className="fw-semibold">
-                    {profileData.religion}, {profileData.caste}
+                    {[profile?.religion, profile?.caste]
+                      .filter(Boolean)
+                      .join(", ") || "—"}
                   </div>
                 </div>
                 <div className="col-6 col-md-4">
                   <small className="text-muted">Location</small>
-                  <div className="fw-semibold">{profileData.location}</div>
+                  <div className="fw-semibold">{location}</div>
                 </div>
                 <div className="col-6 col-md-4">
                   <small className="text-muted">Education</small>
-                  <div className="fw-semibold">{profileData.education}</div>
+                  <div className="fw-semibold">{profile?.education || "—"}</div>
                 </div>
                 <div className="col-6 col-md-4">
                   <small className="text-muted">Occupation</small>
-                  <div className="fw-semibold">{profileData.occupation}</div>
+                  <div className="fw-semibold">
+                    {profile?.occupation || "—"}
+                  </div>
                 </div>
               </div>
 
@@ -138,44 +224,44 @@ const MyProfile = () => {
         </div>
       </div>
 
-      {/* ================= STATS ================= */}
+      {/* STATS */}
       <div className="row g-2 g-md-3 mb-4">
-        {stats.map((stat, idx) => (
-          <div key={idx} className="col-6 col-md-4 col-lg-2">
-            <StatCard {...stat} />
+        {stats.map((s, i) => (
+          <div key={i} className="col-6 col-md-4 col-lg-2">
+            <StatCard {...s} />
           </div>
         ))}
       </div>
 
-      {/* ================= MAIN CONTENT ================= */}
+      {/* MAIN CONTENT */}
       <div className="row g-4">
         <div className="col-12 col-lg-8">
-          {/* About Me */}
           <div className="card mb-3">
             <div className="card-body">
               <h5 className="border-bottom pb-2 mb-3">About Me</h5>
               <p className="text-muted text-justify">
-                I'm a 31-year-old Product Manager based in Pune, working with a
-                leading tech firm. I value honesty, emotional connection, and
-                work-life balance. Looking for a partner who shares similar
-                values and enjoys both quiet moments and spontaneous adventures.
+                {profile?.aboutMe ||
+                  "Add something about yourself in Edit Profile to help others know you better."}
               </p>
             </div>
           </div>
 
-          {/* Photo Gallery */}
           <div className="card mb-3">
             <div className="card-body">
               <h5 className="border-bottom pb-2 mb-3">Photo Gallery</h5>
               <div className="row g-2">
-                {galleryImages.map((img, idx) => (
-                  <div key={idx} className="col-4 col-md-3">
+                {galleryImages.map((img, i) => (
+                  <div key={i} className="col-4 col-md-3">
                     <img
                       src={img}
-                      alt={`Gallery ${idx + 1}`}
+                      alt={`Gallery ${i + 1}`}
                       className="img-fluid rounded cursor-pointer"
-                      style={{ aspectRatio: "1/1", objectFit: "cover" }}
-                      onClick={() => openLightbox(idx)}
+                      style={{
+                        aspectRatio: "1/1",
+                        objectFit: "cover",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => openLightbox(i)}
                     />
                   </div>
                 ))}
@@ -184,14 +270,12 @@ const MyProfile = () => {
           </div>
         </div>
 
-        {/* ================= SIDEBAR ================= */}
         <div className="col-12 col-lg-4">
           <div className="card">
             <div className="card-body">
               <h6 className="mb-3">Contact Information</h6>
-
               <div className="alert alert-warning small mb-0">
-                <i className="bi bi-lock-fill me-1"></i>
+                <i className="bi bi-lock-fill me-1" />
                 Contact details visible to premium members only
               </div>
             </div>
@@ -199,7 +283,7 @@ const MyProfile = () => {
         </div>
       </div>
 
-      {/* ================= LIGHTBOX ================= */}
+      {/* LIGHTBOX */}
       {showLightbox && (
         <div
           className="modal show d-block"
@@ -215,6 +299,7 @@ const MyProfile = () => {
                 <button
                   className="btn-close btn-close-white"
                   onClick={() => setShowLightbox(false)}
+                  aria-label="Close"
                 />
               </div>
               <div className="modal-body text-center">
@@ -226,10 +311,18 @@ const MyProfile = () => {
                 />
               </div>
               <div className="modal-footer border-0 justify-content-between">
-                <button className="btn btn-light" onClick={prevImage}>
+                <button
+                  type="button"
+                  className="btn btn-light"
+                  onClick={prevImage}
+                >
                   ‹ Previous
                 </button>
-                <button className="btn btn-light" onClick={nextImage}>
+                <button
+                  type="button"
+                  className="btn btn-light"
+                  onClick={nextImage}
+                >
                   Next ›
                 </button>
               </div>

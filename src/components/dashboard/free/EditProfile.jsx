@@ -1,113 +1,151 @@
-// src/components/dashboard/premium/EditProfile.jsx
-import React, { useState } from "react";
+// src/components/dashboard/free/EditProfile.jsx
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
+import { profileService } from "../../../services/profileService.js";
+import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
+import {
+  getDefaultFormData,
+  apiProfileToFormData,
+  formDataToUpdateRequest,
+  computeProfileCompletionPercentage,
+} from "../../../utils/profileUtils.js";
+import { toast } from "../../../utils/toast.js";
+import useConfirmation from "../../../hooks/useConfirmation.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    firstName: "Rahul",
-    lastName: "Sharma",
-    gender: "male",
-    dob: "1995-05-15",
-    height: "5.6",
-    maritalStatus: "never-married",
-    religion: "hindu",
-    caste: "Brahmin",
-    motherTongue: "hindi",
-    manglik: "no",
-    country: "india",
-    state: "Maharashtra",
-    city: "Mumbai",
-    citizenship: "Indian",
-    education: "bachelors",
-    college: "Mumbai University",
-    occupation: "engineer",
-    company: "Tech Solutions Pvt Ltd",
-    income: "5-10",
-    familyType: "nuclear",
-    familyStatus: "middle-class",
-    fatherOccupation: "Businessman",
-    motherOccupation: "Homemaker",
-    brothers: "1",
-    sisters: "0",
-    diet: "vegetarian",
-    smoking: "no",
-    drinking: "no",
-    aboutMe:
-      "I am a software engineer working in Mumbai. I enjoy traveling, reading, and spending time with family. Looking for a life partner who shares similar values and interests.",
-  });
+  const basePath = useDashboardBasePath();
+  const { confirm, confirmationProps } = useConfirmation();
+  const [formData, setFormData] = useState(getDefaultFormData);
+  const [loading, setLoading] = useState(true);
+
+  const loadProfile = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await profileService.getProfile();
+      setFormData(apiProfileToFormData(data));
+    } catch (e) {
+      console.error("EditProfile getProfile error:", e);
+      toast.error(
+        e?.response?.data?.error?.message ||
+          e?.response?.data?.message ||
+          "Could not load profile.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadProfile();
+  }, [loadProfile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (window.confirm("Save all changes to your profile?")) {
-      alert("Profile updated successfully! All changes have been saved.");
-      navigate("/dashboard/my-profile");
+    const ok = await confirm({
+      title: "Save changes",
+      message: "Save all changes to your profile?",
+    });
+    if (!ok) return;
+    try {
+      await profileService.updateProfile(formDataToUpdateRequest(formData));
+      toast.success(
+        "Profile updated successfully! All changes have been saved.",
+      );
+      navigate(`${basePath}/my-profile`);
+    } catch (err) {
+      console.error("EditProfile update error:", err);
+      toast.error(
+        err?.response?.data?.error?.message ||
+          err?.response?.data?.message ||
+          "Could not update profile.",
+      );
     }
   };
 
-  const handleCancel = () => {
-    if (window.confirm("Discard all changes and go back?")) {
-      navigate("/dashboard/my-profile");
-    }
+  const handleCancel = async () => {
+    const ok = await confirm({
+      title: "Discard changes",
+      message: "Discard all changes and go back?",
+      variant: "warning",
+    });
+    if (ok) navigate(`${basePath}/my-profile`);
   };
+
+  const percent = computeProfileCompletionPercentage(formData);
+  const displayName =
+    [formData.firstName, formData.lastName].filter(Boolean).join(" ") || "—";
+
+  if (loading) {
+    return (
+      <div className="container-fluid py-3 py-md-4">
+        <div className="text-center py-5">
+          <div className="spinner-border text-danger" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container-fluid py-3 py-md-4">
-      {/* Header Card */}
+      <ConfirmationModal {...confirmationProps} />
       <div className="card mb-3 mb-md-4">
         <div className="card-body">
           <div className="row align-items-center g-3">
-            {/* Profile Photo */}
             <div className="col-12 col-md-auto text-center">
               <div
                 className="rounded-circle mx-auto mb-2"
                 style={{
                   width: "120px",
                   height: "120px",
-                  backgroundImage: "url(../../assets/images/male/rahul.png)",
+                  backgroundImage: "url(/assets/images/male/rahul.png)",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               />
               <input
                 type="file"
-                id="photoUpload"
+                id="photoUploadFree"
                 className="d-none"
                 accept="image/*"
               />
               <button
+                type="button"
                 className="btn btn-sm btn-danger"
-                onClick={() => document.getElementById("photoUpload").click()}
+                onClick={() =>
+                  document.getElementById("photoUploadFree").click()
+                }
               >
                 Change Photo
               </button>
             </div>
-
-            {/* Profile Info */}
             <div className="col-12 col-md">
-              <h2 className="h4 mb-2">Rahul Agarwal</h2>
+              <h2 className="h4 mb-2">{displayName}</h2>
               <p className="text-muted mb-2">
-                ID: #U1001 | Member since: Jan 2025
+                Complete your profile to get better matches
               </p>
               <div className="progress mb-2" style={{ height: "8px" }}>
                 <div
                   className="progress-bar bg-success"
-                  style={{ width: "75%" }}
-                ></div>
+                  style={{ width: `${percent}%` }}
+                />
               </div>
               <p className="small text-muted mb-0">
-                Profile 75% Complete - Add more details to get better matches!
+                Profile {percent}% complete — add more details to improve your
+                matches.
               </p>
             </div>
           </div>
         </div>
       </div>
-
       <form onSubmit={handleSubmit}>
         {/* Basic Information */}
         <div className="card mb-3">
@@ -141,6 +179,17 @@ const EditProfile = () => {
                 />
               </div>
               <div className="col-12 col-md-6">
+                <label className="form-label">Phone</label>
+                <input
+                  type="tel"
+                  className="form-control"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="10-digit mobile"
+                />
+              </div>
+              <div className="col-12 col-md-6">
                 <label className="form-label">
                   Gender <span className="text-danger">*</span>
                 </label>
@@ -153,6 +202,7 @@ const EditProfile = () => {
                 >
                   <option value="male">Male</option>
                   <option value="female">Female</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
               <div className="col-12 col-md-6">
@@ -180,6 +230,8 @@ const EditProfile = () => {
                   required
                 >
                   <option value="">Select Height</option>
+                  <option value="5.4">5'4"</option>
+                  <option value="5.5">5'5"</option>
                   <option value="5.6">5'6"</option>
                   <option value="5.7">5'7"</option>
                   <option value="5.8">5'8"</option>
@@ -187,7 +239,22 @@ const EditProfile = () => {
                   <option value="5.10">5'10"</option>
                   <option value="5.11">5'11"</option>
                   <option value="6.0">6'0"</option>
+                  <option value="6.1">6'1"</option>
+                  <option value="6.2">6'2"</option>
                 </select>
+              </div>
+              <div className="col-12 col-md-6">
+                <label className="form-label">Weight (kg)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="weightKg"
+                  value={formData.weightKg}
+                  onChange={handleChange}
+                  min="20"
+                  max="500"
+                  placeholder="Optional"
+                />
               </div>
               <div className="col-12 col-md-6">
                 <label className="form-label">

@@ -9,8 +9,10 @@ import {
   validatePassword,
   checkPasswordStrength,
   validateAgeAgainstGender,
+  getMinAgeForGender,
   formatDateForAPI,
 } from "../../utils/validation.js";
+import { toast } from "../../utils/toast.js";
 import "../../styles/Register.css";
 
 // Constants for form options
@@ -110,9 +112,13 @@ const Register = () => {
       [name]: type === "checkbox" ? checked : processedValue,
     }));
 
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+    // Clear error for this field when user starts typing. If gender changes, also clear dob (age limit depends on gender).
+    if (errors[name] || (name === "gender" && errors.dob)) {
+      setErrors((prev) => {
+        const next = { ...prev, [name]: "" };
+        if (name === "gender" && prev.dob) next.dob = "";
+        return next;
+      });
     }
 
     // Update password strength indicator
@@ -155,16 +161,16 @@ const Register = () => {
       newErrors.gender = "Please select a gender";
     }
 
-    // Date of birth validation
+    // Date of birth validation (Female 18+, Male 22+)
     if (!formData.dob) {
       newErrors.dob = "Please enter your date of birth";
     } else {
-      // Validate format DD/MM/YYYY
       const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
       if (!datePattern.test(formData.dob)) {
         newErrors.dob = "Please enter date in DD/MM/YYYY format";
-      } else if (!validateAgeAgainstGender(formData.dob)) {
-        newErrors.dob = "You must be at least 18 years old and born after 1950";
+      } else if (!validateAgeAgainstGender(formData.dob, formData.gender)) {
+        const minAge = getMinAgeForGender(formData.gender);
+        newErrors.dob = `You must be at least ${minAge} years old and born after 1950`;
       }
     }
 
@@ -350,18 +356,16 @@ const Register = () => {
       const transformedData = transformFormDataForAPI(formData);
       const result = await register(transformedData);
       if (result.success) {
-        alert(
-          "Registration successful! Please check your email for verification.",
-        );
+        toast.success("Registration successful! You can now log in.");
         navigate("/login");
       }
     } catch (error) {
       console.error("Registration error:", error);
-      setErrors({
-        general:
-          error?.response?.data?.message ||
-          "Registration failed. Please try again.",
-      });
+      const msg =
+        error?.response?.data?.error?.message ||
+        error?.response?.data?.message ||
+        "Registration failed. Please try again.";
+      setErrors({ general: msg });
     } finally {
       setLoading(false);
     }
@@ -513,7 +517,7 @@ const Register = () => {
                         { key: "numberCheck", text: "One number" },
                         {
                           key: "specialCheck",
-                          text: "One special character (@$!%*?&)",
+                          text: "One special character (e.g. @ # $ ! ?)",
                         },
                       ].map(({ key, text }) => (
                         <li

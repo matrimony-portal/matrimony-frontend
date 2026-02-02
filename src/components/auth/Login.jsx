@@ -13,6 +13,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -64,7 +65,18 @@ const Login = () => {
         autoClose: 5000,
       });
       setLoginError(
-        "Invalid credentials!\n\nTest Credentials (password: password123):\njohn.doe@example.com ← free user\njane.smith@example.com ← paid user\npriya.verma@example.com ← event-organizer\nrahul.sharma@example.com ← admin",
+        "Invalid credentials!\n\n" +
+          "══════ TEST CREDENTIALS ══════\n" +
+          "Password for all: password123\n\n" +
+          "👤 ADMIN:\n" +
+          "   rahul.sharma@example.com\n\n" +
+          "🎪 EVENT ORGANIZERS:\n" +
+          "   priya.verma@example.com\n" +
+          "   anil.mehta@example.com\n" +
+          "   sunita.rao@example.com\n\n" +
+          "👥 USERS (20: 5 Free M, 5 Free F, 5 Premium M, 5 Premium F):\n" +
+          "   john.doe@example.com, sneha.patel@example.com (Free)\n" +
+          "   jane.smith@example.com, rahul.mehta@example.com (Premium)",
       );
     } finally {
       setLoading(false);
@@ -130,16 +142,30 @@ const Login = () => {
 
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                className={errors.password ? "error" : ""}
-                placeholder="Enter your password"
-                required
-              />
+              <div className="password-input-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className={errors.password ? "error" : ""}
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword((p) => !p)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  tabIndex={-1}
+                >
+                  <i
+                    className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+                    aria-hidden
+                  ></i>
+                </button>
+              </div>
               {errors.password && (
                 <span className="error-message">{errors.password}</span>
               )}

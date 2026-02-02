@@ -271,7 +271,11 @@ export const EditOrganizerProfile = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         placeholder="+91 98765 43210"
+                        isInvalid={!!validationErrors.phone}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {validationErrors.phone}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                   <Col md={6}>
@@ -295,7 +299,11 @@ export const EditOrganizerProfile = () => {
                         value={formData.state}
                         onChange={handleChange}
                         placeholder="e.g. Maharashtra"
+                        isInvalid={!!validationErrors.state}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {validationErrors.state}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>

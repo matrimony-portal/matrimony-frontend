@@ -43,7 +43,7 @@ body {
 }
 
 /* Mobile: sidebar slides in from left */
-@media (width <= 767.98px) {
+@media (width <=767.98px) {
   .sidebar {
     transform: translateX(-100%);
     width: 80% !important;
@@ -123,13 +123,15 @@ body {
 .main-content {
   /* //padding-top: 1rem; */
   overflow-y: auto;
-  height: calc(100vh - var(--navbar-height)); /* Account for navbar */
+  height: calc(100vh - var(--navbar-height));
+
+  /* Account for navbar */
 }
 
-@media (width >= 768px) {
-  .main-content {
-    /* padding-top: 1.5rem; */
-  }
+@media (width >=768px) {
+  /* .main-content {
+    padding-top: 1.5rem;
+  } */
 }
 
 /* Stat Card */
@@ -212,7 +214,7 @@ body {
   --bs-gutter-y: 1rem;
 }
 
-@media (width >= 768px) {
+@media (width >=768px) {
   .row {
     --bs-gutter-x: 1.5rem;
     --bs-gutter-y: 1.5rem;
@@ -220,7 +222,7 @@ body {
 }
 
 /* Touch-friendly clickable areas on mobile */
-@media (width <= 767.98px) {
+@media (width <=767.98px) {
   .btn {
     min-height: 44px;
     padding: 0.75rem 1rem;
@@ -282,7 +284,7 @@ body {
   width: auto;
 }
 
-@media (width <= 767.98px) {
+@media (width <=767.98px) {
   .logo-text {
     display: none !important;
   }
@@ -313,7 +315,7 @@ body {
   position: relative;
 }
 
-@media (width <= 767.98px) {
+@media (width <=767.98px) {
   .event-image {
     height: 200px;
   }
@@ -326,10 +328,19 @@ body {
 }
 
 /* Modal Responsive */
-@media (width <= 767.98px) {
+@media (width <=767.98px) {
   .modal-dialog {
     margin: 0.5rem;
   }
+}
+
+/* Table links: clickable name/event cells – underline on hover */
+.table a.table-link {
+  text-decoration: none;
+}
+
+.table a.table-link:hover {
+  text-decoration: underline !important;
 }
 
 /* Utility Classes */
@@ -351,7 +362,7 @@ body {
 }
 
 /* Spacing Utilities for Mobile */
-@media (width <= 767.98px) {
+@media (width <=767.98px) {
   .p-md-4 {
     padding: 1rem !important;
   }
@@ -492,7 +503,7 @@ body {
 }
 
 /* Prevent dropdown overflow on small screens */
-@media (width <= 480px) {
+@media (width <=480px) {
   .profile-menu {
     width: 90vw;
     max-width: 280px;
@@ -501,8 +512,107 @@ body {
 }
 
 /* Desktop: add left spacing for logo */
-@media (width >= 768px) {
+@media (width >=768px) {
   .navbar .navbar-brand {
-    padding-left: 1.5rem; /* adjust: 1rem–2rem as needed */
+    padding-left: 1.5rem;
+
+    /* adjust: 1rem–2rem as needed */
   }
+}
+
+/* ========== Dark theme (Settings → Appearance → Theme: Dark) ========== */
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] body {
+  background: #1a1a1a !important;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .main-content {
+  background: #1a1a1a;
+}
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .card-body {
+  background: #2d2d2d !important;
+  color: #e5e5e5;
+  border-color: #404040;
+}
+
+html[data-theme="dark"] .bg-light {
+  background: #2d2d2d !important;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .text-muted {
+  color: #a0a0a0 !important;
+}
+
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .form-select {
+  background: #2d2d2d !important;
+  border-color: #404040 !important;
+  color: #e5e5e5 !important;
+}
+
+html[data-theme="dark"] .form-control::placeholder {
+  color: #808080;
+}
+
+html[data-theme="dark"] .form-control:focus,
+html[data-theme="dark"] .form-select:focus {
+  background: #2d2d2d !important;
+  border-color: #ae1700 !important;
+  color: #e5e5e5 !important;
+}
+
+html[data-theme="dark"] .table {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .table-light {
+  background: #2d2d2d !important;
+}
+
+html[data-theme="dark"] .navbar {
+  background: linear-gradient(135deg, #2a1a1c 0%, #4a2020 100%) !important;
+}
+
+html[data-theme="dark"] .profile-menu {
+  background: #2d2d2d !important;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 50%);
+}
+
+html[data-theme="dark"] .profile-header {
+  background: #404040 !important;
+}
+
+html[data-theme="dark"] .sidebar {
+  background: linear-gradient(135deg, #2a1a1c 0%, #4a2020 100%) !important;
+}
+
+html[data-theme="dark"] .dropdown-menu,
+html[data-theme="dark"] .modal-content {
+  background: #2d2d2d !important;
+  border-color: #404040;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .modal-header,
+html[data-theme="dark"] .modal-footer {
+  border-color: #404040;
+}
+
+html[data-theme="dark"] .list-group-item {
+  background: #2d2d2d !important;
+  border-color: #404040;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .input-group-text {
+  background: #404040 !important;
+  border-color: #404040 !important;
+  color: #e5e5e5 !important;
 }

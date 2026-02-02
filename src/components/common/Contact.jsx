@@ -19,6 +19,7 @@ import {
   GeoAlt,
   QuestionCircle,
 } from "react-bootstrap-icons";
+import { toast } from "../../utils/toast.js";
 
 const ContactPage = ({ inLayout = false }) => {
   const handleSubmit = (e) => {
@@ -29,22 +30,22 @@ const ContactPage = ({ inLayout = false }) => {
     const message = formData.get("message");
 
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      alert("Please enter a valid email address!");
+      toast.error("Please enter a valid email address!");
       return;
     }
 
     if (!phone.match(/^\d{10}$/)) {
-      alert("Please provide a valid phone number (exactly 10 digits).");
+      toast.error("Please provide a valid phone number (exactly 10 digits).");
       return;
     }
 
     if (message.length < 20) {
-      alert("Please provide a detailed message (minimum 20 characters).");
+      toast.error("Please provide a detailed message (minimum 20 characters).");
       return;
     }
 
-    alert(
-      "Thank you for contacting us!\n\nYour message has been sent successfully. We will respond within 24-48 hours.",
+    toast.success(
+      "Thank you for contacting us! Your message has been sent successfully. We will respond within 24-48 hours.",
     );
     e.target.reset();
   };

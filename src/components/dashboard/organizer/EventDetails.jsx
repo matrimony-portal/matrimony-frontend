@@ -11,10 +11,9 @@ import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { toast } from "../../../utils/toast.js";
 import { eventService } from "../../../services/eventService.js";
+import { getDisplayStatus } from "../../../utils/eventStatus.js";
+import { getDefaultEventImage } from "../../../utils/eventUtils.js";
 import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
-
-const DEFAULT_IMAGE =
-  "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg";
 
 function formatEventDate(iso) {
   if (!iso) return { date: "—", time: "—" };
@@ -253,8 +252,15 @@ export const EventDetails = () => {
   }
 
   const { date, time } = formatEventDate(event.eventDate);
-  const imageUrl = event.imageUrl || event.image || DEFAULT_IMAGE;
+  const imageUrl = getDefaultEventImage(event);
   const participants = `${event.currentParticipants ?? 0}/${event.maxParticipants ?? "—"}`;
+  const displayStatus = getDisplayStatus(event);
+  const statusBg = {
+    UPCOMING: "bg-primary",
+    ONGOING: "bg-success",
+    COMPLETED: "bg-secondary",
+    CANCELLED: "bg-danger",
+  };
 
   return (
     <Container fluid>
@@ -281,15 +287,9 @@ export const EventDetails = () => {
           <div className="d-flex align-items-center gap-3 flex-wrap">
             <h1 className="mb-0">{event.title}</h1>
             <span
-              className={`badge rounded-pill ${
-                (event.status ?? "UPCOMING") === "UPCOMING"
-                  ? "bg-primary"
-                  : event.status === "ONGOING"
-                    ? "bg-success"
-                    : "bg-secondary"
-              }`}
+              className={`badge rounded-pill ${statusBg[displayStatus] || "bg-secondary"}`}
             >
-              {event.status ?? "UPCOMING"}
+              {displayStatus}
             </span>
             {event.eventType && <Badge bg="secondary">{event.eventType}</Badge>}
           </div>

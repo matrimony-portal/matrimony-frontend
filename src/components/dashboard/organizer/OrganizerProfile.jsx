@@ -147,21 +147,7 @@ export const OrganizerProfile = () => {
 
   return (
     <Container fluid>
-      {/* Stats cards (same as dashboard) – View Profile only; Edit Profile does not show these */}
-      <Row className="g-4 mb-4">
-        {stats.map((stat, idx) => (
-          <Col key={idx} xs={12} sm={6} lg={3}>
-            <Card className="text-center h-100 shadow-sm">
-              <Card.Body>
-                <div style={{ fontSize: "2rem" }}>{stat.icon}</div>
-                <h2 className={`text-${stat.variant} mb-2`}>{stat.number}</h2>
-                <p className="text-muted mb-0 small">{stat.label}</p>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-
+      {/* 1. Detail card (name, photo, age, religion, location, education, occupation) first */}
       <Card className="mb-4 shadow-sm">
         <Card.Body>
           <Row>
@@ -232,6 +218,22 @@ export const OrganizerProfile = () => {
         </Card.Body>
       </Card>
 
+      {/* 2. Stat cards (Total Events, Active Events, etc.) */}
+      <Row className="g-4 mb-4">
+        {stats.map((stat, idx) => (
+          <Col key={idx} xs={12} sm={6} lg={3}>
+            <Card className="text-center h-100 shadow-sm">
+              <Card.Body>
+                <div style={{ fontSize: "2rem" }}>{stat.icon}</div>
+                <h2 className={`text-${stat.variant} mb-2`}>{stat.number}</h2>
+                <p className="text-muted mb-0 small">{stat.label}</p>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+
+      {/* 3. About Me, Photo Gallery, Contact */}
       <Row>
         <Col lg={8}>
           <Card className="mb-4 shadow-sm">

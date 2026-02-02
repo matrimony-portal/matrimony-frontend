@@ -15,10 +15,9 @@ import {
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { eventService } from "../../../services/eventService.js";
 import { toast } from "../../../utils/toast.js";
+import { getDisplayStatus } from "../../../utils/eventStatus.js";
+import { getDefaultEventImage } from "../../../utils/eventUtils.js";
 import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
-
-const DEFAULT_IMAGE =
-  "/assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg";
 
 const EVENT_TYPES = [
   { value: "", label: "All Types" },
@@ -74,15 +73,6 @@ function formatTime(dateString) {
   });
 }
 
-function getStatusVariant(status) {
-  const s = (status || "").toLowerCase();
-  if (s === "upcoming") return "primary";
-  if (s === "ongoing") return "success";
-  if (s === "completed") return "secondary";
-  if (s === "cancelled") return "danger";
-  return "secondary";
-}
-
 function isInPriceRange(fee, range) {
   const f = fee == null ? 0 : Number(fee);
   switch (range) {
@@ -121,7 +111,7 @@ function isInDateRange(iso, range) {
   }
 }
 
-export const OverallEventsList = () => {
+export const OverallEventsList = ({ compact = false }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const currentOrganizerId = user?.id;
@@ -139,7 +129,6 @@ export const OverallEventsList = () => {
   const [status, setStatus] = useState("");
   const [dateRange, setDateRange] = useState("");
   const [priceRange, setPriceRange] = useState("");
-  // By default hide my events: show only other organizers' events
   const [showMyEvents, setShowMyEvents] = useState(false);
 
   useEffect(() => {
@@ -168,7 +157,6 @@ export const OverallEventsList = () => {
 
   const filtered = useMemo(() => {
     return events.filter((e) => {
-      // By default exclude my events (show only other organizers')
       if (
         !showMyEvents &&
         currentOrganizerId != null &&
@@ -186,32 +174,43 @@ export const OverallEventsList = () => {
       }
       if (eventType && (e.eventType || "") !== eventType) return false;
       if (city && (e.city || "").trim() !== city) return false;
-      if (status && (e.status || "UPCOMING").toUpperCase() !== status)
-        return false;
+      if (status && getDisplayStatus(e) !== status) return false;
       if (!isInDateRange(e.eventDate, dateRange)) return false;
       if (!isInPriceRange(e.registrationFee, priceRange)) return false;
       return true;
     });
   }, [
     events,
-    showMyEvents,
-    currentOrganizerId,
     search,
     eventType,
     city,
     status,
     dateRange,
     priceRange,
+    currentOrganizerId,
+    showMyEvents,
   ]);
 
-  const hasActiveFilters =
-    search ||
-    eventType ||
-    city ||
-    status ||
-    dateRange ||
-    priceRange ||
-    showMyEvents;
+  const handleDeleteClick = (eventId) => {
+    setDeleteModal({ show: true, eventId });
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await eventService.cancelEvent(deleteModal.eventId);
+      setEvents((prev) =>
+        prev.map((e) =>
+          e.id === deleteModal.eventId ? { ...e, status: "CANCELLED" } : e,
+        ),
+      );
+      toast.success("Event cancelled successfully.");
+    } catch (err) {
+      console.error("Error cancelling event:", err);
+      toast.error("Failed to cancel event. Please try again.");
+    } finally {
+      setDeleteModal({ show: false, eventId: null });
+    }
+  };
 
   const resetFilters = () => {
     setSearch("");
@@ -223,532 +222,834 @@ export const OverallEventsList = () => {
     setShowMyEvents(false);
   };
 
-  const handleDeleteClick = (eventId) => {
-    setDeleteModal({ show: true, eventId });
-  };
+  const hasActiveFilters = !!(
+    search ||
+    eventType ||
+    city ||
+    status ||
+    dateRange ||
+    priceRange ||
+    showMyEvents
+  );
 
-  const handleDeleteConfirm = async () => {
-    const eventId = deleteModal.eventId;
-    setDeleteModal({ show: false, eventId: null });
-    try {
-      await eventService.deleteEvent(eventId);
-      toast.success("Event cancelled successfully");
-      const data = await eventService.getEvents();
-      setEvents(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Error deleting event:", err);
-      toast.error("Failed to cancel event");
-    }
-  };
+  const eventsBlock =
+    filtered.length === 0 ? (
+      <div className="empty-state">
+        <div className="empty-icon">
+          <i className="bi bi-calendar-x" />
+        </div>
+        <h3 className="empty-title">No Events Found</h3>
+        <p className="empty-text">
+          {search ||
+          eventType ||
+          city ||
+          status ||
+          dateRange ||
+          priceRange ||
+          showMyEvents
+            ? "Try adjusting your filters to see more events"
+            : "No events available at the moment"}
+        </p>
+      </div>
+    ) : (
+      <Row className="g-4">
+        {filtered.map((event) => {
+          const { date, day, month } = formatDate(event.eventDate);
+          const displayStatus = getDisplayStatus(event);
+          const isOwn =
+            currentOrganizerId != null &&
+            event.organizerId === currentOrganizerId;
+          const fee =
+            event.registrationFee == null || event.registrationFee <= 0
+              ? "Free"
+              : `₹${event.registrationFee}`;
+          return (
+            <Col key={event.id} xs={12} sm={6} lg={4} className="d-flex">
+              <Card className="event-card w-100">
+                <div className="event-image-container">
+                  <img
+                    src={getDefaultEventImage(event)}
+                    alt={event.title}
+                    className="event-image"
+                  />
+                  <div className="status-badge-overlay">{displayStatus}</div>
+                  <div className="date-badge">
+                    <div className="date-day">{day}</div>
+                    <div className="date-month">{month}</div>
+                  </div>
+                </div>
+                <div className="event-card-body d-flex flex-column">
+                  <h5 className="event-title">{event.title}</h5>
+                  <div className="mb-2">
+                    {isOwn ? (
+                      <span className="organizer-badge own-event">
+                        <i className="bi bi-person-check" />
+                        My Event
+                      </span>
+                    ) : event.organizerId ? (
+                      <span
+                        className="organizer-badge other-event"
+                        style={{ cursor: "pointer" }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(
+                            `/dashboard/organizer/organizer-profile/${event.organizerId}`,
+                          );
+                        }}
+                      >
+                        <i className="bi bi-person-circle" />
+                        {event.organizerName || "View organizer"}
+                      </span>
+                    ) : event.organizerName ? (
+                      <span className="text-muted small">
+                        {event.organizerName}
+                      </span>
+                    ) : null}
+                  </div>
+                  {event.eventType && (
+                    <div className="event-type-badge">
+                      {event.eventType.replace(/_/g, " ")}
+                    </div>
+                  )}
+                  <div className="event-details">
+                    {event.venue && (
+                      <div className="detail-row">
+                        <i className="bi bi-geo-alt-fill detail-icon" />
+                        <span>
+                          {[event.venue, event.city, event.state]
+                            .filter(Boolean)
+                            .join(", ")}
+                        </span>
+                      </div>
+                    )}
+                    <div className="detail-row">
+                      <i className="bi bi-clock-fill detail-icon" />
+                      <span>
+                        {date} · {formatTime(event.eventDate)}
+                      </span>
+                    </div>
+                    <div className="detail-row">
+                      <i className="bi bi-people-fill detail-icon" />
+                      <span>
+                        {event.currentParticipants ?? 0} /{" "}
+                        {event.maxParticipants ?? "—"} registered
+                      </span>
+                    </div>
+                    <div className="detail-row">
+                      <i className="bi bi-tag-fill detail-icon" />
+                      <span className="price-highlight">{fee}</span>
+                    </div>
+                  </div>
+                  <div className="action-buttons">
+                    {isOwn ? (
+                      <>
+                        <button
+                          className="btn-primary-custom"
+                          onClick={() =>
+                            navigate(
+                              `/dashboard/organizer/event-edit/${event.id}`,
+                            )
+                          }
+                          title="Edit"
+                        >
+                          <i className="bi bi-pencil" aria-hidden="true" />
+                        </button>
+                        <button
+                          className="btn-secondary-custom"
+                          onClick={() =>
+                            navigate(
+                              `/dashboard/organizer/event-view/${event.id}`,
+                            )
+                          }
+                          title="View"
+                        >
+                          <i className="bi bi-eye" aria-hidden="true" />
+                        </button>
+                        <button
+                          className="btn-cancel-custom"
+                          onClick={() => handleDeleteClick(event.id)}
+                          title="Cancel"
+                        >
+                          <i className="bi bi-x-circle" aria-hidden="true" />
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="btn-primary-custom"
+                          onClick={() =>
+                            navigate(
+                              `/dashboard/organizer/event-view/${event.id}`,
+                            )
+                          }
+                          title="View"
+                        >
+                          <i className="bi bi-eye" aria-hidden="true" />
+                        </button>
+                        <button
+                          className="btn-secondary-custom"
+                          style={{ visibility: "hidden" }}
+                          aria-hidden="true"
+                        >
+                          <i className="bi bi-eye" />
+                        </button>
+                        <button
+                          className="btn-cancel-custom"
+                          style={{ visibility: "hidden" }}
+                          aria-hidden="true"
+                        >
+                          <i className="bi bi-x-circle" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
+    );
 
   if (loading) {
     return (
-      <Container fluid>
-        <Card className="shadow-sm">
-          <Card.Body className="text-center py-5">
-            <Spinner animation="border" variant="danger" />
-            <p className="mt-3 text-muted">Loading events...</p>
-          </Card.Body>
-        </Card>
+      <Container className="mt-5 text-center">
+        <Spinner animation="border" role="status" variant="primary">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        <p className="mt-3 text-muted">Loading events...</p>
       </Container>
     );
   }
 
   if (error) {
     return (
-      <Container fluid>
-        <Card className="shadow-sm">
-          <Card.Body>
-            <Alert variant="danger">{error}</Alert>
-          </Card.Body>
-        </Card>
+      <Container className="mt-5">
+        <Alert variant="danger">{error}</Alert>
       </Container>
     );
   }
 
   return (
-    <Container fluid>
-      <ConfirmationModal
-        show={deleteModal.show}
-        title="Cancel Event"
-        message="Cancel this event? All participants will be notified."
-        variant="danger"
-        confirmText="Cancel Event"
-        onConfirm={handleDeleteConfirm}
-        onCancel={() => setDeleteModal({ show: false, eventId: null })}
-      />
+    <Container fluid className="py-4">
+      <style>{`
+        .event-card {
+          border: none;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          background: white;
+        }
+        
+        .event-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        .event-image-container {
+          position: relative;
+          width: 100%;
+          height: 220px;
+          overflow: hidden;
+          flex-shrink: 0;
+        }
+        
+        .event-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+        
+        .event-card:hover .event-image {
+          transform: scale(1.05);
+        }
+        
+        .date-badge {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          background: white;
+          border-radius: 12px;
+          padding: 8px 12px;
+          text-align: center;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          min-width: 70px;
+        }
+        
+        .date-day {
+          font-size: 1.5rem;
+          font-weight: 700;
+          line-height: 1.2;
+          color: #1a1a1a;
+        }
+        
+        .date-month {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #666;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        
+        .status-badge-overlay {
+          position: absolute;
+          top: 16px;
+          left: 16px;
+          background: #2563eb;
+          color: white;
+          padding: 6px 14px;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        
+        .event-card-body {
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-height: 0;
+        }
+        
+        .event-title {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #1a1a1a;
+          margin-bottom: 12px;
+          line-height: 1.3;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        .organizer-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-size: 0.875rem;
+          font-weight: 500;
+          transition: all 0.2s ease;
+        }
+        
+        .organizer-badge.own-event {
+          background: #f0fdf4;
+          color: #166534;
+          border: 1px solid #bbf7d0;
+        }
+        
+        .organizer-badge.other-event {
+          background: #eff6ff;
+          color: #1e40af;
+          border: 1px solid #bfdbfe;
+          cursor: pointer;
+        }
+        
+        .organizer-badge.other-event:hover {
+          background: #dbeafe;
+          transform: translateY(-1px);
+        }
+        
+        .event-type-badge {
+          display: inline-block;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 5px 12px;
+          border-radius: 6px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: capitalize;
+          margin-top: 8px;
+        }
+        
+        .event-details {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin: 16px 0;
+          color: #4b5563;
+          font-size: 0.9rem;
+        }
+        
+        .detail-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        
+        .detail-icon {
+          color: #dc2626;
+          font-size: 1rem;
+          margin-top: 2px;
+          flex-shrink: 0;
+        }
+        
+        .stats-bar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+          padding: 14px 16px;
+          border-radius: 12px;
+          margin-top: 16px;
+          margin-bottom: 20px;
+        }
+        
+        .stat-item {
+          font-size: 0.875rem;
+          color: #78350f;
+        }
+        
+        .stat-value {
+          font-weight: 700;
+          color: #dc2626;
+          font-size: 1rem;
+        }
+        
+        .action-buttons {
+          display: flex;
+          gap: 10px;
+          margin-top: auto;
+          padding-top: 16px;
+        }
+        
+        .btn-primary-custom {
+          background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+          border: none;
+          color: white;
+          font-weight: 600;
+          padding: 10px;
+          border-radius: 10px;
+          transition: all 0.2s ease;
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.1rem;
+        }
+        
+        .btn-primary-custom:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+          background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
+        }
+        
+        .btn-secondary-custom {
+          background: white;
+          border: 2px solid #e5e7eb;
+          color: #4b5563;
+          font-weight: 600;
+          padding: 10px;
+          border-radius: 10px;
+          transition: all 0.2s ease;
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.1rem;
+        }
+        
+        .btn-secondary-custom:hover {
+          border-color: #9ca3af;
+          background: #f9fafb;
+        }
+        
+        .btn-cancel-custom {
+          background: white;
+          border: 2px solid #fee2e2;
+          color: #dc2626;
+          font-weight: 600;
+          padding: 10px;
+          border-radius: 10px;
+          transition: all 0.2s ease;
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.1rem;
+        }
+        
+        .btn-cancel-custom:hover {
+          background: #fef2f2;
+          border-color: #fecaca;
+        }
+        
+        .filter-container {
+          background: white;
+          border-radius: 16px;
+          padding: 24px;
+          margin-bottom: 32px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-title {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #1a1a1a;
+          margin-bottom: 20px;
+        }
+        
+        .form-control, .form-select {
+          border-radius: 10px;
+          border: 2px solid #e5e7eb;
+          padding: 10px 14px;
+          transition: all 0.2s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+          border-color: #dc2626;
+          box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+        
+        .empty-state {
+          text-align: center;
+          padding: 60px 20px;
+        }
+        
+        .empty-icon {
+          font-size: 4rem;
+          color: #e5e7eb;
+          margin-bottom: 20px;
+        }
+        
+        .empty-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #1a1a1a;
+          margin-bottom: 12px;
+        }
+        
+        .empty-text {
+          color: #6b7280;
+          font-size: 1rem;
+        }
+        
+        .price-highlight {
+          background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+          padding: 4px 12px;
+          border-radius: 6px;
+          font-weight: 600;
+          color: #78350f;
+          display: inline-block;
+        }
+      `}</style>
 
-      <div className="d-flex flex-column flex-lg-row gap-4">
-        {/* Filters sidebar – reference: pages/event-organizer/events.html */}
-        <aside
-          className="flex-shrink-0"
-          style={{ width: "100%", maxWidth: 320 }}
-        >
-          <Card className="shadow-sm sticky-top" style={{ top: "1rem" }}>
-            <Card.Body>
-              <h5
-                className="mb-3"
-                style={{
-                  borderBottom: "2px solid #ae1700",
-                  paddingBottom: "0.35rem",
-                  color: "#333",
-                }}
-              >
-                <i className="bi bi-funnel me-2" />
-                Filters
-              </h5>
-
-              <Form.Group className="mb-3">
-                <Form.Check
-                  type="switch"
-                  id="show-my-events"
-                  label="Include my events"
-                  checked={showMyEvents}
-                  onChange={(e) => setShowMyEvents(e.target.checked)}
-                  className="small"
-                />
-                <Form.Text className="text-muted">
-                  By default only other organizers&apos; events are shown.
-                </Form.Text>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label className="small fw-semibold text-secondary">
-                  Search
-                </Form.Label>
-                <InputGroup size="sm">
-                  <InputGroup.Text>
-                    <i className="bi bi-search" />
-                  </InputGroup.Text>
-                  <Form.Control
-                    placeholder="Title, venue, city, organizer…"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                </InputGroup>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label className="small fw-semibold text-secondary">
-                  Event Type
-                </Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={eventType}
-                  onChange={(e) => setEventType(e.target.value)}
-                >
-                  {EVENT_TYPES.map((o) => (
-                    <option key={o.value || "all"} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label className="small fw-semibold text-secondary">
-                  City
-                </Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                >
-                  <option value="">All Cities</option>
-                  {cities.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label className="small fw-semibold text-secondary">
-                  Status
-                </Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  {STATUS_OPTIONS.map((o) => (
-                    <option key={o.value || "all"} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label className="small fw-semibold text-secondary">
-                  Date
-                </Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={dateRange}
-                  onChange={(e) => setDateRange(e.target.value)}
-                >
-                  {DATE_OPTIONS.map((o) => (
-                    <option key={o.value || "any"} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label className="small fw-semibold text-secondary">
-                  Price
-                </Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={priceRange}
-                  onChange={(e) => setPriceRange(e.target.value)}
-                >
-                  {PRICE_OPTIONS.map((o) => (
-                    <option key={o.value || "any"} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-
-              {hasActiveFilters && (
-                <Button
-                  variant="outline-secondary"
-                  size="sm"
-                  className="w-100 mt-2"
-                  onClick={resetFilters}
-                >
-                  <i className="bi bi-arrow-counterclockwise me-1" /> Reset
-                </Button>
-              )}
-            </Card.Body>
-          </Card>
-        </aside>
-
-        {/* Main: header + grid */}
-        <div className="flex-grow-1 min-w-0">
-          <Card className="shadow-sm mb-4">
-            <Card.Body>
-              <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-0">
-                <div>
+      <div className="container-lg">
+        {compact ? (
+          <div className="d-flex flex-column flex-lg-row gap-4">
+            <aside
+              className="flex-shrink-0"
+              style={{ width: "100%", maxWidth: 320 }}
+            >
+              <Card className="shadow-sm sticky-top" style={{ top: "1rem" }}>
+                <Card.Body>
+                  <h5
+                    className="mb-3"
+                    style={{
+                      borderBottom: "2px solid #ae1700",
+                      paddingBottom: "0.35rem",
+                      color: "#333",
+                    }}
+                  >
+                    <i className="bi bi-funnel me-2" aria-hidden="true" />
+                    Filters
+                  </h5>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small fw-semibold text-secondary">
+                      Search
+                    </Form.Label>
+                    <InputGroup size="sm">
+                      <InputGroup.Text>
+                        <i className="bi bi-search" aria-hidden="true" />
+                      </InputGroup.Text>
+                      <Form.Control
+                        placeholder="Search events..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </InputGroup>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small fw-semibold text-secondary">
+                      Event Type
+                    </Form.Label>
+                    <Form.Select
+                      size="sm"
+                      value={eventType}
+                      onChange={(e) => setEventType(e.target.value)}
+                    >
+                      {EVENT_TYPES.map((t) => (
+                        <option key={t.value} value={t.value}>
+                          {t.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small fw-semibold text-secondary">
+                      City
+                    </Form.Label>
+                    <Form.Select
+                      size="sm"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                    >
+                      <option value="">All Cities</option>
+                      {cities.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small fw-semibold text-secondary">
+                      Status
+                    </Form.Label>
+                    <Form.Select
+                      size="sm"
+                      value={status}
+                      onChange={(e) => setStatus(e.target.value)}
+                    >
+                      {STATUS_OPTIONS.map((s) => (
+                        <option key={s.value} value={s.value}>
+                          {s.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small fw-semibold text-secondary">
+                      Date
+                    </Form.Label>
+                    <Form.Select
+                      size="sm"
+                      value={dateRange}
+                      onChange={(e) => setDateRange(e.target.value)}
+                    >
+                      {DATE_OPTIONS.map((d) => (
+                        <option key={d.value} value={d.value}>
+                          {d.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small fw-semibold text-secondary">
+                      Price
+                    </Form.Label>
+                    <Form.Select
+                      size="sm"
+                      value={priceRange}
+                      onChange={(e) => setPriceRange(e.target.value)}
+                    >
+                      {PRICE_OPTIONS.map((p) => (
+                        <option key={p.value} value={p.value}>
+                          {p.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Check
+                      type="switch"
+                      id="show-my-events-sidebar"
+                      label="Include my events"
+                      checked={showMyEvents}
+                      onChange={(e) => setShowMyEvents(e.target.checked)}
+                    />
+                    <Form.Text className="text-muted small d-block">
+                      By default only other organizers&apos; events are shown.
+                    </Form.Text>
+                  </Form.Group>
+                  {hasActiveFilters && (
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      className="w-100 mt-2"
+                      onClick={resetFilters}
+                    >
+                      <i
+                        className="bi bi-arrow-counterclockwise me-1"
+                        aria-hidden="true"
+                      />{" "}
+                      Reset
+                    </Button>
+                  )}
+                </Card.Body>
+              </Card>
+            </aside>
+            <div className="flex-grow-1 min-w-0">
+              <Card className="shadow-sm mb-4">
+                <Card.Body>
                   <h2 className="mb-1" style={{ color: "#333" }}>
-                    Overall Events
+                    Discover Events
                   </h2>
                   <p className="text-muted small mb-0">
                     Showing {filtered.length} of {events.length} events
-                    {hasActiveFilters && " (filtered)"}
+                    {hasActiveFilters ? " (filtered)" : ""}
                   </p>
+                </Card.Body>
+              </Card>
+              {eventsBlock}
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="filter-container">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h2 className="filter-title mb-0">Discover Events</h2>
+                <div>
+                  <Form.Check
+                    type="switch"
+                    id="show-my-events"
+                    label="Include my events"
+                    checked={showMyEvents}
+                    onChange={(e) => setShowMyEvents(e.target.checked)}
+                  />
+                  <Form.Text className="text-muted d-block small">
+                    By default only other organizers&apos; events are shown.
+                  </Form.Text>
                 </div>
-                <Button
-                  variant="danger"
-                  style={{ background: "#ae1700", borderColor: "#ae1700" }}
-                  onClick={() => navigate("/dashboard/organizer/create-event")}
-                >
-                  <i className="bi bi-plus-lg me-1" /> Create New Event
-                </Button>
               </div>
-            </Card.Body>
-          </Card>
 
-          {events.length === 0 ? (
-            <Card className="shadow-sm">
-              <Card.Body className="text-center py-5">
-                <p className="text-muted mb-3">
-                  No events found. Create your first event!
-                </p>
-                <Button
-                  variant="danger"
-                  style={{ background: "#ae1700", borderColor: "#ae1700" }}
-                  onClick={() => navigate("/dashboard/organizer/create-event")}
-                >
-                  Create Event
-                </Button>
-              </Card.Body>
-            </Card>
-          ) : filtered.length === 0 ? (
-            <Card className="shadow-sm">
-              <Card.Body className="text-center py-5">
-                <p className="text-muted mb-2">No events match your filters.</p>
-                <Button
-                  variant="outline-secondary"
-                  size="sm"
-                  onClick={resetFilters}
-                >
-                  Reset filters
-                </Button>
-              </Card.Body>
-            </Card>
-          ) : (
-            <Row className="g-4">
-              {filtered.map((event) => {
-                const isOwn = event.organizerId === currentOrganizerId;
-                const { day, month, date } = formatDate(event.eventDate);
-                const imageUrl = event.imageUrl || event.image || DEFAULT_IMAGE;
-                const fee =
-                  event.registrationFee != null && event.registrationFee > 0
-                    ? `₹${event.registrationFee}`
-                    : "Free";
-                const spots =
-                  event.maxParticipants != null
-                    ? event.maxParticipants - (event.currentParticipants ?? 0)
-                    : null;
-
-                return (
-                  <Col key={event.id} xs={12} md={6} xl={4}>
-                    <Card
-                      className="h-100 shadow-sm border"
+              <Row className="g-3">
+                <Col md={6} lg={4}>
+                  <InputGroup>
+                    <InputGroup.Text
                       style={{
-                        transition: "all 0.3s ease",
-                        borderColor: "rgba(0,0,0,0.08)",
-                        overflow: "hidden",
-                        borderRadius: 10,
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "translateY(-4px)";
-                        e.currentTarget.style.boxShadow =
-                          "0 8px 24px rgba(0,0,0,0.12)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "translateY(0)";
-                        e.currentTarget.style.boxShadow = "";
+                        background: "white",
+                        border: "2px solid #e5e7eb",
+                        borderRight: "none",
+                        borderRadius: "10px 0 0 10px",
                       }}
                     >
-                      {/* Image with date overlay – events.html style */}
-                      <div
-                        style={{
-                          height: 200,
-                          backgroundImage: `url("${imageUrl}")`,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          position: "relative",
-                        }}
-                      >
-                        <Badge
-                          bg={getStatusVariant(event.status)}
-                          className="position-absolute top-0 start-0 m-2"
-                          style={{ fontWeight: 600 }}
-                        >
-                          {event.status || "UPCOMING"}
-                        </Badge>
-                        <div
-                          className="position-absolute top-0 end-0 m-2 text-center rounded px-2 py-1"
-                          style={{
-                            background: "rgba(255,255,255,0.95)",
-                            color: "#333",
-                            minWidth: 48,
-                          }}
-                        >
-                          <span
-                            className="d-block lh-1 fw-bold"
-                            style={{ fontSize: "1.1rem" }}
-                          >
-                            {day}
-                          </span>
-                          <span className="d-block small">{month}</span>
-                        </div>
-                      </div>
+                      <i className="bi bi-search" />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      placeholder="Search events..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      style={{ borderLeft: "none" }}
+                    />
+                  </InputGroup>
+                </Col>
 
-                      <Card.Body className="d-flex flex-column">
-                        <Card.Title
-                          className="mb-2"
-                          style={{ fontSize: "1.1rem", color: "#333" }}
-                        >
-                          {event.title}
-                        </Card.Title>
+                <Col md={6} lg={2}>
+                  <Form.Select
+                    value={eventType}
+                    onChange={(e) => setEventType(e.target.value)}
+                  >
+                    {EVENT_TYPES.map((t) => (
+                      <option key={t.value} value={t.value}>
+                        {t.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
 
-                        {/* Organizer: clickable badge for other organizers only */}
-                        <div className="mb-2">
-                          {isOwn ? (
-                            <Badge
-                              bg="light"
-                              text="dark"
-                              style={{
-                                fontWeight: 500,
-                                border: "1px solid #dee2e6",
-                              }}
-                            >
-                              <i className="bi bi-person-check me-1" /> My Event
-                            </Badge>
-                          ) : event.organizerName && event.organizerId ? (
-                            <button
-                              type="button"
-                              className="badge border-0 text-decoration-none"
-                              style={{
-                                background: "#0d6efd",
-                                color: "white",
-                                fontWeight: 500,
-                                cursor: "pointer",
-                                padding: "0.35em 0.65em",
-                              }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                navigate(
-                                  `/dashboard/organizer/organizer-profile/${event.organizerId}`,
-                                );
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.background = "#0b5ed7";
-                                e.currentTarget.style.textDecoration =
-                                  "underline";
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.background = "#0d6efd";
-                                e.currentTarget.style.textDecoration = "none";
-                              }}
-                            >
-                              <i className="bi bi-person-circle me-1" />
-                              {event.organizerName}
-                            </button>
-                          ) : event.organizerName ? (
-                            <span className="text-muted small">
-                              {event.organizerName}
-                            </span>
-                          ) : null}
-                        </div>
+                <Col md={6} lg={2}>
+                  <Form.Select
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  >
+                    <option value="">All Cities</option>
+                    {cities.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
 
-                        {event.eventType && (
-                          <Badge
-                            bg="secondary"
-                            className="mb-2 align-self-start"
-                          >
-                            {event.eventType.replace(/_/g, " ")}
-                          </Badge>
-                        )}
+                <Col md={6} lg={2}>
+                  <Form.Select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  >
+                    {STATUS_OPTIONS.map((s) => (
+                      <option key={s.value} value={s.value}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
 
-                        <div className="text-muted small mb-3 flex-grow-1">
-                          {event.venue && (
-                            <div className="d-flex align-items-center gap-1">
-                              <i
-                                className="bi bi-geo-alt"
-                                style={{ color: "#ae1700" }}
-                              />
-                              {[event.venue, event.city, event.state]
-                                .filter(Boolean)
-                                .join(", ") || "—"}
-                            </div>
-                          )}
-                          <div className="d-flex align-items-center gap-1 mt-1">
-                            <i
-                              className="bi bi-clock"
-                              style={{ color: "#ae1700" }}
-                            />
-                            {date} · {formatTime(event.eventDate)}
-                          </div>
-                          <div className="d-flex justify-content-between mt-1">
-                            <span>
-                              <i
-                                className="bi bi-people me-1"
-                                style={{ color: "#ae1700" }}
-                              />
-                              {event.currentParticipants ?? 0} /{" "}
-                              {event.maxParticipants ?? "—"} registered
-                            </span>
-                            <span>
-                              <i
-                                className="bi bi-currency-rupee me-1"
-                                style={{ color: "#ae1700" }}
-                              />
-                              {fee}
-                            </span>
-                          </div>
-                        </div>
+                <Col md={6} lg={2}>
+                  <Form.Select
+                    value={dateRange}
+                    onChange={(e) => setDateRange(e.target.value)}
+                  >
+                    {DATE_OPTIONS.map((d) => (
+                      <option key={d.value} value={d.value}>
+                        {d.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
 
-                        {/* Stats bar – events.html style */}
-                        {spots != null && spots >= 0 && (
-                          <div
-                            className="d-flex justify-content-between py-2 px-2 mb-2 rounded"
-                            style={{
-                              background: "#f8fafc",
-                              fontSize: "0.875rem",
-                            }}
-                          >
-                            <span>
-                              <strong style={{ color: "#ae1700" }}>
-                                {event.currentParticipants ?? 0}/
-                                {event.maxParticipants}
-                              </strong>{" "}
-                              Registered
-                            </span>
-                            <span>
-                              <strong style={{ color: "#ae1700" }}>
-                                {spots}
-                              </strong>{" "}
-                              Spots left
-                            </span>
-                          </div>
-                        )}
+                <Col md={6} lg={2}>
+                  <Form.Select
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                  >
+                    {PRICE_OPTIONS.map((p) => (
+                      <option key={p.value} value={p.value}>
+                        {p.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
 
-                        <div className="d-flex gap-2 flex-wrap">
-                          {isOwn ? (
-                            <>
-                              <Button
-                                variant="danger"
-                                size="sm"
-                                className="flex-fill"
-                                style={{
-                                  background: "#ae1700",
-                                  borderColor: "#ae1700",
-                                }}
-                                onClick={() =>
-                                  navigate(
-                                    `/dashboard/organizer/event-edit/${event.id}`,
-                                  )
-                                }
-                              >
-                                <i className="bi bi-pencil me-1" /> Edit
-                              </Button>
-                              <Button
-                                variant="outline-secondary"
-                                size="sm"
-                                className="flex-fill"
-                                onClick={() =>
-                                  navigate(
-                                    `/dashboard/organizer/event-view/${event.id}`,
-                                  )
-                                }
-                              >
-                                View
-                              </Button>
-                              <Button
-                                variant="outline-danger"
-                                size="sm"
-                                className="flex-fill"
-                                onClick={() => handleDeleteClick(event.id)}
-                              >
-                                Cancel
-                              </Button>
-                            </>
-                          ) : (
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              className="w-100"
-                              style={{
-                                background: "#ae1700",
-                                borderColor: "#ae1700",
-                              }}
-                              onClick={() =>
-                                navigate(
-                                  `/dashboard/organizer/event-view/${event.id}`,
-                                )
-                              }
-                            >
-                              <i className="bi bi-eye me-1" /> View Details
-                            </Button>
-                          )}
-                        </div>
-                      </Card.Body>
-                    </Card>
+                {(search ||
+                  eventType ||
+                  city ||
+                  status ||
+                  dateRange ||
+                  priceRange ||
+                  showMyEvents) && (
+                  <Col xs={12}>
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={resetFilters}
+                      style={{
+                        borderRadius: "8px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      <i className="bi bi-x-circle me-1" /> Clear Filters
+                    </Button>
                   </Col>
-                );
-              })}
-            </Row>
-          )}
-        </div>
+                )}
+              </Row>
+            </div>
+            {eventsBlock}
+          </>
+        )}
       </div>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        show={deleteModal.show}
+        onHide={() => setDeleteModal({ show: false, eventId: null })}
+        onConfirm={handleDeleteConfirm}
+        title="Cancel Event"
+        message="Are you sure you want to cancel this event? This action cannot be undone."
+        confirmText="Yes, Cancel Event"
+        cancelText="No, Keep Event"
+      />
     </Container>
   );
 };

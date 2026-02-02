@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
 import { OverallEventsList } from "./EventList.jsx";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { eventService } from "../../../services/eventService.js";
+import { getDisplayStatus } from "../../../utils/eventStatus.js";
 
 export const EventOrganizerDashboard = () => {
   const { user } = useAuth();
@@ -45,7 +46,7 @@ export const EventOrganizerDashboard = () => {
           {
             icon: "⏳",
             number: statistics.pendingRegistrations?.toString() || "0",
-            label: "Pending Payments",
+            label: "Pending Requests",
             variant: "warning",
           },
         ]);
@@ -56,9 +57,10 @@ export const EventOrganizerDashboard = () => {
           const myEvents = await eventService.getMyEvents();
           const events = Array.isArray(myEvents) ? myEvents : [];
           const totalEvents = events.length;
-          const activeEvents = events.filter(
-            (e) => e.status === "UPCOMING" || e.status === "ONGOING",
-          ).length;
+          const activeEvents = events.filter((e) => {
+            const d = getDisplayStatus(e);
+            return d === "UPCOMING" || d === "ONGOING";
+          }).length;
 
           setStats([
             {
@@ -82,7 +84,7 @@ export const EventOrganizerDashboard = () => {
             {
               icon: "⏳",
               number: "0",
-              label: "Pending Payments",
+              label: "Pending Requests",
               variant: "warning",
             },
           ]);
@@ -139,8 +141,8 @@ export const EventOrganizerDashboard = () => {
         </Row>
       )}
 
-      {/* Overall Events Section */}
-      <OverallEventsList />
+      {/* Events: all events by default (others only); "Include my events" to add yours */}
+      <OverallEventsList compact />
     </Container>
   );
 };

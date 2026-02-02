@@ -16,13 +16,15 @@ const mapRoleToUserType = (role) => {
 };
 
 /**
- * Normalize backend AuthResponse to frontend expected format
+ * Normalize backend ApiResponse<AuthResponse> to frontend format.
+ * Uses planType (FREE/PREMIUM) as subscriptionTier.
  */
 const normalizeAuthResponse = (apiResponse) => {
-  const authData = apiResponse.data; // Unwrap from ApiResponse
+  const authData = apiResponse.data; // AuthResponse: token, refreshToken, expiresIn, user
   if (!authData || !authData.user) {
     throw new Error("Invalid auth response");
   }
+  const tier = (authData.user.planType || "FREE").toLowerCase();
 
   return {
     token: authData.token,
@@ -31,11 +33,10 @@ const normalizeAuthResponse = (apiResponse) => {
     user: {
       id: authData.user.id,
       email: authData.user.email,
-      name: `${authData.user.firstName} ${authData.user.lastName}`.trim(),
+      name: `${authData.user.firstName || ""} ${authData.user.lastName || ""}`.trim(),
       userType: mapRoleToUserType(authData.user.role),
-      // These may not exist in backend response yet
-      subscriptionStatus: authData.user.subscriptionStatus || "active",
-      subscriptionTier: authData.user.subscriptionTier || "free",
+      subscriptionStatus: "active",
+      subscriptionTier: tier,
       subscriptionExpiry: authData.user.subscriptionExpiry || null,
     },
   };
@@ -58,15 +59,21 @@ export const authService = {
       return await mockAuthService.register(userData);
     }
     const response = await api.post("/auth/register", userData);
-    return response.data;
+    const res = response.data;
+    const data = res?.data ?? res;
+    return data;
   },
 
   logout: async () => {
     if (USE_MOCK) {
       return await mockAuthService.logout();
     }
-    const response = await api.post("/auth/logout");
-    return response.data;
+    const refreshToken =
+      typeof localStorage !== "undefined"
+        ? localStorage.getItem("matrimony_refresh_token")
+        : null;
+    await api.post("/auth/logout", { refreshToken: refreshToken || "" });
+    return { success: true };
   },
 
   forgotPassword: async (email) => {

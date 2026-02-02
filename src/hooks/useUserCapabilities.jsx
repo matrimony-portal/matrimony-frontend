@@ -16,8 +16,8 @@ export function useUserCapabilities() {
       isPremium: premium,
       isFree: free,
       userType,
-      // Messaging is a premium feature
-      canMessage: premium,
+      // Messaging: premium and event organisers; free must upgrade
+      canMessage: premium || userType === "organizer",
       // Advanced filters/search depth
       canUseAdvancedFilters: premium,
       // Daily proposal limits

@@ -3,15 +3,17 @@ import { useAuth } from "../../hooks/useAuth.jsx";
 import Loading from "../common/Loading.jsx";
 
 const DashboardRouter = () => {
-  const { userType, subscriptionStatus, loading } = useAuth();
+  const { userType, subscriptionStatus, subscriptionTier, loading } = useAuth();
 
-  // 🔴 THIS is the fix
   if (loading || (userType === "user" && subscriptionStatus === null)) {
     return <Loading message="Loading your dashboard..." />;
   }
 
   if (userType === "user") {
-    return subscriptionStatus === "active" ? (
+    // Premium only when explicitly premium tier; new users and FREE go to /dashboard/free
+    const isPremium =
+      subscriptionStatus === "active" && subscriptionTier === "premium";
+    return isPremium ? (
       <Navigate to="/dashboard/premium" replace />
     ) : (
       <Navigate to="/dashboard/free" replace />

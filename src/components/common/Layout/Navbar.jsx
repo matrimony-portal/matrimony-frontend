@@ -3,23 +3,52 @@ import { useNavigate, Link, NavLink } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
 import { useUserCapabilities } from "../../../hooks/useUserCapabilities.jsx";
+import { eventService } from "../../../services/eventService.js";
+import useConfirmation from "../../../hooks/useConfirmation.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 
 const Navbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const { logout, user, userType } = useAuth();
   const base = useDashboardBasePath();
   const { isFree, canMessage, isPremium } = useUserCapabilities();
+  const { confirm, confirmationProps } = useConfirmation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [pendingRequests, setPendingRequests] = useState(0);
 
   const isOrganizer = userType === "organizer";
   const isAdmin = userType === "admin";
 
-  const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout?")) {
-      logout();
-      navigate("/login");
-    }
+  const refreshPendingBadge = () => {
+    eventService
+      .getEventStatistics()
+      .then((s) => setPendingRequests(Number(s?.pendingRegistrations) || 0))
+      .catch(() => setPendingRequests(0));
+  };
+
+  useEffect(() => {
+    if (!isOrganizer) return;
+    refreshPendingBadge();
+  }, [isOrganizer]);
+
+  // Re-fetch when Event Requests page accepts/rejects so the ! badge updates
+  useEffect(() => {
+    if (!isOrganizer) return;
+    const handler = () => refreshPendingBadge();
+    window.addEventListener("refresh-event-requests-badge", handler);
+    return () =>
+      window.removeEventListener("refresh-event-requests-badge", handler);
+  }, [isOrganizer]);
+
+  const handleLogout = async () => {
+    const ok = await confirm({
+      title: "Logout",
+      message: "Are you sure you want to logout?",
+    });
+    if (!ok) return;
+    logout();
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -50,6 +79,7 @@ const Navbar = ({ toggleSidebar }) => {
 
   return (
     <nav className="navbar navbar-dark sticky-top p-0 shadow navbar-gradient dashboard-navbar">
+      <ConfirmationModal {...confirmationProps} />
       <div className="dashboard-navbar-container d-flex align-items-center w-100">
         <button
           className="navbar-toggler d-md-none"
@@ -109,9 +139,11 @@ const Navbar = ({ toggleSidebar }) => {
               title="Event Requests"
             >
               <i className="bi bi-inbox nav-icon"></i>
-              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                3<span className="visually-hidden">pending requests</span>
-              </span>
+              {pendingRequests > 0 && (
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  !<span className="visually-hidden">pending requests</span>
+                </span>
+              )}
             </NavLink>
           )}
 

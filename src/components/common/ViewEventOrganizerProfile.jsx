@@ -12,6 +12,7 @@ import {
 import { ArrowLeft } from "react-bootstrap-icons";
 import { organizerService } from "../../services/organizerService.js";
 import { eventService } from "../../services/eventService.js";
+import { getDisplayStatus } from "../../utils/eventStatus.js";
 
 function formatDate(iso) {
   if (!iso) return "—";
@@ -223,14 +224,15 @@ export const ViewEventOrganizerProfile = () => {
                       </div>
                       <Badge
                         bg={
-                          ev.status === "UPCOMING"
-                            ? "primary"
-                            : ev.status === "ONGOING"
-                              ? "success"
-                              : "secondary"
+                          {
+                            UPCOMING: "primary",
+                            ONGOING: "success",
+                            COMPLETED: "secondary",
+                            CANCELLED: "danger",
+                          }[getDisplayStatus(ev)] || "secondary"
                         }
                       >
-                        {ev.status}
+                        {getDisplayStatus(ev)}
                       </Badge>
                     </div>
                   ))}

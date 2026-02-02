@@ -14,40 +14,9 @@ const GALLERY_PLACEHOLDERS = [
 ];
 
 /**
- * Reusable section: only render if at least one item has a value.
- * Same structure as free/premium ProfileView ProfileSection.
- */
-function ProfileSection({ title, items }) {
-  const filtered = (items || []).filter(
-    (i) => i.value != null && String(i.value).trim() !== "",
-  );
-  if (filtered.length === 0) return null;
-  return (
-    <Card className="mb-3 shadow-sm">
-      <Card.Body>
-        <h5 className="border-bottom border-danger border-2 pb-2 mb-3">
-          {title}
-        </h5>
-        <div className="row g-3">
-          {filtered.map((item, idx) => (
-            <div key={idx} className="col-6 col-md-4">
-              <div className="p-2 bg-light rounded">
-                <div className="small text-muted mb-1">{item.label}</div>
-                <div className="fw-semibold">{item.value}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card.Body>
-    </Card>
-  );
-}
-
-/**
  * Read-only view of a participant's (registrant's) profile.
- * Layout matches free/premium user ProfileView: header (photo, summary), About,
- * Photo Gallery, Basic Details, Religious Background, Education & Career,
- * sidebar Contact. No Send Interest / Chat / Shortlist / Similar Profiles.
+ * Header shows Age, Gender, Religion, Location, Education, Occupation (no repeat below).
+ * Then: About Me, Photo Gallery, sidebar Contact. No Send Interest / Chat / Shortlist.
  */
 export const ViewEventParticipantProfile = () => {
   const { registrationId } = useParams();
@@ -140,27 +109,6 @@ export const ViewEventParticipantProfile = () => {
   const religionCaste = [profile.religion, profile.caste]
     .filter(Boolean)
     .join(", ");
-
-  // Header summary: same 6-tile layout as free/premium (Age, Height, Religion, Location, Education, Occupation)
-  // We have: Age, Gender, Religion/Caste, Location, Education, Occupation (no Height in API)
-  const basicDetails = [
-    {
-      label: "Age",
-      value: profile.age != null ? `${profile.age} years` : null,
-    },
-    { label: "Gender", value: profile.gender || null },
-  ];
-
-  const religiousBackground = [
-    { label: "Religion", value: profile.religion || null },
-    { label: "Caste", value: profile.caste || null },
-  ];
-
-  const educationCareer = [
-    { label: "Education", value: profile.education || null },
-    { label: "Occupation", value: profile.occupation || null },
-    { label: "Location", value: location || null },
-  ];
 
   return (
     <div className="container-fluid py-3 py-md-4">
@@ -282,13 +230,6 @@ export const ViewEventParticipantProfile = () => {
               </div>
             </Card.Body>
           </Card>
-
-          <ProfileSection title="Basic Details" items={basicDetails} />
-          <ProfileSection
-            title="Religious Background"
-            items={religiousBackground}
-          />
-          <ProfileSection title="Education & Career" items={educationCareer} />
         </div>
 
         {/* Sidebar – col-lg-4: Contact like free/premium; no Similar Profiles */}

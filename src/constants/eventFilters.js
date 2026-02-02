@@ -2,7 +2,7 @@
 // Centralized filter options for events
 
 /**
- * Event type options for filter dropdowns
+ * Event type options for filter dropdowns (frontend/display)
  */
 export const EVENT_TYPES = [
   { value: "", label: "All Types" },
@@ -13,6 +13,15 @@ export const EVENT_TYPES = [
   { value: "outdoor", label: "Outdoor Activity" },
   { value: "music", label: "Music Night" },
   { value: "picnic", label: "Picnic" },
+];
+
+/** Event types matching backend (SPEED_DATING, COFFEE_MEETUP, DINNER, CULTURAL) */
+export const EVENT_TYPES_BACKEND = [
+  { value: "", label: "All Types" },
+  { value: "SPEED_DATING", label: "Speed Dating" },
+  { value: "COFFEE_MEETUP", label: "Coffee Meetup" },
+  { value: "DINNER", label: "Dinner Event" },
+  { value: "CULTURAL", label: "Cultural Evening" },
 ];
 
 /**

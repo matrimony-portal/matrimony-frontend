@@ -64,9 +64,11 @@ import { MyEventsList } from "./components/dashboard/organizer/MyEventsList.jsx"
 import { ViewEventParticipantProfile } from "./components/dashboard/organizer/ViewEventParticipantProfile.jsx";
 import { OverallEventsList } from "./components/dashboard/organizer/EventList.jsx";
 import { BlockedUsers as OrganizerBlockedUsers } from "./components/dashboard/organizer/BlockedUsers.jsx";
+import OrganizerMessages from "./components/dashboard/organizer/Messages.jsx";
 
 // Shared Components
 import PartnerPreferences from "./components/dashboard/shared/PartnerPreferences.jsx";
+import OrganizerFeedback from "./components/dashboard/shared/Feedback.jsx";
 import { ViewEventOrganizerProfile } from "./components/common/ViewEventOrganizerProfile.jsx";
 
 import "./styles/custom.css";
@@ -180,7 +182,8 @@ function App() {
             />
             <Route path="settings" element={<OrganizerSettings />} />
             <Route path="blocked-users" element={<OrganizerBlockedUsers />} />
-            <Route path="messages" element={<PremiumMessages />} />
+            <Route path="messages" element={<OrganizerMessages />} />
+            <Route path="feedback" element={<OrganizerFeedback />} />
             <Route path="contact" element={<ContactPage />} />
           </Route>
 

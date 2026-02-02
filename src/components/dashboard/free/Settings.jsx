@@ -1,6 +1,9 @@
-// src/components/dashboard/premium/Settings.jsx
-import React, { useState } from "react";
+// src/components/dashboard/free/Settings.jsx
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "../../../utils/toast.js";
+import useConfirmation from "../../../hooks/useConfirmation.js";
+import ConfirmationModal from "../../ui/ConfirmationModal.jsx";
 
 const SettingItem = ({ title, description, children }) => (
   <div className="d-flex justify-content-between align-items-center p-3 bg-light rounded mb-2">
@@ -26,6 +29,7 @@ const ToggleSwitch = ({ checked, onChange }) => (
 
 const Settings = () => {
   const navigate = useNavigate();
+  const { confirm, confirmDanger, confirmationProps } = useConfirmation();
   const [settings, setSettings] = useState({
     profileVisibility: "everyone",
     showContact: true,
@@ -48,40 +52,49 @@ const Settings = () => {
     setSettings((prev) => ({ ...prev, [name]: value }));
   };
 
-  const changePassword = () => {
-    alert("Redirecting to change password page...");
-  };
+  const changePassword = useCallback(() => {
+    toast.info("Redirecting to change password page...");
+  }, []);
 
-  const deactivateAccount = () => {
-    if (
-      window.confirm(
-        "Deactivate your account?\n\nYour profile will be hidden but you can reactivate anytime.",
-      )
-    ) {
-      alert("Account deactivated. You can reactivate by logging in again.");
+  const deactivateAccount = useCallback(async () => {
+    const ok = await confirm({
+      title: "Deactivate account",
+      message:
+        "Deactivate your account? Your profile will be hidden but you can reactivate anytime.",
+      variant: "warning",
+    });
+    if (ok) {
+      toast.success(
+        "Account deactivated. You can reactivate by logging in again.",
+      );
       navigate("/login");
     }
-  };
+  }, [navigate, confirm]);
 
-  const deleteAccount = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to DELETE your account?\n\nThis action cannot be undone!",
-      )
-    ) {
-      if (
-        window.confirm("Final confirmation: Delete all your data permanently?")
-      ) {
-        alert(
-          "Account deletion initiated. You will receive a confirmation email.",
-        );
-        navigate("/login");
-      }
+  const deleteAccount = useCallback(async () => {
+    const ok1 = await confirm({
+      title: "Delete account",
+      message:
+        "Are you sure you want to DELETE your account? This action cannot be undone!",
+      variant: "danger",
+    });
+    if (!ok1) return;
+    const ok2 = await confirmDanger({
+      title: "Final confirmation",
+      message: "Delete all your data permanently?",
+      confirmText: "Yes, delete",
+    });
+    if (ok2) {
+      toast.info(
+        "Account deletion initiated. You will receive a confirmation email.",
+      );
+      navigate("/login");
     }
-  };
+  }, [navigate, confirm, confirmDanger]);
 
   return (
     <div className="container-fluid py-3 py-md-4">
+      <ConfirmationModal {...confirmationProps} />
       <h1 className="h3 mb-4">Settings</h1>
 
       {/* Privacy Settings */}

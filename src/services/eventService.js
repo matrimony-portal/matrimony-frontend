@@ -6,7 +6,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 function getOrganizerId() {
   const userStr = localStorage.getItem("matrimony_user");
   const user = userStr ? JSON.parse(userStr) : null;
-  const id = user?.id ?? user?.userId;
+  const id = user?.id ?? user?.userId ?? user?.organizerId;
   if (!id) throw new Error("User not authenticated");
   return id;
 }
@@ -31,8 +31,9 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.getEvents(filters);
     }
-    const response = await api.get("/events", { params: filters });
-    return response.data;
+    const response = await api.get("events", { params: filters });
+    const raw = response.data;
+    return Array.isArray(raw) ? raw : Array.isArray(raw?.data) ? raw.data : [];
   },
 
   // Get single event by ID
@@ -40,7 +41,7 @@ export const eventService = {
     if (USE_MOCK) {
       return await mockEventService.getEventById(eventId);
     }
-    const response = await api.get(`/events/${eventId}`);
+    const response = await api.get(`events/${eventId}`);
     return response.data;
   },
 
@@ -50,7 +51,7 @@ export const eventService = {
       return await mockEventService.createEvent(eventData);
     }
     const organizerId = getOrganizerId();
-    const response = await api.post("/events", eventData, {
+    const response = await api.post("events", eventData, {
       params: { organizerId },
     });
     return response.data;
@@ -74,7 +75,7 @@ export const eventService = {
       return await mockEventService.deleteEvent(eventId);
     }
     const organizerId = getOrganizerId();
-    const response = await api.delete(`/events/${eventId}`, {
+    const response = await api.delete(`events/${eventId}`, {
       params: { organizerId },
     });
     return response.data;
@@ -86,7 +87,7 @@ export const eventService = {
       return await mockEventService.updateEventStatus?.(eventId, status);
     }
     const organizerId = getOrganizerId();
-    const response = await api.put(`/events/${eventId}/status`, null, {
+    const response = await api.put(`events/${eventId}/status`, null, {
       params: { status, organizerId },
     });
     return response.data;
@@ -100,7 +101,7 @@ export const eventService = {
     const userId = getUserId();
     const params = { userId };
     if (notes) params.notes = notes;
-    const response = await api.post(`/events/${eventId}/register`, null, {
+    const response = await api.post(`events/${eventId}/register`, null, {
       params,
     });
     return response.data;
@@ -112,7 +113,7 @@ export const eventService = {
       return await mockEventService.unregisterFromEvent(eventId);
     }
     const userId = getUserId();
-    const response = await api.delete(`/events/${eventId}/register`, {
+    const response = await api.delete(`events/${eventId}/register`, {
       params: { userId },
     });
     return response.data;
@@ -123,7 +124,7 @@ export const eventService = {
     if (USE_MOCK) {
       return (await mockEventService.getEventsByOrganizer?.(organizerId)) ?? [];
     }
-    const response = await api.get(`/events/organizer/${organizerId}`);
+    const response = await api.get(`events/organizer/${organizerId}`);
     return response.data;
   },
 
@@ -133,7 +134,7 @@ export const eventService = {
       return await mockEventService.getMyEvents();
     }
     const organizerId = getOrganizerId();
-    const response = await api.get("/events/my-events", {
+    const response = await api.get("events/my-events", {
       params: { organizerId },
     });
     return response.data;
@@ -145,7 +146,7 @@ export const eventService = {
       return await mockEventService.getEventRegistrations(eventId);
     }
     const organizerId = getOrganizerId();
-    const response = await api.get(`/events/${eventId}/registrations`, {
+    const response = await api.get(`events/${eventId}/registrations`, {
       params: { organizerId },
     });
     return response.data;
@@ -157,7 +158,7 @@ export const eventService = {
       return await mockEventService.getMyEventRegistrations();
     }
     const organizerId = getOrganizerId();
-    const response = await api.get("/events/registrations/my-events", {
+    const response = await api.get("events/registrations/my-events", {
       params: { organizerId },
     });
     return response.data;
@@ -173,7 +174,7 @@ export const eventService = {
     }
     const organizerId = getOrganizerId();
     const response = await api.put(
-      `/events/registrations/${registrationId}/payment-status`,
+      `events/registrations/${registrationId}/payment-status`,
       null,
       {
         params: { paymentStatus, organizerId },
@@ -212,7 +213,7 @@ export const eventService = {
     }
     const organizerId = getOrganizerId();
     const response = await api.put(
-      `/events/registrations/${registrationId}/attendance`,
+      `events/registrations/${registrationId}/attendance`,
       null,
       {
         params: { attended, organizerId },
@@ -227,9 +228,21 @@ export const eventService = {
       return await mockEventService.getEventStatistics();
     }
     const organizerId = getOrganizerId();
-    const response = await api.get("/events/statistics", {
+    const response = await api.get("events/statistics", {
       params: { organizerId },
     });
     return response.data;
+  },
+
+  // Get my event registrations (for regular users: which events I'm registered for)
+  getMyRegistrations: async () => {
+    if (USE_MOCK) {
+      return [];
+    }
+    const userId = getUserId();
+    const response = await api.get("events/my-registrations", {
+      params: { userId },
+    });
+    return Array.isArray(response.data) ? response.data : [];
   },
 };
