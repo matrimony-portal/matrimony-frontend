@@ -5,7 +5,6 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import App from "./App.jsx";
 import "./index.css";
-import { AuthProvider } from "./providers/AuthProvider.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 import "./styles/custom.css";
@@ -14,9 +13,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ErrorBoundary>
       <BrowserRouter>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <App />
       </BrowserRouter>
     </ErrorBoundary>
   </StrictMode>,

@@ -9,16 +9,6 @@ const FreeUserDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("new");
 
-  // Mock data - replace with API calls
-  const stats = [
-    { icon: "👥", number: 28, label: "Total Matches" },
-    { icon: "💌", number: 12, label: "Sent Proposals" },
-    { icon: "📩", number: 8, label: "Received Proposals" },
-    { icon: "⭐", number: 15, label: "Shortlisted" },
-    { icon: "💬", number: 6, label: "Active Chats" },
-    { icon: "👁️", number: 145, label: "Profile Views" },
-  ];
-
   const profiles = [
     {
       id: 1,
@@ -71,22 +61,13 @@ const FreeUserDashboard = () => {
   return (
     <div className="dashboard-container py-3 py-md-4">
       {/* Header */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 pb-2 border-bottom">
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 pb-2 border-bottom p-2">
         <h1 className="h2 mb-2 mb-md-0">
           Welcome back, {user?.firstName || "User"}!
         </h1>
         <div className="text-muted small">
           You have 5 new matches and 3 pending proposals
         </div>
-      </div>
-
-      {/* Stats Grid - Mobile First */}
-      <div className="row g-2 g-md-3 mb-4">
-        {stats.map((stat, index) => (
-          <div key={index} className="col-6 col-md-4 col-lg-2">
-            <StatCard {...stat} />
-          </div>
-        ))}
       </div>
 
       {/* Tabs */}

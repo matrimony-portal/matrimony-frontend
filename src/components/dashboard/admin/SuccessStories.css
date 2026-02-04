@@ -1,0 +1,61 @@
+.success-container {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 8%);
+  margin: 20px;
+}
+
+.success-title {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.success-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.success-table th,
+.success-table td {
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  font-size: 18px;
+}
+
+.success-table th {
+  font-weight: bold;
+  color: #333;
+}
+
+.btn-view {
+  background: #8e5bbf;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-verify {
+  background: #67c877;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.back-btn {
+  margin-top: 20px;
+  background: #5b3cc4;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

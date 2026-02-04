@@ -169,18 +169,18 @@ const PremiumUserDashboard = () => {
           </li>
           <li className="nav-item">
             <button
-              className={`nav-link ${activeTab === "recent" ? "active" : ""}`}
-              onClick={() => setActiveTab("recent")}
-            >
-              Recently Viewed
-            </button>
-          </li>
-          <li className="nav-item">
-            <button
               className={`nav-link ${activeTab === "compatible" ? "active" : ""}`}
               onClick={() => setActiveTab("compatible")}
             >
               Most Compatible
+            </button>
+          </li>
+          <li className="nav-item d-none d-md-block">
+            <button
+              className={`nav-link ${activeTab === "recent" ? "active" : ""}`}
+              onClick={() => setActiveTab("recent")}
+            >
+              Recently Viewed
             </button>
           </li>
         </ul>
