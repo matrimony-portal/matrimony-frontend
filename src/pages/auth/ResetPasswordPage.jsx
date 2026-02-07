@@ -56,7 +56,7 @@ const ResetPasswordPage = () => {
     };
 
     verifyToken();
-  }, [token]);
+  }, [token, resetPasswordVerify]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
