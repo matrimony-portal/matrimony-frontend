@@ -1,0 +1,22 @@
+/* Only custom styles that can't be achieved with Bootstrap */
+
+/* Dark overlay for carousel images */
+.carousel-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 45%);
+  z-index: 1;
+}
+
+/* Ensure carousel caption appears above overlay */
+.carousel-caption {
+  z-index: 2;
+}
+
+/* Mobile carousel adjustments */
+@media (width <= 768px) {
+  .carousel-item img {
+    object-position: center center !important;
+  }
+}

@@ -1,0 +1,295 @@
+/* Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: linear-gradient(to right, #6e0000, #b30000);
+  color: white;
+  position: relative;
+  z-index: 1000;
+  min-height: 60px;
+  max-height: 60px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: white;
+  flex-shrink: 0;
+}
+
+.logo-icon {
+  font-size: 1.2rem;
+}
+
+.logo-text {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-links li {
+  flex-shrink: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: opacity 0.3s ease;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  min-width: 150px;
+  padding: 8px 0;
+  display: none;
+  z-index: 1001;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #333;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+  background-color: #f8f9fa;
+}
+
+.nav-links a:hover {
+  opacity: 0.85;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.login-btn {
+  background: #7a0000;
+  color: white;
+}
+
+.register-btn {
+  background: white;
+  color: #b30000;
+}
+
+.subscribe-btn {
+  background: #ffc107;
+  color: black;
+  border-radius: 20px;
+  padding: 8px 16px;
+  box-shadow: 0 0 15px rgb(255 193 7 / 40%);
+  display: none;
+}
+
+.icon-btn {
+  background: transparent;
+  color: white;
+  padding: 6px 10px;
+  font-size: 1rem;
+}
+
+.create-btn {
+  background: #28a745;
+  color: white;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-btn {
+  background: rgb(255 255 255 / 10%);
+  color: white;
+  border: 1px solid rgb(255 255 255 / 30%);
+}
+
+/* Mobile First Responsive */
+@media (width <= 480px) {
+  .navbar {
+    padding: 8px 12px;
+    min-height: 50px;
+  }
+
+  .navbar-left {
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .navbar-right {
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .btn {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+    min-width: auto;
+  }
+
+  .subscribe-btn,
+  .login-btn {
+    display: none;
+  }
+
+  .register-btn {
+    padding: 6px 8px;
+  }
+
+  .logo-text {
+    display: none;
+  }
+}
+
+@media (width >= 481px) and (width <= 768px) {
+  .navbar {
+    padding: 10px 16px;
+  }
+
+  .navbar-left {
+    gap: 12px;
+  }
+
+  .nav-links {
+    gap: 8px;
+    max-width: 150px;
+  }
+
+  .nav-links a {
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+
+  .subscribe-btn {
+    display: none;
+  }
+}
+
+@media (width >= 769px) and (width <= 1024px) {
+  .navbar {
+    padding: 14px 24px;
+  }
+
+  .navbar-left {
+    gap: 24px;
+  }
+
+  .nav-links {
+    gap: 18px;
+  }
+
+  .btn {
+    padding: 9px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (width >= 1025px) {
+  .navbar {
+    padding: 16px 40px;
+  }
+
+  .navbar-left {
+    gap: 40px;
+  }
+
+  .nav-links {
+    gap: 28px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  .logo-icon {
+    font-size: 1.5rem;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  .nav-links a {
+    font-size: 1rem;
+  }
+}
