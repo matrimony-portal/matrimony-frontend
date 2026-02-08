@@ -1,8 +1,8 @@
-const API_BASE_URL = "http://localhost:8080/admin";
+const API_BASE_URL = "http://localhost:8080";
 
 export const fetchAdminProfile = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/profile`, {
+    const response = await fetch(`${API_BASE_URL}/admin/profile`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
@@ -14,8 +14,13 @@ export const fetchAdminProfile = async () => {
     }
 
     const data = await response.json();
+    console.log("Admin profile data:", data);
+
+    const firstName = data.firstName || data.first_name || data.name || "Admin";
+    const lastName = data.lastName || data.last_name || "";
+
     return {
-      name: `${data.first_name} ${data.last_name}`,
+      name: `${firstName} ${lastName}`.trim(),
       avatar: data.avatar || "https://i.pravatar.cc/40",
       ...data,
     };
