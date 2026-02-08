@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import { useAuth } from "../../hooks/useAuth.jsx";
 import "../../styles/Login.css";
 import { validateEmail } from "../../utils/validation.js";
 
-/**
- * LoginPage - User login form
- * URL: /login
- */
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -15,7 +12,6 @@ const LoginPage = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [loginError, setLoginError] = useState("");
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -28,7 +24,6 @@ const LoginPage = () => {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
-    setLoginError("");
   };
 
   const validateForm = () => {
@@ -45,7 +40,6 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoginError("");
 
     if (!validateForm()) return;
 
@@ -53,12 +47,13 @@ const LoginPage = () => {
     try {
       const result = await login(formData.email, formData.password);
       if (result.success) {
+        toast.success("Login successful!");
         const redirectPath = location.state?.from?.pathname || "/dashboard";
         navigate(redirectPath, { replace: true });
       }
     } catch (error) {
       const message = error?.message || "Login failed. Please try again.";
-      setLoginError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -67,7 +62,6 @@ const LoginPage = () => {
   return (
     <div className="login-page">
       <div className="login-container">
-        {/* Branding Section */}
         <div className="login-brand">
           <div
             className="brand-logo"
@@ -97,7 +91,6 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Login Form Section */}
         <div className="login-form-section">
           <div className="form-header">
             <h2>Login to Your Account</h2>
@@ -143,12 +136,6 @@ const LoginPage = () => {
                 Forgot Password?
               </Link>
             </div>
-
-            {loginError && (
-              <div className="error-alert">
-                <p>{loginError}</p>
-              </div>
-            )}
 
             <button type="submit" disabled={loading} className="login-btn">
               {loading ? "Logging in..." : "Login"}

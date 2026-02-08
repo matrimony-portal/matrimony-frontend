@@ -58,6 +58,74 @@ npm run check
 - `npm run lint:css` - CSS linting
 - `npm run lint:js` - JavaScript linting
 
+## API Response Structure
+
+**All API responses follow this standardized structure:**
+
+```javascript
+// Success Response
+{
+  "success": true,
+  "data": { /* response data */ },
+  "message": "Operation successful",
+  "timestamp": "2025-01-15T10:30:00"
+}
+
+// Error Response
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_FAILED",
+    "message": "Invalid input",
+    "details": "Email format is incorrect",
+    "field": "email"
+  },
+  "timestamp": "2025-01-15T10:30:00"
+}
+```
+
+**Usage in Services:**
+
+```javascript
+import apiClient from "@/utils/apiClient";
+
+// Example: Handling API response
+const getUser = async (userId) => {
+  try {
+    const response = await apiClient.get(`/users/${userId}`);
+
+    if (response.isSuccess()) {
+      return response.getData(); // Extract data
+    }
+
+    throw new Error(response.getErrorMessage());
+  } catch (error) {
+    console.error(error.getErrorMessage());
+    throw error;
+  }
+};
+```
+
+**Helper Methods:**
+
+- `response.isSuccess()` - Check if request succeeded
+- `response.isError()` - Check if request failed
+- `response.getData()` - Extract response data
+- `response.getMessage()` - Get success message
+- `response.getError()` - Get error object
+- `response.getErrorMessage()` - Get error message
+
+**Common Error Codes:**
+
+- `VALIDATION_FAILED` - Input validation failed
+- `NOT_FOUND` - Resource not found
+- `UNAUTHORIZED` - Authentication required
+- `FORBIDDEN` - Access denied
+- `CONFLICT` - Resource conflict
+- `SERVER_ERROR` - Internal server error
+- `NETWORK_ERROR` - Network/connection error
+- `TIMEOUT` - Request timeout
+
 ## Commit Messages
 
 Use conventional commits:
@@ -66,15 +134,12 @@ Use conventional commits:
 npm run commit
 ```
 
-<<<<<<< HEAD
 Examples:
 
 - `feat: add user registration`
 - `fix: resolve login validation`
 - `docs: update README`
 
-=======
->>>>>>> 7a8c82918da573d91155c58409be142900963289
 ## Pull Requests
 
 **Branch Flow:**

@@ -1,16 +1,19 @@
 // src/App.jsx
 import { Navigate, Outlet, Route, Routes } from "react-router";
+import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "./providers/AuthProvider.jsx";
+
+// Auth Components
 import DashboardPathRouter from "./components/auth/DashboardPathRouter.jsx";
 import DashboardRouter from "./components/auth/DashboardRouter.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
-import { AuthProvider } from "./providers/AuthProvider.jsx";
 
 // Public Pages
-import Login from "./components/auth/Login.jsx";
-import Register from "./components/auth/Register.jsx";
-import ForgotPassword from "./components/ForgotPassword";
 import HomePage from "./components/HomePage";
 import UpgradePage from "./components/upgrade/UpgradePage.jsx";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage.jsx";
+import LoginPage from "./pages/auth/LoginPage.jsx";
+import RegisterPage from "./pages/auth/RegisterPage.jsx";
 
 // Layout
 import Layout from "./components/common/Layout/Layout.jsx";
@@ -31,10 +34,10 @@ import FreeSettings from "./components/dashboard/free/Settings.jsx";
 import FreeShortlist from "./components/dashboard/free/Shortlist.jsx";
 
 // Dashboard Pages (Premium)
+import AddEvent from "./components/dashboard/admin/AddEvent.jsx";
 import AdminDashboard from "./components/dashboard/admin/AdminDashboard.jsx";
 import AdminProfile from "./components/dashboard/admin/AdminProfile.jsx";
 import BroadcastMessage from "./components/dashboard/admin/BroadcastMessage.jsx";
-import AddEvent from "./components/dashboard/admin/AddEvent.jsx";
 import GlobalAnnouncement from "./components/dashboard/admin/GlobalAnnouncement.jsx";
 import ReportsCounter from "./components/dashboard/admin/ReportsCounter.jsx";
 import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
@@ -59,12 +62,13 @@ import "./styles/custom.css";
 function App() {
   return (
     <AuthProvider>
+      <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/upgrade" element={<UpgradePage />} />
 
         {/* Protected Dashboard Routes with Layout */}
