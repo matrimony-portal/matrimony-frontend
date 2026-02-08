@@ -37,6 +37,7 @@ import BroadcastMessage from "./components/dashboard/admin/BroadcastMessage.jsx"
 import AddEvent from "./components/dashboard/admin/AddEvent.jsx";
 import GlobalAnnouncement from "./components/dashboard/admin/GlobalAnnouncement.jsx";
 import ReportsCounter from "./components/dashboard/admin/ReportsCounter.jsx";
+import ManageUsers from "./components/dashboard/admin/ManageUsers.jsx";
 import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
 import PremiumBlockedUsers from "./components/dashboard/premium/BlockedUsers.jsx";
 import PremiumEditProfile from "./components/dashboard/premium/EditProfile.jsx";
@@ -54,6 +55,7 @@ import PremiumSettings from "./components/dashboard/premium/Settings.jsx";
 import PremiumShortlist from "./components/dashboard/premium/Shortlist.jsx";
 
 import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import "./styles/custom.css";
 
 function App() {
@@ -123,6 +125,7 @@ function App() {
             <Route path="add-event" element={<AddEvent />} />
             <Route path="announcement" element={<GlobalAnnouncement />} />
             <Route path="reports" element={<ReportsCounter />} />
+            <Route path="users" element={<ManageUsers />} />
           </Route>
 
           {/* Legacy routes (keep old links working, but route under correct base) */}
@@ -183,6 +186,7 @@ function App() {
         {/* Catch-all redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <ToastContainer position="top-right" autoClose={3000} />
     </AuthProvider>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { getAdminById } from "../../../services/admin/AdminProfile";
 import "./AdminProfile.css";
 
 export default function AdminProfile() {
@@ -20,13 +21,22 @@ export default function AdminProfile() {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const response = await fetch("/admin/profile", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        const data = await response.json();
-        setAdminData(data);
+        const adminId = localStorage.getItem("adminId") || "1";
+        const data = await getAdminById(adminId);
+        // Map backend field names to frontend field names
+        const mappedData = {
+          id: data.id,
+          first_name: data.firstName,
+          last_name: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          role: data.role || "ADMIN",
+          status: data.status,
+          created_at: data.createdAt,
+          updated_at: data.updatedAt,
+          avatar: data.avatar,
+        };
+        setAdminData(mappedData);
       } catch (error) {
         console.error("Failed to fetch admin profile:", error);
         // Mock data for development
@@ -40,7 +50,6 @@ export default function AdminProfile() {
           status: "ACTIVE",
           created_at: "2023-01-15T10:30:00Z",
           updated_at: "2024-01-20T15:45:00Z",
-          // avatar: "https://i.pravatar.cc/150",
         });
       }
     };
@@ -61,7 +70,14 @@ export default function AdminProfile() {
       <div className="profile-container">
         <div className="profile-card">
           <div className="profile-avatar">
-            <img src={adminData.avatar} alt="Admin Avatar" />
+            {adminData.avatar ? (
+              <img src={adminData.avatar} alt="Admin Avatar" />
+            ) : (
+              <div className="avatar-placeholder">
+                {adminData.first_name?.[0]}
+                {adminData.last_name?.[0]}
+              </div>
+            )}
           </div>
 
           <div className="profile-info">
@@ -74,11 +90,11 @@ export default function AdminProfile() {
                 </div>
                 <div className="info-item">
                   <label>First Name</label>
-                  <span>{adminData.first_name}</span>
+                  <span>{adminData.first_name || "N/A"}</span>
                 </div>
                 <div className="info-item">
                   <label>Last Name</label>
-                  <span>{adminData.last_name}</span>
+                  <span>{adminData.last_name || "N/A"}</span>
                 </div>
                 <div className="info-item">
                   <label>Email Address</label>
