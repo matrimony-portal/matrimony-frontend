@@ -45,16 +45,14 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
-      const result = await login(formData.email, formData.password);
-      if (result.success) {
-        toast.success("Login successful!");
-        const redirectPath = location.state?.from?.pathname || "/dashboard";
-        navigate(redirectPath, { replace: true });
-      }
+      await login(formData.email, formData.password);
+      toast.success("Login successful!");
+      const redirectPath = location.state?.from?.pathname || "/dashboard";
+      navigate(redirectPath, { replace: true });
     } catch (error) {
+      console.error("Login error:", error);
       const message = error?.message || "Login failed. Please try again.";
       toast.error(message);
-    } finally {
       setLoading(false);
     }
   };
