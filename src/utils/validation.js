@@ -16,10 +16,29 @@ export const validateName = (name) => {
 };
 
 export const validatePassword = (password) => {
-  // Minimum 8 characters, at least one uppercase, one lowercase, one number, and one special character
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  return passwordRegex.test(password);
+  const errors = [];
+
+  if (password.length < 8) {
+    errors.push("at least 8 characters");
+  }
+  if (!/[a-z]/.test(password)) {
+    errors.push("one lowercase letter");
+  }
+  if (!/[A-Z]/.test(password)) {
+    errors.push("one uppercase letter");
+  }
+  if (!/\d/.test(password)) {
+    errors.push("one number");
+  }
+  if (!/[@$!%*?&]/.test(password)) {
+    errors.push("one special character (@$!%*?&)");
+  }
+
+  return {
+    isValid: errors.length === 0,
+    message:
+      errors.length > 0 ? `Password must contain ${errors.join(", ")}` : "",
+  };
 };
 
 export const validateAge = (dobValue, minAge = 18) => {

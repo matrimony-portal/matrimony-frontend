@@ -67,11 +67,6 @@ export const AuthProvider = ({ children }) => {
     return { success: true, user: userData };
   }, []);
 
-  const register = useCallback(async (userData) => {
-    const data = await authService.register(userData);
-    return { success: true, user: data.user };
-  }, []);
-
   const logout = useCallback(async () => {
     try {
       await authService.logout();
@@ -104,7 +99,6 @@ export const AuthProvider = ({ children }) => {
     accessToken,
     loading,
     login,
-    register,
     logout,
     isAuthenticated,
     hasRole,
