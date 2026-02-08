@@ -3,26 +3,21 @@ import { useAuth } from "../../hooks/useAuth.jsx";
 import Loading from "../common/Loading.jsx";
 
 const DashboardRouter = () => {
-  const { userType, subscriptionStatus, loading } = useAuth();
+  const { user, loading } = useAuth();
 
-  // 🔴 THIS is the fix
-  if (loading || (userType === "user" && subscriptionStatus === null)) {
+  if (loading) {
     return <Loading message="Loading your dashboard..." />;
   }
 
-  if (userType === "user") {
-    return subscriptionStatus === "active" ? (
-      <Navigate to="/dashboard/premium" replace />
-    ) : (
-      <Navigate to="/dashboard/free" replace />
-    );
+  if (user?.role === "USER") {
+    return <Navigate to="/dashboard/free" replace />;
   }
 
-  if (userType === "organizer") {
+  if (user?.role === "ORGANIZER") {
     return <Navigate to="/dashboard/organizer" replace />;
   }
 
-  if (userType === "admin") {
+  if (user?.role === "ADMIN") {
     return <Navigate to="/dashboard/admin" replace />;
   }
 
