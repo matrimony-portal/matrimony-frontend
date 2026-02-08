@@ -10,9 +10,38 @@ export const authService = {
     }
   },
 
-  register: async (userData) => {
+  // Step 1: Start registration - send verification email
+  startRegistration: async (email) => {
     try {
-      const response = await apiClient.post("/auth/register", userData);
+      const response = await apiClient.post("/auth/start-registration", {
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
+
+  // Step 2: Verify email token
+  verifyEmail: async (token) => {
+    try {
+      const response = await apiClient.post("/auth/verify-email", { token });
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
+
+  // Step 3: Complete registration with user data
+  completeRegistration: async (token, userData) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/complete-registration",
+        userData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       return response.data;
     } catch (error) {
       handleApiError(error);
