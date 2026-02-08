@@ -66,12 +66,26 @@ export const authService = {
     }
   },
 
+  verifyResetToken: async (token) => {
+    try {
+      const response = await apiClient.post("/auth/verify-reset-token", {
+        token,
+      });
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+    }
+  },
+
   resetPassword: async (token, newPassword) => {
     try {
-      const response = await apiClient.post("/auth/reset-password", {
-        token,
-        newPassword,
-      });
+      const response = await apiClient.post(
+        "/auth/reset-password",
+        { newPassword },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       return response.data;
     } catch (error) {
       handleApiError(error);

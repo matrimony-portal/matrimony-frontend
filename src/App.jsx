@@ -15,7 +15,9 @@ import CompleteRegistrationPage from "./pages/auth/CompleteRegistrationPage.jsx"
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage.jsx";
 import LoginPage from "./pages/auth/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage.jsx";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage.jsx";
 import VerifyEmailPage from "./pages/auth/VerifyEmailPage.jsx";
+import VerifyResetTokenPage from "./pages/auth/VerifyResetTokenPage.jsx";
 
 // Layout
 import Layout from "./components/common/Layout/Layout.jsx";
@@ -76,6 +78,8 @@ function App() {
           element={<CompleteRegistrationPage />}
         />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset/verify" element={<VerifyResetTokenPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/upgrade" element={<UpgradePage />} />
 
         {/* Protected Dashboard Routes with Layout */}

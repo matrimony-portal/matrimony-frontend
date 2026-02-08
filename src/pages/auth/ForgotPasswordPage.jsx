@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { useAuth } from "../../hooks/useAuth.jsx";
+import { authService } from "../../services/authService.js";
 import { validateEmail } from "../../utils/validation.js";
 
 /**
@@ -12,8 +12,6 @@ const ForgotPasswordPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  const { resetPasswordRequest } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,17 +25,10 @@ const ForgotPasswordPage = () => {
 
     setLoading(true);
     try {
-      await resetPasswordRequest(email);
+      await authService.forgotPassword(email);
       setSuccess(true);
     } catch (err) {
-      // Show success even if email doesn't exist (security best practice)
-      // But if it's a network error, show the error
-      if (err?.status === 0) {
-        setError(err?.message || "Network error. Please try again.");
-      } else {
-        // For security, still show success message
-        setSuccess(true);
-      }
+      setError(err?.message || "Failed to send reset link. Please try again.");
     } finally {
       setLoading(false);
     }
