@@ -11,9 +11,11 @@ import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 // Public Pages
 import HomePage from "./components/HomePage";
 import UpgradePage from "./components/upgrade/UpgradePage.jsx";
+import CompleteRegistrationPage from "./pages/auth/CompleteRegistrationPage.jsx";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage.jsx";
 import LoginPage from "./pages/auth/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage.jsx";
+import VerifyEmailPage from "./pages/auth/VerifyEmailPage.jsx";
 
 // Layout
 import Layout from "./components/common/Layout/Layout.jsx";
@@ -68,6 +70,11 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register/verify" element={<VerifyEmailPage />} />
+        <Route
+          path="/register/complete"
+          element={<CompleteRegistrationPage />}
+        />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/upgrade" element={<UpgradePage />} />
 

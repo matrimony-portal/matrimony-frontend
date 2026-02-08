@@ -30,7 +30,7 @@ jobs:
         run: npm run build
         env:
           VITE_NODE_ENV: production
-          VITE_API_BASE_URL: bandhan.up.railway.app
+          VITE_API_BASE_URL: https://bandhan.up.railway.app/
           VITE_USE_MOCK: false
 
       - name: Configure AWS credentials (OIDC)
