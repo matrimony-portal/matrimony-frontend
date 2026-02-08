@@ -1,40 +1,42 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AuthContext from "../context/AuthContext.jsx";
-import { authService } from "../services/index.js";
+import { authService } from "../services/authService.js";
+import { tokenManager } from "../utils/tokenManager.js";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userType, setUserType] = useState(null);
-  //Subscription based login
-  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
-  const [subscriptionTier, setSubscriptionTier] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const initAuth = () => {
+    const initAuth = async () => {
       try {
         const storedUser = localStorage.getItem("matrimony_user");
         const storedUserType = localStorage.getItem("matrimony_userType");
-        const storedSubscriptionStatus = localStorage.getItem(
-          "matrimony_subscriptionStatus",
-        );
-        const storedSubscriptionTier = localStorage.getItem(
-          "matrimony_subscriptionTier",
-        );
+        const refreshToken = tokenManager.getRefreshToken();
 
-        if (storedUser && storedUserType) {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          setUserType(storedUserType);
-          setSubscriptionStatus(storedSubscriptionStatus);
-          setSubscriptionTier(storedSubscriptionTier);
+        if (storedUser && storedUserType && refreshToken) {
+          try {
+            const { data } = await authService.refreshToken(refreshToken);
+
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+            setUserType(storedUserType);
+            setAccessToken(data.accessToken);
+            tokenManager.setAccessToken(data.accessToken);
+          } catch (error) {
+            console.error("Token refresh failed:", error);
+            tokenManager.clearTokens();
+            localStorage.removeItem("matrimony_user");
+            localStorage.removeItem("matrimony_userType");
+          }
         }
       } catch (error) {
         console.error("Error initializing auth:", error);
+        tokenManager.clearTokens();
         localStorage.removeItem("matrimony_user");
         localStorage.removeItem("matrimony_userType");
-        localStorage.removeItem("matrimony_subscriptionStatus");
-        localStorage.removeItem("matrimony_subscriptionTier");
       } finally {
         setLoading(false);
       }
@@ -51,27 +53,16 @@ export const AuthProvider = ({ children }) => {
       userType: data.user.userType,
       name: data.user.name,
       id: data.user.id,
-      subscriptionStatus: data.user.subscriptionStatus,
-      subscriptionTier: data.user.subscriptionTier,
-      subscriptionExpiry: data.user.subscriptionExpiry,
     };
 
     setUser(userData);
     setUserType(data.user.userType);
-    setSubscriptionStatus(data.user.subscriptionStatus);
-    setSubscriptionTier(data.user.subscriptionTier);
+    setAccessToken(data.accessToken);
+    tokenManager.setAccessToken(data.accessToken);
+    tokenManager.setRefreshToken(data.refreshToken);
 
-    localStorage.setItem("matrimony_token", data.token);
     localStorage.setItem("matrimony_user", JSON.stringify(userData));
     localStorage.setItem("matrimony_userType", data.user.userType);
-    localStorage.setItem(
-      "matrimony_subscriptionStatus",
-      data.user.subscriptionStatus,
-    );
-    localStorage.setItem(
-      "matrimony_subscriptionTier",
-      data.user.subscriptionTier,
-    );
 
     return { success: true, user: userData };
   }, []);
@@ -89,13 +80,10 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setUser(null);
       setUserType(null);
-      setSubscriptionStatus(null);
-      setSubscriptionTier(null);
-      localStorage.removeItem("matrimony_token");
+      setAccessToken(null);
+      tokenManager.clearTokens();
       localStorage.removeItem("matrimony_user");
       localStorage.removeItem("matrimony_userType");
-      localStorage.removeItem("matrimony_subscriptionStatus");
-      localStorage.removeItem("matrimony_subscriptionTier");
     }
   }, []);
 
@@ -110,35 +98,16 @@ export const AuthProvider = ({ children }) => {
     [userType],
   );
 
-  // Helpers to determine user access levels based on subscription state
-  const isPremiumUser = useCallback(() => {
-    return (
-      userType === "user" &&
-      subscriptionStatus === "active" &&
-      subscriptionTier === "premium"
-    );
-  }, [userType, subscriptionStatus, subscriptionTier]);
-
-  const isFreeUser = useCallback(() => {
-    return (
-      userType === "user" &&
-      (subscriptionStatus === "inactive" || subscriptionTier === "free")
-    );
-  }, [userType, subscriptionStatus, subscriptionTier]);
-
   const value = {
     user,
     userType,
-    subscriptionStatus,
-    subscriptionTier,
+    accessToken,
     loading,
     login,
     register,
     logout,
     isAuthenticated,
     hasRole,
-    isPremiumUser,
-    isFreeUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
