@@ -4,7 +4,6 @@ import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./providers/AuthProvider.jsx";
 
 // Auth Components
-import DashboardPathRouter from "./components/auth/DashboardPathRouter.jsx";
 import DashboardRouter from "./components/auth/DashboardRouter.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 
@@ -23,10 +22,8 @@ import VerifyResetTokenPage from "./pages/auth/VerifyResetTokenPage.jsx";
 import Layout from "./components/common/Layout/Layout.jsx";
 
 // Dashboard Pages (Free)
-import FreeBlockedUsers from "./components/dashboard/free/BlockedUsers.jsx";
 import FreeEditProfile from "./components/dashboard/free/EditProfile.jsx";
 import FreeEvents from "./components/dashboard/free/Events.jsx";
-import FreeFeedback from "./components/dashboard/free/Feedback.jsx";
 import FreeUserDashboard from "./components/dashboard/free/FreeUserDashboard.jsx";
 import FreeManagePhotos from "./components/dashboard/free/ManagePhotos.jsx";
 import FreeManageProfile from "./components/dashboard/free/ManageProfile.jsx";
@@ -34,8 +31,6 @@ import FreeMessages from "./components/dashboard/free/Messages.jsx";
 import FreeProfileView from "./components/dashboard/free/ProfileView.jsx";
 import FreeProposals from "./components/dashboard/free/Proposals.jsx";
 import FreeSearchMatches from "./components/dashboard/free/SearchMatches.jsx";
-import FreeSettings from "./components/dashboard/free/Settings.jsx";
-import FreeShortlist from "./components/dashboard/free/Shortlist.jsx";
 
 // Dashboard Pages (Premium)
 import AddEvent from "./components/dashboard/admin/AddEvent.jsx";
@@ -45,10 +40,8 @@ import BroadcastMessage from "./components/dashboard/admin/BroadcastMessage.jsx"
 import GlobalAnnouncement from "./components/dashboard/admin/GlobalAnnouncement.jsx";
 import ReportsCounter from "./components/dashboard/admin/ReportsCounter.jsx";
 import OrganizerDashboard from "./components/dashboard/organizer/OrganizerDashboard.jsx";
-import PremiumBlockedUsers from "./components/dashboard/premium/BlockedUsers.jsx";
 import PremiumEditProfile from "./components/dashboard/premium/EditProfile.jsx";
 import PremiumEvents from "./components/dashboard/premium/Events.jsx";
-import PremiumFeedback from "./components/dashboard/premium/Feedback.jsx";
 import PremiumManagePhotos from "./components/dashboard/premium/ManagePhotos.jsx";
 import PremiumManageProfile from "./components/dashboard/premium/ManageProfile.jsx";
 import PremiumMessages from "./components/dashboard/premium/Messages.jsx";
@@ -57,8 +50,6 @@ import PremiumUserDashboard from "./components/dashboard/premium/PremiumUserDash
 import PremiumProfileView from "./components/dashboard/premium/ProfileView.jsx";
 import PremiumProposals from "./components/dashboard/premium/Proposals.jsx";
 import PremiumSearchMatches from "./components/dashboard/premium/SearchMatches.jsx";
-import PremiumSettings from "./components/dashboard/premium/Settings.jsx";
-import PremiumShortlist from "./components/dashboard/premium/Shortlist.jsx";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/custom.css";
@@ -103,11 +94,10 @@ function App() {
             <Route path="search" element={<FreeSearchMatches />} />
             <Route path="proposals" element={<FreeProposals />} />
             <Route path="messages" element={<FreeMessages />} />
-            <Route path="shortlist" element={<FreeShortlist />} />
-            <Route path="blocked-users" element={<FreeBlockedUsers />} />
+            {/* <Route path="blocked-users" element={<FreeBlockedUsers />} /> */}
             <Route path="events" element={<FreeEvents />} />
-            <Route path="settings" element={<FreeSettings />} />
-            <Route path="feedback" element={<FreeFeedback />} />
+            {/* <Route path="settings" element={<FreeSettings />} /> */}
+            {/* <Route path="feedback" element={<FreeFeedback />} /> */}
             <Route path="profile/:id" element={<FreeProfileView />} />
           </Route>
 
@@ -121,11 +111,10 @@ function App() {
             <Route path="search" element={<PremiumSearchMatches />} />
             <Route path="proposals" element={<PremiumProposals />} />
             <Route path="messages" element={<PremiumMessages />} />
-            <Route path="shortlist" element={<PremiumShortlist />} />
-            <Route path="blocked-users" element={<PremiumBlockedUsers />} />
+            {/* <Route path="blocked-users" element={<PremiumBlockedUsers />} /> */}
             <Route path="events" element={<PremiumEvents />} />
-            <Route path="settings" element={<PremiumSettings />} />
-            <Route path="feedback" element={<PremiumFeedback />} />
+            {/* <Route path="settings" element={<PremiumSettings />} /> */}
+            {/* <Route path="feedback" element={<PremiumFeedback />} /> */}
             <Route path="profile/:id" element={<PremiumProfileView />} />
           </Route>
 
@@ -139,60 +128,6 @@ function App() {
             <Route path="announcement" element={<GlobalAnnouncement />} />
             <Route path="reports" element={<ReportsCounter />} />
           </Route>
-
-          {/* Legacy routes (keep old links working, but route under correct base) */}
-          <Route
-            path="search"
-            element={<DashboardPathRouter subPath="search" />}
-          />
-          <Route
-            path="proposals"
-            element={<DashboardPathRouter subPath="proposals" />}
-          />
-          <Route
-            path="messages"
-            element={<DashboardPathRouter subPath="messages" />}
-          />
-          <Route
-            path="shortlist"
-            element={<DashboardPathRouter subPath="shortlist" />}
-          />
-          <Route
-            path="events"
-            element={<DashboardPathRouter subPath="events" />}
-          />
-          <Route
-            path="settings"
-            element={<DashboardPathRouter subPath="settings" />}
-          />
-          <Route
-            path="edit-profile"
-            element={<DashboardPathRouter subPath="edit-profile" />}
-          />
-          <Route
-            path="manage-photos"
-            element={<DashboardPathRouter subPath="manage-photos" />}
-          />
-          <Route
-            path="manage-profile"
-            element={<DashboardPathRouter subPath="manage-profile" />}
-          />
-          <Route
-            path="blocked-users"
-            element={<DashboardPathRouter subPath="blocked-users" />}
-          />
-          <Route
-            path="feedback"
-            element={<DashboardPathRouter subPath="feedback" />}
-          />
-          <Route
-            path="profile/:id"
-            element={<DashboardPathRouter subPath="profile/:id" />}
-          />
-          <Route
-            path="my-profile"
-            element={<DashboardPathRouter subPath="my-profile" />}
-          />
         </Route>
 
         {/* Catch-all redirect */}
