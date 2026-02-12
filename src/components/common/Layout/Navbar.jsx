@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
@@ -43,113 +43,112 @@ const Navbar = ({ toggleSidebar }) => {
   };
 
   return (
-    <nav className="navbar navbar-dark sticky-top p-0 shadow navbar-gradient">
-      {/* Mobile sidebar toggle - positioned on the left */}
+    <nav
+      className="navbar navbar-dark sticky-top shadow navbar-gradient d-flex align-items-center"
+      style={{ height: "60px", padding: "0 1rem" }}
+    >
+      {/* Mobile sidebar toggle */}
       <button
-        className="navbar-toggler d-md-none"
+        className="navbar-toggler d-md-none border-0 p-2"
         type="button"
         onClick={toggleSidebar}
         aria-label="Toggle sidebar"
-        style={{
-          border: "none",
-          padding: "0.5rem",
-          marginLeft: "0.5rem",
-          zIndex: 1,
-        }}
       >
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      {/* Logo - with proper spacing */}
-      <Link className="navbar-brand me-0" to={base}>
-        <div className="logo d-flex align-items-center">
-          <img src="/assets/logo/logo.svg" alt="Logo" className="logo-icon" />
-          <img
-            src="/assets/logo/bandan.svg"
-            alt="Bandan"
-            className="logo-text d-none d-md-inline"
-          />
-        </div>
+      {/* Logo */}
+      <Link className="navbar-brand d-flex align-items-center m-0" to={base}>
+        <img
+          src="/assets/logo/logo.svg"
+          alt="Logo"
+          className="logo-icon"
+          style={{ height: "40px" }}
+        />
+        <img
+          src="/assets/logo/bandan.svg"
+          alt="Bandan"
+          className="logo-text d-none d-md-inline ms-2"
+          style={{ height: "30px" }}
+        />
       </Link>
 
       {/* Right Section */}
-      <div className="navbar-nav ms-auto flex-row align-items-center gap-3 pe-3">
+      <div className="d-flex align-items-center gap-3 ms-auto">
         {/* Notifications */}
         <NavLink
           to={`${base}/proposals`}
-          className="nav-icon-wrapper"
+          className="text-white text-decoration-none"
           title="Notifications"
         >
-          <i className="bi bi-bell nav-icon"></i>
+          <i className="bi bi-bell fs-5"></i>
         </NavLink>
 
         {/* Messages */}
         <NavLink
           to={`${base}/messages`}
-          className="nav-icon-wrapper"
+          className="text-white text-decoration-none"
           title="Messages"
         >
-          <i className="bi bi-chat-dots nav-icon"></i>
+          <i className="bi bi-chat-dots fs-5"></i>
         </NavLink>
 
         {/* Profile Dropdown */}
-        <div
-          className={`profile-dropdown ${isDropdownOpen ? "active" : ""}`}
-          ref={dropdownRef}
-        >
+        <div className="dropdown position-relative" ref={dropdownRef}>
           <img
-            src="/assets/images/male/rahul.png"
+            src="/src/assets/images/placeholder/user.png"
             alt="Profile"
-            className="profile-avatar"
+            className="rounded-circle border border-2 border-white"
             onClick={toggleDropdown}
-            style={{ cursor: "pointer" }}
+            style={{
+              width: "40px",
+              height: "40px",
+              objectFit: "cover",
+              cursor: "pointer",
+            }}
           />
 
           {isDropdownOpen && (
             <div
-              className="profile-menu"
-              style={{
-                opacity: 1,
-                transform: "translateY(0)",
-                pointerEvents: "auto",
-              }}
+              className="dropdown-menu dropdown-menu-end show shadow-lg"
+              style={{ minWidth: "220px", right: 0, left: "auto" }}
             >
               {/* Header */}
               <NavLink
                 to={`${base}/my-profile`}
-                className="profile-header text-decoration-none"
+                className="dropdown-header text-white text-decoration-none p-3"
                 onClick={closeDropdown}
+                style={{
+                  background:
+                    "linear-gradient(135deg, #5a0d14 0%, #ae1700 100%)",
+                }}
               >
-                <strong>{user?.name || "User"}</strong>
-                <span className="view-profile">View Profile</span>
+                <strong className="d-block">{user?.firstName || "User"}</strong>
               </NavLink>
 
-              {/* Profile actions */}
-              <div className="profile-section">
-                <NavLink to={`${base}/edit-profile`} onClick={closeDropdown}>
-                  Edit Profile
-                </NavLink>
-                <NavLink to={`${base}/manage-photos`} onClick={closeDropdown}>
-                  Manage Photos
-                </NavLink>
-                <NavLink to={`${base}/settings`} onClick={closeDropdown}>
-                  Theme
-                </NavLink>
-              </div>
+              <div className="dropdown-divider m-0"></div>
 
-              {/* Support */}
-              <div className="profile-section">
-                <NavLink to={`${base}/feedback`} onClick={closeDropdown}>
-                  Send Feedback
-                </NavLink>
-                <NavLink to="/dashboard/help" onClick={closeDropdown}>
-                  Help
-                </NavLink>
-              </div>
+              {/* Profile actions */}
+              <NavLink
+                to={`${base}/edit-profile`}
+                className="dropdown-item py-2"
+                onClick={closeDropdown}
+              >
+                Edit Profile
+              </NavLink>
+              <NavLink
+                to={`${base}/manage-photos`}
+                className="dropdown-item py-2"
+                onClick={closeDropdown}
+              >
+                Manage Photos
+              </NavLink>
+
+              <div className="dropdown-divider m-0"></div>
 
               {/* Logout */}
               <div
-                className="profile-section logout"
+                className="dropdown-item py-2 text-danger fw-medium"
                 onClick={() => {
                   closeDropdown();
                   handleLogout();
@@ -164,118 +163,8 @@ const Navbar = ({ toggleSidebar }) => {
       </div>
 
       <style>{`
-        .profile-dropdown {
-          position: relative;
-        }
-
-        .profile-avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 2px solid #fff;
-          transition: transform 0.2s ease;
-        }
-
-        .profile-avatar:hover {
-          transform: scale(1.05);
-        }
-
-        .profile-menu {
-          position: absolute;
-          top: calc(100% + 10px);
-          right: 0;
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          min-width: 220px;
-          z-index: 1050;
-          overflow: hidden;
-          animation: dropdownFadeIn 0.2s ease;
-        }
-
-        @keyframes dropdownFadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .profile-header {
-          display: block;
-          padding: 16px;
-          background: linear-gradient(135deg, #5a0d14 0%, #ae1700 100%);
-          color: white !important;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .profile-header:hover {
-          background: linear-gradient(135deg, #6a1d24 0%, #be2710 100%);
-        }
-
-        .profile-header strong {
-          display: block;
-          font-size: 16px;
-          margin-bottom: 4px;
-        }
-
-        .view-profile {
-          font-size: 13px;
-          opacity: 0.9;
-        }
-
-        .profile-section {
-          padding: 8px 0;
-          border-bottom: 1px solid #f0f0f0;
-        }
-
-        .profile-section:last-child {
-          border-bottom: none;
-        }
-
-        .profile-section a,
-        .profile-section.logout {
-          display: block;
-          padding: 10px 16px;
-          color: #333;
-          text-decoration: none;
-          font-size: 14px;
-          transition: background-color 0.2s ease;
-        }
-
-        .profile-section a:hover,
-        .profile-section.logout:hover {
-          background-color: #f8f9fa;
-          color: #ae1700;
-        }
-
-        .profile-section.logout {
-          color: #dc3545;
-          font-weight: 500;
-        }
-
-        .profile-section.logout:hover {
-          background-color: #fff5f5;
-          color: #c82333;
-        }
-
-        .nav-icon-wrapper {
-          color: white;
-          text-decoration: none;
-          transition: transform 0.2s ease;
-        }
-
-        .nav-icon-wrapper:hover {
-          transform: scale(1.1);
-        }
-
-        .nav-icon {
-          font-size: 20px;
-        }
+        .dropdown-item:hover { background-color: #f8f9fa; color: #ae1700; }
+        .dropdown-item.text-danger:hover { background-color: #fff5f5; color: #c82333; }
       `}</style>
     </nav>
   );

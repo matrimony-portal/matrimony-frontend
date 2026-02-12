@@ -1,15 +1,14 @@
 // src/components/common/Layout/Sidebar.jsx
-import React from "react";
 import { NavLink } from "react-router";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-  const { user, userType } = useAuth();
+  const { user } = useAuth();
   const base = useDashboardBasePath();
 
   const menuItems =
-    userType === "admin" || userType === "organizer"
+    user?.role === "ADMIN" || user?.role === "ORGANIZER"
       ? [{ path: base, icon: "bi-house-door", label: "Dashboard" }]
       : [
           { path: base, icon: "bi-house-door", label: "Dashboard" },
@@ -24,13 +23,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             label: "Proposals",
           },
           { path: `${base}/messages`, icon: "bi-chat-dots", label: "Messages" },
-          { path: `${base}/shortlist`, icon: "bi-star", label: "Shortlist" },
           {
             path: `${base}/events`,
             icon: "bi-calendar-event",
             label: "Events",
           },
-          { path: `${base}/settings`, icon: "bi-gear", label: "Settings" },
+          // { path: `${base}/settings`, icon: "bi-gear", label: "Settings" },
         ];
 
   return (
@@ -96,16 +94,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           ></i>
         </button>
 
-        <div className="pt-3">
-          {" "}
-          {/* REMOVED: position-sticky - causes scroll issues */}
-          {isOpen && (
-            <h6 className="sidebar-heading px-3 mt-2 mb-3 text-white-50 text-uppercase">
-              {" "}
-              {/* REDUCED: mt-4 to mt-2 */}
-              <span>Welcome! {user?.name || "User"}</span>
-            </h6>
-          )}
+        <div className="pt-2">
           <ul className="nav flex-column mb-0">
             {menuItems.map((item, index) => (
               <li className="nav-item" key={index}>
@@ -123,7 +112,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     backgroundColor: isActive
                       ? "rgba(255,255,255,0.15)"
                       : "transparent",
-                    padding: isOpen ? "0.75rem 1.5rem" : "0.75rem 0",
+                    padding: isOpen ? "0.4rem 1.5rem" : "0.4rem 0",
                     justifyContent: isOpen ? "flex-start" : "center",
                     whiteSpace: "nowrap",
                     //overflow: "hidden",
@@ -133,7 +122,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                   <i
                     className={`bi ${item.icon}`}
                     style={{
-                      fontSize: "1.25rem",
+                      fontSize: "1.1rem",
                       minWidth: "24px",
                       marginRight: isOpen ? "0.5rem" : "0",
                     }}
