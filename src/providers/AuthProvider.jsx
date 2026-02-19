@@ -5,7 +5,6 @@ import { tokenManager } from "../utils/tokenManager.js";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,7 +19,6 @@ export const AuthProvider = ({ children }) => {
 
             const parsedUser = JSON.parse(storedUser);
             setUser(parsedUser);
-            setAccessToken(data.accessToken);
             tokenManager.setAccessToken(data.accessToken);
           } catch (error) {
             console.error("Token refresh failed:", error);
@@ -44,7 +42,6 @@ export const AuthProvider = ({ children }) => {
     const { data } = await authService.login(email, password);
 
     setUser(data.user);
-    setAccessToken(data.accessToken);
     tokenManager.setAccessToken(data.accessToken);
     tokenManager.setRefreshToken(data.refreshToken);
 
@@ -58,7 +55,6 @@ export const AuthProvider = ({ children }) => {
       console.error("Logout error:", error);
     } finally {
       setUser(null);
-      setAccessToken(null);
       tokenManager.clearTokens();
       localStorage.removeItem("matrimony_user");
     }
@@ -77,7 +73,6 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
-    accessToken,
     loading,
     login,
     logout,

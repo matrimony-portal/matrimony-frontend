@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
 const Layout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true); // Default: open on desktop
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 

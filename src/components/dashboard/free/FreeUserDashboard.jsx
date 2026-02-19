@@ -1,117 +1,214 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import { useAuth } from "../../../hooks/useAuth.jsx";
-import StatCard from "../../common/shared/StatCard.jsx";
-import ProfileCard from "../../common/shared/ProfileCard.jsx";
+import { interestService } from "../../../services/interestService.js";
+import { matchService } from "../../../services/matchService.js";
+import "./Dashboard.css";
 
 const FreeUserDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("new");
+  const [matches, setMatches] = useState([]);
+  const [likedUsers, setLikedUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("matches");
 
-  const profiles = [
-    {
-      id: 1,
-      name: "Priya Agarwal",
-      age: 28,
-      height: "5'4\"",
-      education: "MBA",
-      occupation: "Software Engineer",
-      location: "Mumbai, Maharashtra",
-      religion: "Hindu",
-      maritalStatus: "Never Married",
-      image: "/assets/images/female-profile/priyanka.png",
-    },
-    {
-      id: 2,
-      name: "Sneha Kapoor",
-      age: 26,
-      height: "5'3\"",
-      education: "B.Tech",
-      occupation: "Doctor",
-      location: "Delhi, India",
-      religion: "Hindu",
-      maritalStatus: "Never Married",
-      image: "/assets/images/female-profile/sneha.png",
-    },
-    {
-      id: 3,
-      name: "Ananya Mehta",
-      age: 27,
-      height: "5'5\"",
-      education: "Masters",
-      occupation: "Business Analyst",
-      location: "Bangalore, Karnataka",
-      religion: "Hindu",
-      maritalStatus: "Never Married",
-      image: "/assets/images/female-profile/ananya.png",
-    },
-  ];
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
 
-  const handleSendProposal = (profileName) => {
-    alert(
-      `Proposal sent to ${profileName}! You will be notified when they respond.`,
+  const loadDashboardData = async () => {
+    setLoading(true);
+    try {
+      const [matchesData, likedData] = await Promise.all([
+        matchService.getMatches(),
+        interestService.getLikedUsers(),
+      ]);
+      setMatches(matchesData || []);
+      setLikedUsers(likedData || []);
+    } catch {
+      toast.error("Failed to load dashboard data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLike = async (userId) => {
+    try {
+      await interestService.likeUser(userId);
+      toast.success("Interest sent!");
+      loadDashboardData();
+    } catch (error) {
+      toast.error(error?.message || "Failed to send interest");
+    }
+  };
+
+  const handlePass = async (userId) => {
+    try {
+      await interestService.passUser(userId);
+      setMatches(matches.filter((m) => m.userId !== userId));
+    } catch (error) {
+      toast.error(error?.message || "Failed to pass");
+    }
+  };
+
+  const handleViewProfile = (userId) => {
+    navigate(`/dashboard/free/profile/${userId}`);
+  };
+
+  if (loading) {
+    return (
+      <div className="dashboard-loading">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
     );
-  };
-
-  const handleViewProfile = (profileId) => {
-    navigate(`/profile/${profileId}`);
-  };
+  }
 
   return (
-    <div className="dashboard-container py-3 py-md-4">
+    <div className="modern-dashboard">
       {/* Header */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 pb-2 border-bottom p-2">
-        <h1 className="h2 mb-2 mb-md-0">
-          Welcome back, {user?.firstName || "User"}!
-        </h1>
-        <div className="text-muted small">
-          You have 5 new matches and 3 pending proposals
+      <div className="dashboard-header">
+        <div className="header-content">
+          <h1>Welcome, {user?.firstName}!</h1>
+          <p className="text-muted">Find your perfect match today</p>
+        </div>
+        <div className="header-stats">
+          <div className="stat-item">
+            <span className="stat-value">{matches.length}</span>
+            <span className="stat-label">New Matches</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-value">{likedUsers.length}</span>
+            <span className="stat-label">Interests Sent</span>
+          </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="mb-4">
-        <h2 className="h4 mb-3">Recommended Matches</h2>
-        <ul className="nav nav-tabs">
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === "new" ? "active" : ""}`}
-              onClick={() => setActiveTab("new")}
-            >
-              New Matches
-            </button>
-          </li>
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === "premium" ? "active" : ""}`}
-              onClick={() => setActiveTab("premium")}
-            >
-              Premium Profiles
-            </button>
-          </li>
-          <li className="nav-item d-none d-md-block">
-            <button
-              className={`nav-link ${activeTab === "recent" ? "active" : ""}`}
-              onClick={() => setActiveTab("recent")}
-            >
-              Recently Viewed
-            </button>
-          </li>
-        </ul>
+      <div className="dashboard-tabs">
+        <button
+          className={`tab-btn ${activeTab === "matches" ? "active" : ""}`}
+          onClick={() => setActiveTab("matches")}
+        >
+          <i className="bi bi-heart"></i>
+          Matches
+        </button>
+        <button
+          className={`tab-btn ${activeTab === "liked" ? "active" : ""}`}
+          onClick={() => setActiveTab("liked")}
+        >
+          <i className="bi bi-star"></i>
+          Liked
+        </button>
       </div>
 
-      {/* Profile Cards Grid - Responsive */}
-      <div className="row g-3 g-md-4">
-        {profiles.map((profile) => (
-          <div key={profile.id} className="col-12 col-md-6 col-lg-4">
-            <ProfileCard
-              profile={profile}
-              onSendProposal={handleSendProposal}
-              onViewProfile={handleViewProfile}
-            />
+      {/* Content */}
+      <div className="dashboard-content">
+        {activeTab === "matches" && (
+          <div className="matches-grid">
+            {matches.length === 0 ? (
+              <div className="empty-state">
+                <i className="bi bi-search"></i>
+                <h3>No matches yet</h3>
+                <p>Check back later for new profiles</p>
+              </div>
+            ) : (
+              matches.map((match) => (
+                <div key={match.userId} className="match-card">
+                  <div className="match-image">
+                    <img
+                      src={
+                        match.profilePhoto ||
+                        "/src/assets/images/placeholder/male.jpg"
+                      }
+                      alt={match.name}
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                  <div className="match-info">
+                    <h3>{match.name}</h3>
+                    <p className="match-details">
+                      {match.age} yrs • {match.city}
+                    </p>
+                    {match.compatibilityScore && (
+                      <p className="match-occupation">
+                        {Math.round(match.compatibilityScore * 100)}% Match
+                      </p>
+                    )}
+                  </div>
+                  <div className="match-actions">
+                    <button
+                      className="btn-pass"
+                      onClick={() => handlePass(match.userId)}
+                      title="Pass"
+                    >
+                      <i className="bi bi-x-lg"></i>
+                    </button>
+                    <button
+                      className="btn-view"
+                      onClick={() => handleViewProfile(match.userId)}
+                      title="View Profile"
+                    >
+                      <i className="bi bi-eye"></i>
+                    </button>
+                    <button
+                      className="btn-like"
+                      onClick={() => handleLike(match.userId)}
+                      title="Like"
+                    >
+                      <i className="bi bi-heart-fill"></i>
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-        ))}
+        )}
+
+        {activeTab === "liked" && (
+          <div className="matches-grid">
+            {likedUsers.length === 0 ? (
+              <div className="empty-state">
+                <i className="bi bi-heart"></i>
+                <h3>No liked profiles yet</h3>
+                <p>Start liking profiles to see them here</p>
+              </div>
+            ) : (
+              likedUsers.map((user) => (
+                <div key={user.id} className="match-card">
+                  <div className="match-image">
+                    <img
+                      src={
+                        user.profilePhoto || "/assets/images/default-avatar.png"
+                      }
+                      alt={user.firstName}
+                    />
+                  </div>
+                  <div className="match-info">
+                    <h3>
+                      {user.firstName} {user.lastName}
+                    </h3>
+                    <p className="match-details">
+                      {user.age} yrs • {user.city}
+                    </p>
+                    <p className="match-occupation">{user.occupation}</p>
+                  </div>
+                  <div className="match-actions">
+                    <button
+                      className="btn-view"
+                      onClick={() => handleViewProfile(user.id)}
+                    >
+                      View Profile
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

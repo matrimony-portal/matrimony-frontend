@@ -1,6 +1,6 @@
 // src/components/dashboard/premium/ProfileView.jsx
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 const ProfileView = () => {
   const { id } = useParams();
@@ -104,10 +104,6 @@ The ideal match should be understanding, supportive, and have a positive outlook
   const startChat = () => {
     alert(`Starting chat with ${profile.name}...`);
     navigate("/dashboard/messages");
-  };
-
-  const shortlist = () => {
-    alert(`${profile.name} added to your shortlist!`);
   };
 
   const share = () => {
@@ -221,12 +217,6 @@ The ideal match should be understanding, supportive, and have a positive outlook
                   💬 Start Chat
                 </button>
                 <div className="btn-group">
-                  <button
-                    className="btn btn-outline-secondary"
-                    onClick={shortlist}
-                  >
-                    ⭐
-                  </button>
                   <button className="btn btn-outline-secondary" onClick={share}>
                     ↗️
                   </button>

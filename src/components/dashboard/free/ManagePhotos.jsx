@@ -1,169 +1,322 @@
-// src/components/dashboard/premium/ManagePhotos.jsx
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { photoService } from "../../../services/photoService.js";
 
-const ManagePhotos = () => {
-  const [photos, setPhotos] = useState([
-    { id: 1, url: "../../assets/images/male/rahul.png", isProfile: true },
-    { id: 2, url: "../../assets/images/male/rahul-p1.png", isProfile: false },
-    { id: 3, url: "../../assets/images/male/rahul-p2.png", isProfile: false },
-    { id: 4, url: "../../assets/images/male/rahul-p3.png", isProfile: false },
-    { id: 5, url: "../../assets/images/male/rahul-p4.png", isProfile: false },
-    { id: 6, url: "../../assets/images/male/rahul-p5.png", isProfile: false },
-  ]);
+const FreeManagePhotos = () => {
+  const [photos, setPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [uploadType, setUploadType] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
-  const handleFileUpload = (e) => {
-    const files = e.target.files;
-    if (files.length > 0) {
-      alert(
-        `Uploading ${files.length} photo(s)... Photos will be reviewed within 24 hours.`,
-      );
+  useEffect(() => {
+    loadPhotos();
+  }, []);
+
+  const loadPhotos = async () => {
+    try {
+      const data = await photoService.getMyPhotos();
+      setPhotos(data || []);
+    } catch {
+      toast.error("Failed to load photos");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const makeProfilePhoto = (id) => {
-    setPhotos(
-      photos.map((photo) => ({
-        ...photo,
-        isProfile: photo.id === id,
-      })),
+  const handleUpload = async (e, isPrimary = false) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    setUploading(true);
+    setUploadType(isPrimary ? "primary" : "additional");
+    try {
+      const uploadedPhoto = await photoService.uploadPhoto(formData, isPrimary);
+      toast.success(isPrimary ? "Primary photo uploaded!" : "Photo uploaded!");
+      setPhotos((prev) => [...prev, uploadedPhoto]);
+      e.target.value = "";
+    } catch {
+      toast.error("Failed to upload photo");
+    } finally {
+      setUploading(false);
+      setUploadType(null);
+    }
+  };
+
+  const handleDelete = async (photoId) => {
+    if (!window.confirm("Delete this photo?")) return;
+
+    try {
+      await photoService.deletePhoto(photoId);
+      toast.success("Photo deleted");
+      setPhotos(photos.filter((p) => p.id !== photoId));
+    } catch {
+      toast.error("Failed to delete photo");
+    }
+  };
+
+  const primaryPhoto = photos.find((p) => p.isPrimary);
+  const additionalPhotos = photos.filter((p) => !p.isPrimary);
+
+  if (loading) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "400px" }}
+      >
+        <div className="spinner-border text-danger" />
+      </div>
     );
-    alert("Photo set as profile picture!");
-  };
-
-  const deletePhoto = (id) => {
-    if (window.confirm("Delete this photo?")) {
-      setPhotos(photos.filter((photo) => photo.id !== id));
-      alert("Photo deleted successfully!");
-    }
-  };
+  }
 
   return (
-    <div className="container-fluid py-3 py-md-4">
-      {/* Page Header */}
-      <div className="card mb-3 mb-md-4">
-        <div className="card-body text-center">
-          <h1 className="h3 mb-2">📸 Manage Your Photos</h1>
-          <p className="text-muted mb-0">
-            Upload up to 10 photos to make your profile more attractive
-          </p>
-        </div>
-      </div>
-
-      {/* Info Banner */}
-      <div className="alert alert-warning mb-3 mb-md-4">
-        <i className="bi bi-exclamation-triangle-fill me-2"></i>
-        <strong>Important:</strong> Profiles with photos get 10x more responses!
-        Make sure to add clear, recent photos.
-      </div>
-
-      {/* Upload Section */}
-      <div className="card mb-3 mb-md-4">
-        <div className="card-body">
-          <h3 className="h5 mb-3">Upload New Photos</h3>
-          <div
-            className="border-3 border-dashed rounded p-4 p-md-5 text-center"
-            style={{
-              borderStyle: "dashed",
-              borderColor: "#cbd5e0",
-              cursor: "pointer",
-              transition: "all 0.3s",
-            }}
-            onClick={() => document.getElementById("photoInput").click()}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#ae1700";
-              e.currentTarget.style.backgroundColor = "#f0f4ff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#cbd5e0";
-              e.currentTarget.style.backgroundColor = "transparent";
-            }}
-          >
-            <div className="mb-3" style={{ fontSize: "3rem" }}>
-              📤
-            </div>
-            <h4 className="mb-2">Click or Drag to Upload</h4>
-            <p className="text-muted mb-3">
-              Supported formats: JPG, PNG (Max 5MB)
-            </p>
-            <input
-              type="file"
-              id="photoInput"
-              className="d-none"
-              multiple
-              accept="image/*"
-              onChange={handleFileUpload}
-            />
-            <button className="btn btn-danger">Choose Photos</button>
+    <div className="container-fluid py-4">
+      <div className="row mb-4">
+        <div className="col-12">
+          <h2 className="h4 mb-3">
+            <i className="bi bi-images me-2"></i>
+            Manage Photos
+          </h2>
+          <div className="alert alert-info mb-0">
+            <i className="bi bi-info-circle me-2"></i>
+            Upload a primary photo (profile picture) and up to 5 additional
+            photos. Click any photo to view full size.
           </div>
         </div>
       </div>
 
-      {/* Photos Grid */}
-      <h3 className="h5 mb-3">Your Photos ({photos.length}/10)</h3>
-      <div className="row g-3 g-md-4">
-        {photos.map((photo) => (
-          <div key={photo.id} className="col-6 col-md-4 col-lg-3">
-            <div className="card h-100">
-              <div
-                className="position-relative"
-                style={{
-                  paddingTop: "100%",
-                  backgroundImage: `url(${photo.url})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  borderRadius: "10px 10px 0 0",
-                }}
-              >
-                {photo.isProfile && (
-                  <span
-                    className="badge bg-success position-absolute top-0 start-0 m-2"
-                    style={{ fontSize: "0.75rem" }}
+      <div className="row g-4">
+        <div className="col-12 col-lg-6">
+          <div className="card shadow-sm h-100">
+            <div className="card-body">
+              <h5 className="card-title mb-3">
+                <i className="bi bi-star-fill text-warning me-2"></i>
+                Primary Photo
+              </h5>
+              {primaryPhoto ? (
+                <div className="position-relative">
+                  <div
+                    className="bg-light rounded p-3 mb-3"
+                    style={{
+                      minHeight: "300px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setPreviewImage(primaryPhoto.url)}
                   >
-                    Profile Photo
-                  </span>
-                )}
-              </div>
-              <div className="card-body p-2">
-                <div className="d-flex flex-column gap-1">
-                  {!photo.isProfile && (
+                    <img
+                      src={primaryPhoto.url}
+                      alt="Primary"
+                      className="img-fluid rounded"
+                      style={{
+                        maxHeight: "400px",
+                        maxWidth: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
+                  <div className="d-flex gap-2">
                     <button
-                      className="btn btn-sm btn-danger w-100"
-                      onClick={() => makeProfilePhoto(photo.id)}
+                      className="btn btn-danger btn-sm flex-grow-1"
+                      onClick={() => handleDelete(primaryPhoto.id)}
                     >
-                      Set as Profile
+                      <i className="bi bi-trash me-1"></i> Delete
                     </button>
-                  )}
-                  <button
-                    className="btn btn-sm btn-outline-danger w-100"
-                    onClick={() => deletePhoto(photo.id)}
-                  >
-                    Delete
-                  </button>
+                    <button
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() => setPreviewImage(primaryPhoto.url)}
+                    >
+                      <i className="bi bi-eye"></i>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="text-center p-5 border border-2 border-dashed rounded bg-light">
+                  <i className="bi bi-person-circle display-1 text-muted"></i>
+                  <p className="text-muted mt-3 mb-3">
+                    No primary photo uploaded
+                  </p>
+                  <label className="btn btn-danger">
+                    {uploading && uploadType === "primary" ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2"></span>
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-cloud-upload me-2"></i>
+                        Upload Primary Photo
+                      </>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleUpload(e, true)}
+                      hidden
+                      disabled={uploading}
+                    />
+                  </label>
+                </div>
+              )}
             </div>
           </div>
-        ))}
-      </div>
+        </div>
 
-      {/* Guidelines */}
-      <div className="card mt-3 mt-md-4">
-        <div className="card-body">
-          <h3 className="h5 mb-3">Photo Guidelines</h3>
-          <ul className="mb-0">
-            <li>Use recent photos (taken within last 6 months)</li>
-            <li>Ensure photos are clear and well-lit</li>
-            <li>At least one photo should show your face clearly</li>
-            <li>Avoid group photos or photos with others</li>
-            <li>No sunglasses or face coverings</li>
-            <li>Professional attire photos are recommended</li>
-            <li>Inappropriate photos will be rejected during verification</li>
-            <li>Photos with watermarks or logos will not be accepted</li>
-          </ul>
+        <div className="col-12 col-lg-6">
+          <div className="card shadow-sm h-100">
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h5 className="card-title mb-0">
+                  <i className="bi bi-images me-2"></i>
+                  Additional Photos
+                </h5>
+                <span className="badge bg-secondary">
+                  {additionalPhotos.length}/5
+                </span>
+              </div>
+
+              {additionalPhotos.length === 0 ? (
+                <div className="text-center p-5 border border-2 border-dashed rounded bg-light">
+                  <i className="bi bi-images display-1 text-muted"></i>
+                  <p className="text-muted mt-3 mb-3">
+                    No additional photos yet
+                  </p>
+                  {additionalPhotos.length < 5 && (
+                    <label className="btn btn-outline-danger">
+                      {uploading && uploadType === "additional" ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2"></span>
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <i className="bi bi-plus-lg me-2"></i>
+                          Add Photo
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleUpload(e, false)}
+                        hidden
+                        disabled={uploading}
+                      />
+                    </label>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <div className="row g-3 mb-3">
+                    {additionalPhotos.map((photo) => (
+                      <div key={photo.id} className="col-6">
+                        <div className="position-relative">
+                          <div
+                            className="bg-light rounded p-2"
+                            style={{
+                              height: "180px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => setPreviewImage(photo.url)}
+                          >
+                            <img
+                              src={photo.url}
+                              alt="Additional"
+                              className="img-fluid rounded"
+                              style={{
+                                maxHeight: "160px",
+                                maxWidth: "100%",
+                                objectFit: "contain",
+                              }}
+                            />
+                          </div>
+                          <div className="d-flex gap-1 mt-2">
+                            <button
+                              className="btn btn-danger btn-sm flex-grow-1"
+                              onClick={() => handleDelete(photo.id)}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                            <button
+                              className="btn btn-outline-secondary btn-sm"
+                              onClick={() => setPreviewImage(photo.url)}
+                            >
+                              <i className="bi bi-eye"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {additionalPhotos.length < 5 && (
+                    <label className="btn btn-outline-danger w-100">
+                      {uploading && uploadType === "additional" ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2"></span>
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <i className="bi bi-plus-lg me-2"></i>
+                          Add More Photos
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleUpload(e, false)}
+                        hidden
+                        disabled={uploading}
+                      />
+                    </label>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
+
+      {previewImage && (
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.9)" }}
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="modal-dialog modal-dialog-centered modal-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-content bg-transparent border-0">
+              <button
+                className="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+                style={{ zIndex: 1 }}
+                onClick={() => setPreviewImage(null)}
+              />
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="img-fluid rounded"
+                style={{ maxHeight: "90vh" }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default ManagePhotos;
+export default FreeManagePhotos;
