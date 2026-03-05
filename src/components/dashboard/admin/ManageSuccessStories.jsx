@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import { COUPLE_IMAGES } from "../../../constants/assets.js";
 
 const ManageSuccessStories = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const ManageSuccessStories = () => {
       status: "Published",
       views: 1250,
       likes: 89,
-      image: "/assets/images/happy-couple/naeem-ad-qZqjCgYEWl4-unsplash.jpg",
+      image: COUPLE_IMAGES.couple1,
     },
     {
       id: 2,
@@ -26,8 +27,7 @@ const ManageSuccessStories = () => {
       status: "Published",
       views: 980,
       likes: 67,
-      image:
-        "/assets/images/happy-couple/amish-thakkar-REmCdjjUeB8-unsplash.jpg",
+      image: COUPLE_IMAGES.couple2,
     },
     {
       id: 3,
@@ -38,7 +38,7 @@ const ManageSuccessStories = () => {
       status: "Draft",
       views: 0,
       likes: 0,
-      image: "/assets/images/happy-couple/arto-suraj-U24mGMjnIIo-unsplash.jpg",
+      image: COUPLE_IMAGES.couple3,
     },
   ];
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { PLACEHOLDERS } from "../../../constants/assets.js";
 import { interestService } from "../../../services/interestService.js";
 import { matchService } from "../../../services/matchService.js";
 import "./Dashboard.css";
@@ -70,14 +71,11 @@ const FreeSearchMatches = () => {
             <div key={match.userId} className="match-card">
               <div className="match-image">
                 <img
-                  src={
-                    match.profilePhoto ||
-                    "/src/assets/images/placeholder/male.jpg"
-                  }
+                  src={match.profilePhoto || PLACEHOLDERS.male}
                   alt={match.name}
                   style={{ objectFit: "contain" }}
                   onError={(e) => {
-                    e.target.src = "/src/assets/images/placeholder/male.jpg";
+                    e.target.src = PLACEHOLDERS.male;
                   }}
                 />
               </div>

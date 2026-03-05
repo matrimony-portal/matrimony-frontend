@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
+import { PLACEHOLDERS } from "../../../constants/assets.js";
 import { profileService } from "../../../services/profileService.js";
 
 const ProfileView = () => {
@@ -71,10 +72,7 @@ const ProfileView = () => {
           <div className="row g-3">
             <div className="col-12 col-md-3 text-center">
               <img
-                src={
-                  galleryImages[currentImageIndex] ||
-                  "/src/assets/images/placeholder/user.png"
-                }
+                src={galleryImages[currentImageIndex] || PLACEHOLDERS.user}
                 alt={profile.firstName}
                 className="img-fluid rounded mb-3"
                 style={{
@@ -83,9 +81,7 @@ const ProfileView = () => {
                   height: "auto",
                   cursor: galleryImages.length > 0 ? "pointer" : "default",
                 }}
-                onError={(e) =>
-                  (e.target.src = "/src/assets/images/placeholder/user.png")
-                }
+                onError={(e) => (e.target.src = PLACEHOLDERS.user)}
                 onClick={() =>
                   galleryImages.length > 0 && setShowLightbox(true)
                 }
@@ -105,10 +101,7 @@ const ProfileView = () => {
                         cursor: "pointer",
                       }}
                       onClick={() => setCurrentImageIndex(idx)}
-                      onError={(e) =>
-                        (e.target.src =
-                          "/src/assets/images/placeholder/user.png")
-                      }
+                      onError={(e) => (e.target.src = PLACEHOLDERS.user)}
                     />
                   ))}
                 </div>

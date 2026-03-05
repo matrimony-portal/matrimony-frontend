@@ -1,6 +1,7 @@
 // src/components/dashboard/premium/EditProfile.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import { MALE_PROFILES } from "../../../constants/assets.js";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const EditProfile = () => {
                 style={{
                   width: "120px",
                   height: "120px",
-                  backgroundImage: "url(../../assets/images/male/rahul.png)",
+                  backgroundImage: "url(" + MALE_PROFILES.rahul + ")",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}

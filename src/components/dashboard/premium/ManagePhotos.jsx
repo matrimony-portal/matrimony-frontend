@@ -1,14 +1,15 @@
 // src/components/dashboard/premium/ManagePhotos.jsx
-import React, { useState } from "react";
+import { useState } from "react";
+import { MALE_PROFILES } from "../../../constants/assets.js";
 
 const ManagePhotos = () => {
   const [photos, setPhotos] = useState([
-    { id: 1, url: "../../assets/images/male/rahul.png", isProfile: true },
-    { id: 2, url: "../../assets/images/male/rahul-p1.png", isProfile: false },
-    { id: 3, url: "../../assets/images/male/rahul-p2.png", isProfile: false },
-    { id: 4, url: "../../assets/images/male/rahul-p3.png", isProfile: false },
-    { id: 5, url: "../../assets/images/male/rahul-p4.png", isProfile: false },
-    { id: 6, url: "../../assets/images/male/rahul-p5.png", isProfile: false },
+    { id: 1, url: MALE_PROFILES.rahul, isProfile: true },
+    { id: 2, url: MALE_PROFILES.rahulP1, isProfile: false },
+    { id: 3, url: MALE_PROFILES.rahulP2, isProfile: false },
+    { id: 4, url: MALE_PROFILES.rahulP3, isProfile: false },
+    { id: 5, url: MALE_PROFILES.rahulP4, isProfile: false },
+    { id: 6, url: MALE_PROFILES.rahulP5, isProfile: false },
   ]);
 
   const handleFileUpload = (e) => {

@@ -1,6 +1,7 @@
 // src/components/dashboard/premium/Proposals.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import { FEMALE_PROFILES } from "../../../constants/assets.js";
 import ProposalCard from "../../common/shared/ProposalCard.jsx";
 
 const Proposals = () => {
@@ -17,7 +18,7 @@ const Proposals = () => {
       occupation: "Software Engineer",
       location: "Mumbai, Maharashtra",
       description: "Looking for educated partner with good family values...",
-      image: "../../assets/images/female-profile/priyanka.png",
+      image: FEMALE_PROFILES.priyanka,
       isNew: true,
       timeAgo: "2 hours ago",
     },
@@ -30,7 +31,7 @@ const Proposals = () => {
       occupation: "Doctor",
       location: "Delhi, India",
       description: "Seeking understanding and caring life partner...",
-      image: "../../assets/images/female-profile/sneha.png",
+      image: FEMALE_PROFILES.sneha,
       isNew: false,
       timeAgo: "1 day ago",
     },
@@ -43,7 +44,7 @@ const Proposals = () => {
       occupation: "Business Analyst",
       location: "Bangalore, Karnataka",
       description: "Looking for ambitious and family-oriented partner...",
-      image: "../../assets/images/female-profile/ananya.png",
+      image: FEMALE_PROFILES.ananya,
       isNew: false,
       timeAgo: "3 days ago",
     },
@@ -60,7 +61,7 @@ const Proposals = () => {
       location: "Hyderabad, Telangana",
       status: "pending",
       sentDate: "2 days ago",
-      image: "../../assets/images/female-profile/neha.png",
+      image: FEMALE_PROFILES.neha,
     },
     {
       id: 5,
@@ -72,7 +73,7 @@ const Proposals = () => {
       location: "Ahmedabad, Gujarat",
       status: "viewed",
       sentDate: "5 days ago",
-      image: "../../assets/images/female-profile/divya.png",
+      image: FEMALE_PROFILES.divya,
     },
   ];
 
@@ -86,7 +87,7 @@ const Proposals = () => {
       occupation: "Architect",
       location: "Pune, Maharashtra",
       acceptedDate: "1 week ago",
-      image: "../../assets/images/female-profile/riya.png",
+      image: FEMALE_PROFILES.riya,
     },
   ];
 

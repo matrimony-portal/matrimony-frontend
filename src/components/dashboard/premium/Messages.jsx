@@ -1,5 +1,6 @@
 // src/components/dashboard/premium/Messages.jsx
-import React, { useState } from "react";
+import { useState } from "react";
+import { FEMALE_PROFILES } from "../../../constants/assets.js";
 
 const Messages = () => {
   const [selectedChat, setSelectedChat] = useState(null);
@@ -10,7 +11,7 @@ const Messages = () => {
     {
       id: 1,
       name: "Priya Agarwal",
-      avatar: "../../assets/images/female-profile/priyanka.png",
+      avatar: FEMALE_PROFILES.priyanka,
       lastMessage:
         "Hi! Thanks for connecting. I'd love to know more about you.",
       time: "2 min ago",
@@ -20,7 +21,7 @@ const Messages = () => {
     {
       id: 2,
       name: "Ananya Mehta",
-      avatar: "../../assets/images/female-profile/ananya.png",
+      avatar: FEMALE_PROFILES.ananya,
       lastMessage: "That sounds interesting! When are you free to talk?",
       time: "1 hour ago",
       unread: 0,
@@ -29,7 +30,7 @@ const Messages = () => {
     {
       id: 3,
       name: "Riya Gupta",
-      avatar: "../../assets/images/female-profile/riya.png",
+      avatar: FEMALE_PROFILES.riya,
       lastMessage: "Thank you! Looking forward to meeting you.",
       time: "3 hours ago",
       unread: 1,
@@ -38,7 +39,7 @@ const Messages = () => {
     {
       id: 4,
       name: "Sneha Kapoor",
-      avatar: "../../assets/images/female-profile/sneha.png",
+      avatar: FEMALE_PROFILES.sneha,
       lastMessage: "Hello! Nice to connect with you.",
       time: "Yesterday",
       unread: 0,

@@ -1,5 +1,6 @@
 // src/components/dashboard/premium/Events.jsx
 import { useState } from "react";
+import { EVENT_IMAGES } from "../../../constants/assets.js";
 //import { useNavigate } from "react-router";
 
 const Events = () => {
@@ -27,8 +28,7 @@ const Events = () => {
       badge: "Hot",
       day: "25",
       month: "OCT",
-      image:
-        "../../assets/images/event-images/surface-aqdPtCtq3dY-unsplash.jpg",
+      image: EVENT_IMAGES.event1,
     },
     {
       id: 2,
@@ -42,8 +42,7 @@ const Events = () => {
       total: 40,
       day: "28",
       month: "OCT",
-      image:
-        "../../assets/images/event-images/nathan-dumlao-I_394sxx0ec-unsplash.jpg",
+      image: EVENT_IMAGES.event2,
     },
     {
       id: 3,
@@ -58,8 +57,7 @@ const Events = () => {
       badge: "New",
       day: "30",
       month: "OCT",
-      image:
-        "../../assets/images/event-images/al-elmes-ULHxWq8reao-unsplash.jpg",
+      image: EVENT_IMAGES.event3,
     },
   ];
 

@@ -1,6 +1,7 @@
 // src/components/dashboard/premium/ProfileView.jsx
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { FEMALE_PROFILES } from "../../../constants/assets.js";
 
 const ProfileView = () => {
   const { id } = useParams();
@@ -23,7 +24,7 @@ const ProfileView = () => {
     occupation: "Software Engineer",
     company: "Tech Solutions Pvt Ltd",
     income: "₹15-20 Lakhs",
-    photo: "/assets/images/female-profile/priyanka.png",
+    photo: FEMALE_PROFILES.priyanka,
     isOnline: true,
     respondsIn: "2 hours",
     isPremium: true,
@@ -60,9 +61,9 @@ The ideal match should be understanding, supportive, and have a positive outlook
   };
 
   const galleryImages = [
-    "../../assets/images/female-profile/priyanka.png",
-    "../../assets/images/female-profile/sneha.png",
-    "../../assets/images/female-profile/ananya.png",
+    FEMALE_PROFILES.priyanka,
+    FEMALE_PROFILES.sneha,
+    FEMALE_PROFILES.ananya,
   ];
 
   const similarProfiles = [
@@ -73,7 +74,7 @@ The ideal match should be understanding, supportive, and have a positive outlook
       height: "5'3\"",
       occupation: "Doctor",
       location: "Delhi, India",
-      image: "../../assets/images/female-profile/sneha.png",
+      image: FEMALE_PROFILES.sneha,
     },
     {
       id: 3,
@@ -82,7 +83,7 @@ The ideal match should be understanding, supportive, and have a positive outlook
       height: "5'5\"",
       occupation: "Business Analyst",
       location: "Bangalore, Karnataka",
-      image: "../../assets/images/female-profile/ananya.png",
+      image: FEMALE_PROFILES.ananya,
     },
     {
       id: 4,
@@ -91,7 +92,7 @@ The ideal match should be understanding, supportive, and have a positive outlook
       height: "5'6\"",
       occupation: "Marketing Manager",
       location: "Hyderabad, Telangana",
-      image: "../../assets/images/female-profile/neha.png",
+      image: FEMALE_PROFILES.neha,
     },
   ];
 

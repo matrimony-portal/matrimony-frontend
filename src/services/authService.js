@@ -48,9 +48,9 @@ export const authService = {
     }
   },
 
-  logout: async () => {
+  logout: async (refreshToken) => {
     try {
-      const response = await apiClient.post("/auth/logout");
+      const response = await apiClient.post("/auth/logout", { refreshToken });
       return response.data;
     } catch (error) {
       handleApiError(error);

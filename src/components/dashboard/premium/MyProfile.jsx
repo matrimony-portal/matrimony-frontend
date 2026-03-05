@@ -1,14 +1,13 @@
 // src/components/dashboard/premium/MyProfile.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
-// Images (CORRECT way in React)
-import profileImg from "../../../assets/images/male/rahul.png";
 import g1 from "../../../assets/images/male/rahul-p1.png";
 import g2 from "../../../assets/images/male/rahul-p2.png";
 import g3 from "../../../assets/images/male/rahul-p3.png";
 import g4 from "../../../assets/images/male/rahul-p4.png";
 import g5 from "../../../assets/images/male/rahul-p5.png";
+import profileImg from "../../../assets/images/male/rahul.png";
 
 // Components
 import StatCard from "../../common/shared/StatCard";
