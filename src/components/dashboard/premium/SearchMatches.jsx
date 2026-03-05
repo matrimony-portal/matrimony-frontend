@@ -1,6 +1,7 @@
 // src/components/dashboard/premium/SearchMatches.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import { FEMALE_PROFILES } from "../../../constants/assets.js";
 import ProfileCard from "../../common/shared/ProfileCard.jsx";
 
 const SearchMatches = () => {
@@ -34,7 +35,7 @@ const SearchMatches = () => {
       location: "Mumbai, Maharashtra",
       religion: "Hindu",
       maritalStatus: "Never Married",
-      image: "../../assets/images/female-profile/priyanka.png",
+      image: FEMALE_PROFILES.priyanka,
       isOnline: true,
     },
     {
@@ -47,7 +48,7 @@ const SearchMatches = () => {
       location: "Delhi, India",
       religion: "Hindu",
       maritalStatus: "Never Married",
-      image: "../../assets/images/female-profile/sneha.png",
+      image: FEMALE_PROFILES.sneha,
       isOnline: false,
     },
     {
@@ -60,7 +61,7 @@ const SearchMatches = () => {
       location: "Bangalore, Karnataka",
       religion: "Hindu",
       maritalStatus: "Never Married",
-      image: "../../assets/images/female-profile/ananya.png",
+      image: FEMALE_PROFILES.ananya,
       isOnline: true,
     },
     {
@@ -73,7 +74,7 @@ const SearchMatches = () => {
       location: "Hyderabad, Telangana",
       religion: "Hindu",
       maritalStatus: "Never Married",
-      image: "../../assets/images/female-profile/neha.png",
+      image: FEMALE_PROFILES.neha,
       isOnline: false,
     },
     {
@@ -86,7 +87,7 @@ const SearchMatches = () => {
       location: "Ahmedabad, Gujarat",
       religion: "Hindu",
       maritalStatus: "Never Married",
-      image: "../../assets/images/female-profile/divya.png",
+      image: FEMALE_PROFILES.divya,
       isOnline: false,
     },
     {
@@ -99,7 +100,7 @@ const SearchMatches = () => {
       location: "Pune, Maharashtra",
       religion: "Hindu",
       maritalStatus: "Never Married",
-      image: "../../assets/images/female-profile/riya.png",
+      image: FEMALE_PROFILES.riya,
       isOnline: true,
     },
   ];

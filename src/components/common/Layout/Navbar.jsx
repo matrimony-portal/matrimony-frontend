@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
+import { PLACEHOLDERS } from "../../../constants/assets.js";
 import { useAuth } from "../../../hooks/useAuth.jsx";
 import { useDashboardBasePath } from "../../../hooks/useDashboardBasePath.jsx";
 
@@ -96,7 +97,7 @@ const Navbar = ({ toggleSidebar }) => {
         {/* Profile Dropdown */}
         <div className="dropdown position-relative" ref={dropdownRef}>
           <img
-            src="/src/assets/images/placeholder/user.png"
+            src={PLACEHOLDERS.user}
             alt="Profile"
             className="rounded-circle border border-2 border-white"
             onClick={toggleDropdown}

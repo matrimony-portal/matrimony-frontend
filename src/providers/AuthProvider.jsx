@@ -50,7 +50,10 @@ export const AuthProvider = ({ children }) => {
 
   const logout = useCallback(async () => {
     try {
-      await authService.logout();
+      const refreshToken = tokenManager.getRefreshToken();
+      if (refreshToken) {
+        await authService.logout(refreshToken);
+      }
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
