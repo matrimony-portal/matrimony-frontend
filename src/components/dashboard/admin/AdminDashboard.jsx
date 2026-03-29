@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
-import { fetchAdminProfile } from "../../../services/admin/API_BASE_URL";
+import { getAdminById } from "../../../services/admin/AdminProfile";
 import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
@@ -8,14 +9,58 @@ export default function AdminDashboard() {
     name: "Loading...",
     avatar: "https://i.pravatar.cc/40",
   });
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    activeUsers: 0,
+    blockedUsers: 0,
+  });
+
+  const fetchStats = useCallback(async () => {
+    try {
+      const { data } = await axios.get("/api/user-stats", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const totalUsers = data.totalUsers || 0;
+      const activeUsers = data.activeUsers || 0;
+      const inactiveUsers = data.inactiveUsers || 0;
+      const blockedUsers = totalUsers - (activeUsers + inactiveUsers);
+
+      setStats({
+        totalUsers,
+        activeUsers,
+        blockedUsers,
+      });
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+    }
+  }, []);
 
   useEffect(() => {
-    const loadProfile = async () => {
-      const data = await fetchAdminProfile();
-      setAdminData(data);
+    const loadData = async () => {
+      try {
+        const adminId = localStorage.getItem("adminId") || "1";
+        const data = await getAdminById(adminId);
+        console.log("Admin data:", data);
+        setAdminData({
+          name:
+            `${data.firstName || ""} ${data.lastName || ""}`.trim() ||
+            "Admin User",
+          avatar: data.avatar || "https://i.pravatar.cc/40",
+        });
+      } catch (error) {
+        console.error("Failed to fetch admin profile:", error);
+        setAdminData({
+          name: "Admin User",
+          avatar: "https://i.pravatar.cc/40",
+        });
+      }
+      await fetchStats();
     };
-    loadProfile();
-  }, []);
+
+    loadData();
+  }, [fetchStats]);
 
   return (
     <div className="admin-layout">
@@ -25,27 +70,39 @@ export default function AdminDashboard() {
           <h2 className="logo">💍 Bandan Admin</h2>
         </div>
         <div className="sidebar-stats">
-          <div className="stat-item">
+          <Link
+            to="users"
+            className="stat-item"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
             <div className="stat-icon">👥</div>
             <div className="stat-info">
               <span className="stat-label">Total Users</span>
-              <span className="stat-value">25,890</span>
+              <span className="stat-value">{stats.totalUsers}</span>
             </div>
-          </div>
-          <div className="stat-item">
+          </Link>
+          <Link
+            to="users?tab=active"
+            className="stat-item"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <div className="stat-icon">✅</div>
+            <div className="stat-info">
+              <span className="stat-label">Active Users</span>
+              <span className="stat-value">{stats.activeUsers}</span>
+            </div>
+          </Link>
+          <Link
+            to="users?tab=blocked"
+            className="stat-item"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
             <div className="stat-icon">🚫</div>
             <div className="stat-info">
               <span className="stat-label">Blocked Users</span>
-              <span className="stat-value">342</span>
+              <span className="stat-value">{stats.blockedUsers}</span>
             </div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-icon">💰</div>
-            <div className="stat-info">
-              <span className="stat-label">Total Revenue</span>
-              <span className="stat-value">₹145.6L</span>
-            </div>
-          </div>
+          </Link>
         </div>
       </aside>
 
@@ -66,22 +123,22 @@ export default function AdminDashboard() {
         <div className="stats">
           <div className="stat-card purple">
             <h4>Active Members</h4>
-            <h2>12,540</h2>
+            <h2>{stats.activeUsers}</h2>
             <span>+1.5%</span>
           </div>
           <div className="stat-card blue">
             <h4>Active Matches</h4>
-            <h2>3,210</h2>
+            <h2>12</h2>
             <span>+2.2%</span>
           </div>
           <div className="stat-card yellow">
             <h4>Daily Matches</h4>
-            <h2>560</h2>
+            <h2>5</h2>
             <span>+2.5%</span>
           </div>
           <div className="stat-card green">
             <h4>Success Stories</h4>
-            <h2>51,200</h2>
+            <h2>18</h2>
           </div>
         </div>
 
